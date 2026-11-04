@@ -7,9 +7,9 @@
   .home-refresh .modalities .section-heading{margin:0 0 18px;justify-content:flex-start;text-align:left}
   .home-refresh .modalities .section-heading>div{width:100%;text-align:left}
   .phone-products-carousel{position:relative;padding:0 21px}
-  .home-refresh .game-cards{display:flex;gap:0;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding:8px 0 12px;align-items:flex-start}
+  .home-refresh .game-cards{display:flex;gap:0;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding:8px 0 12px;align-items:stretch}
   .home-refresh .game-cards::-webkit-scrollbar{display:none}
-  .home-refresh .game-cards>.product-card,.home-refresh .game-cards>.product-card:nth-child(9),.home-refresh .game-cards>.product-card:last-child{flex:0 0 calc(100% - 14px);width:calc(100% - 14px);max-width:none;margin:0 7px;min-height:423px;height:423px;scroll-snap-align:center;container-type:inline-size;border-radius:10px}
+  .home-refresh .game-cards>.product-card,.home-refresh .game-cards>.product-card:nth-child(9),.home-refresh .game-cards>.product-card:last-child{flex:0 0 calc(100% - 14px);width:calc(100% - 14px);max-width:none;margin:0 7px;min-height:423px;height:auto;align-self:stretch;scroll-snap-align:center;container-type:inline-size;border-radius:10px}
   .home-refresh .game-cards>.product-card:nth-child(n) .product-header{height:56px;min-height:56px;padding:0 8px 0 22cqw;gap:0;background:var(--product-header);color:#fff}
   .home-refresh .game-cards>.product-card:nth-child(n) .product-header::before{display:block;width:80px;background:#00000012;clip-path:polygon(0 0,100% 0,44% 100%,0 100%)}
   .home-refresh .game-cards>.product-card:nth-child(n) .product-header h3{font-family:var(--font-display);font-size:6.7cqw;font-weight:900;line-height:1;letter-spacing:-.025em;white-space:nowrap}

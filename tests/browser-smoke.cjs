@@ -75,7 +75,7 @@ function check(ok,message){if(!ok)throw new Error(message);}
   await command('Page.enable');await command('Runtime.enable');
   await command('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:1,mobile:true});
   const checks = [];
-  async function run(name,fn){try{await fn();checks.push({name,pass:true});console.log('PASS '+name);}catch(error){checks.push({name,pass:false,error:error.message});console.log('FAIL '+name+': '+error.message);}}
+  async function run(name,fn){if(process.env.BROWSER_CHECK_FILTER && !name.includes(process.env.BROWSER_CHECK_FILTER))return;try{await fn();checks.push({name,pass:true});console.log('PASS '+name);}catch(error){checks.push({name,pass:false,error:error.message});console.log('FAIL '+name+': '+error.message);}}
   await run('welcome privacy notice has its stylesheet class',async()=>{
     await navigate('/');check(await evaluate('document.getElementById("cookie-notice").classList.contains("cookie-notice")'),'Cookie notice class is broken');
   });
@@ -162,6 +162,20 @@ function check(ok,message){if(!ok)throw new Error(message);}
   });
   await run('main auxiliary pages load without uncaught exceptions',async()=>{
     for(const page of ['/painel.html','/previa.html','/demonstracao.html','/compra-bolao/index.html'])await navigate(page);
+  });
+  await run('product cards fit their content on phone screens',async()=>{
+    await navigate('/home.html');
+    for(const width of [320,360,390,650]) {
+      await command('Emulation.setDeviceMetricsOverride',{width,height:844,deviceScaleFactor:1,mobile:true});await pause(100);
+      const clipped=await evaluate('Array.from(document.querySelectorAll(".product-card")).map(card=>({name:card.querySelector("h3").textContent,height:card.clientHeight,content:card.scrollHeight,bottom:card.getBoundingClientRect().bottom,buttonBottom:card.querySelector(".product-play").getBoundingClientRect().bottom})).filter(card=>card.content>card.height+1 || card.buttonBottom>card.bottom+1)');
+      check(clipped.length===0,`Cards clipped at ${width}px: ${JSON.stringify(clipped)}`);
+      const dimensions=await evaluate('Array.from(document.querySelectorAll(".product-card")).map(card=>({width:card.getBoundingClientRect().width,height:card.getBoundingClientRect().height,buttonBottom:card.querySelector(".product-play").getBoundingClientRect().bottom-card.getBoundingClientRect().top}))');
+      for(const key of ['width','height','buttonBottom'])check(Math.max(...dimensions.map(d=>d[key]))-Math.min(...dimensions.map(d=>d[key]))<=1,`Unequal card ${key} at ${width}px: ${JSON.stringify(dimensions)}`);
+    }
+    await command('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:1,mobile:true});
+    await evaluate('document.querySelector(".product-mega").scrollIntoView({block:"center",inline:"center"})');await pause(150);
+    const screenshot=await command('Page.captureScreenshot',{format:'png'});
+    fs.writeFileSync(path.join(root,'card-preview.png'),Buffer.from(screenshot.data,'base64'));
   });
   await run('no uncaught browser exceptions',async()=>check(errors.length===0,JSON.stringify(errors)));
   console.log(JSON.stringify({checks,errors}));
