@@ -12,3 +12,6 @@
 *.sqlite
 *.sqlite-shm
 *.sqlite-wal
+/.loteria-publicacao-*/
+/loteria-github.zip
+/loteria-publicacao.json
