@@ -177,6 +177,36 @@ function check(ok,message){if(!ok)throw new Error(message);}
     const screenshot=await command('Page.captureScreenshot',{format:'png'});
     fs.writeFileSync(path.join(root,'card-preview.png'),Buffer.from(screenshot.data,'base64'));
   });
+  await run('all 11 product cards have equal sizes on tablets and desktops',async()=>{
+    await navigate('/home.html');
+    for(const width of [768,1024,1280,1920]) {
+      await command('Emulation.setDeviceMetricsOverride',{width,height:1080,deviceScaleFactor:1,mobile:false});await pause(100);
+      const cards=await evaluate('Array.from(document.querySelectorAll(".product-card")).map(c=>({name:c.querySelector("h3").textContent,width:c.getBoundingClientRect().width,height:c.getBoundingClientRect().height,content:c.scrollHeight,buttonBottom:c.querySelector(".product-play").getBoundingClientRect().bottom-c.getBoundingClientRect().top}))');
+      check(cards.length===11,`Expected 11 cards, got ${cards.length}`);
+      for(const key of ['width','height','buttonBottom'])check(Math.max(...cards.map(d=>d[key]))-Math.min(...cards.map(d=>d[key]))<=2,`Unequal ${key} at ${width}px: ${JSON.stringify(cards)}`);
+      check(cards.every(c=>c.content<=c.height+2),`Cards clipped at ${width}px: ${JSON.stringify(cards)}`);
+    }
+  });
+  await run('all 11 product cards are reachable using the phone arrows',async()=>{
+    await command('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:1,mobile:true});
+    await command('Emulation.setEmulatedMedia',{features:[{name:'prefers-reduced-motion',value:'reduce'}]});
+    await navigate('/home.html');
+    check(await evaluate('document.querySelectorAll(".product-card").length===11'),'Expected all 11 products');
+    for(let index=1;index<=11;index++) {
+      await until(`document.querySelector('.phone-product-position').textContent==='Produto ${index} de 11'`);
+      if(index<11)await evaluate('document.querySelector(".phone-product-next").click()');
+    }
+    check(await evaluate('document.querySelector(".phone-product-next").disabled'),'Last card was not reachable');
+    await evaluate('document.querySelector(".phone-product-prev").click()');
+    await until('document.querySelector(".phone-product-position").textContent==="Produto 10 de 11"');
+  });
+  await run('all 11 product cards remain available when returning from the cart',async()=>{
+    await navigate('/carrinho.html');
+    await evaluate('window.portalCartPage.close()');await pause(100);
+    check(await evaluate('document.querySelectorAll(".product-card").length===11'),'The cart page used an older catalog');
+    check(await evaluate('document.querySelector(".phone-product-position").textContent.endsWith("de 11")'),'Carousel is missing after leaving the cart');
+    check(await evaluate('!document.getElementById("modalidades").hidden'),'Products remain hidden after closing the cart');
+  });
   await run('no uncaught browser exceptions',async()=>check(errors.length===0,JSON.stringify(errors)));
   console.log(JSON.stringify({checks,errors}));
   process.exitCode=checks.some(c=>!c.pass)?1:0;

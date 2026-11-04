@@ -21,12 +21,27 @@
   };
   const previous = arrow('prev', 'Produto anterior');
   const next = arrow('next', 'Próximo produto');
+  const position = document.createElement('p');
+  position.className = 'phone-product-position';
+  position.setAttribute('role', 'status');
+  position.setAttribute('aria-live', 'polite');
+  carousel.append(position);
   function sync() {
     if (subtitle) subtitle.textContent = media.matches ? 'Cada combo possui uma variedade de jogos prontos para você testar a sua sorte. Quanto mais você joga, mais chances de ganhar!' : originalSubtitle;
     previous.disabled = track.scrollLeft < 2;
     next.disabled = track.scrollLeft + track.clientWidth >= track.scrollWidth - 2;
-    track.querySelectorAll('.product-card').forEach(card => {
-      card.inert = media.matches && Math.abs(card.offsetLeft - track.offsetLeft - track.scrollLeft) > track.clientWidth / 2;
+    const cards = [...track.querySelectorAll('.product-card')];
+    const bounds = track.getBoundingClientRect();
+    const center = bounds.left + bounds.width / 2;
+    let active = 0;
+    cards.forEach((card,index) => {
+      const rect = card.getBoundingClientRect();
+      const current = cards[active]?.getBoundingClientRect();
+      if (current && Math.abs(rect.left + rect.width/2 - center) < Math.abs(current.left + current.width/2 - center)) active = index;
+    });
+    position.textContent = cards.length ? `Produto ${active + 1} de ${cards.length}` : 'Nenhum produto encontrado';
+    cards.forEach((card,index) => {
+      card.inert = media.matches && index !== active;
     });
   }
   track.addEventListener('scroll', sync, {passive:true});

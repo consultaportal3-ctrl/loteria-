@@ -1,4 +1,4 @@
-.phone-product-arrow{display:none}
+.phone-product-arrow,.phone-product-position{display:none}
 @media(max-width:650px){
   .home-refresh:not([class*="-route"]) .campaign-navigation.is-fixed{display:none}
   .home-refresh .modalities{width:100%;padding:24px 12px 54px;max-width:none}
@@ -34,6 +34,7 @@
   .phone-product-arrow svg{width:24px;height:34px}
   .phone-product-prev{left:-8px}.phone-product-next{right:-8px}
   .phone-product-arrow:disabled{color:#ffddb0}
+  .phone-product-position{display:block;margin:6px 0 0;text-align:center;color:#536076;font:400 13px/1.4 var(--font-text)}
   .home-refresh .combos-section{width:100%;padding:12px 12px 42px}
   .home-refresh #combos-title{font-size:30px;letter-spacing:-1px}
   .home-refresh #combos-title strong{font-size:26px}
