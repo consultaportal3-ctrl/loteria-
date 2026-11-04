@@ -273,12 +273,7 @@
   });
   byId('finish-demo').addEventListener('click', () => {
     if (!cart.length) return;
-    const quantity = cart.length;
-    byId('success-message').textContent = `Você montou ${quantity} combinação${quantity === 1 ? '' : 's'} nesta demonstração.`;
-    cart = [];
-    persist();
-    window.portalCartPage.close();
-    byId('success-dialog').showModal();
+    toast('O checkout não carregou. Atualize a página e tente novamente. Seu carrinho foi mantido.');
   });
   document.querySelectorAll('[data-close]').forEach(button => button.addEventListener('click', () => byId(button.dataset.close).close()));
   const navigation = document.querySelector('.campaign-navigation');

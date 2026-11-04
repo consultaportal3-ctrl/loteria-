@@ -45,3 +45,13 @@ Os endpoints PHP antigos de criacao, configuracao, status e webhook respondem HT
 O painel PHP e seu banco foram preservados para consultar registros historicos. Nao recebem novos registros de simulacao. O campo historico mp_payment_id permanece por compatibilidade de dados e nao representa uma integracao ativa. PHP e SQLite nao sao usados pelo simulador Node.js na Vercel.
 
 Para um ambiente oficial de homologacao, obtenha as instrucoes especificas do provedor. A API publica informada e de producao. Cobrancas reais e emissao de bilhetes nao estao implementadas.
+
+## Testes de navegador
+
+O teste tests/browser-smoke.cjs usa Chrome ou Edge em modo headless e um servidor HTTP local. Requer Node.js com WebSocket nativo. Nao usa dados reais e nao chama o gateway.
+
+    node tests/browser-smoke.cjs
+
+O caminho do navegador pode ser informado por BROWSER_PATH. Se a maquina restringir a criacao de subprocessos, inicie um navegador headless com perfil de teste separado e defina BROWSER_CDP_PORT com a porta de depuracao desse processo. Nunca use a porta de um navegador pessoal.
+
+O teste verifica entrada e cookies, rotas das dez modalidades, carrinho persistido, checkout, respostas atrasadas, falha de carregamento do checkout, limites e precos dos sete combos, menu responsivo e largura das paginas em 320, 390, 768 e 1280 pixels. Cada execucao usa dados ficticios e mantem o simulador isolado.

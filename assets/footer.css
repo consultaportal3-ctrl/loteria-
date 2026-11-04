@@ -1,13 +1,13 @@
 .portal-page .site-footer{padding:0;background:#fff;color:#4f5a73;font-family:var(--font-text)}
 .portal-page .site-footer .footer-inner{display:flex;justify-content:space-between;align-items:flex-start;gap:48px;width:88%;max-width:1670px;padding:40px 0 52px}
-.footer-support{flex-shrink:0}
+.footer-support{flex:1 1 0;min-width:0;max-width:100%;overflow-wrap:anywhere}
 .portal-page .footer-support h2{margin:0 0 10px;font:400 17px/1.4 var(--font-text);color:#4f5a73;letter-spacing:0}
 .portal-page .footer-support p{margin:0 0 6px;color:#4f5a73;font:400 15px/1.3 var(--font-text)}
-.portal-page .footer-support a{display:block;width:max-content;color:#006bb6;text-decoration:none;font:400 23px/1.25 var(--font-text)}
+.portal-page .footer-support a{display:block;width:max-content;max-width:100%;color:#006bb6;text-decoration:none;font:400 23px/1.25 var(--font-text)}
 .portal-page .footer-support a:hover{text-decoration:underline}
 .portal-page .footer-support [data-business-identity] a{display:inline;width:auto;color:#006bb6;font:inherit}
 .footer-support span{display:block}
-.footer-demo{max-width:360px}
+.footer-demo{min-width:0;max-width:360px}
 .portal-page .site-footer .footer-demo strong{font-size:13px;font-weight:700}
 .portal-page .site-footer .footer-demo p{margin:8px 0 0;color:#6b7d8b;font-size:12px;line-height:1.5}
 .portal-page .footer-company{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:12px 22px;min-height:137px;margin:0 8px;padding:30px 24px 40px;border-bottom:12px solid #f8f8fa;background:#fff;color:#4f5a73;font:400 17px/1.5 var(--font-text)}

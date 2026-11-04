@@ -97,6 +97,9 @@
   let orderToken = '';
   let submitting = false;
   let checkingStatus = false;
+  let checkoutSession = 0;
+  let sessionController = null;
+  let checkoutReady = false;
 
   const money = value => new Intl.NumberFormat('pt-BR', {style:'currency',currency:'BRL'}).format(value);
 
@@ -150,28 +153,36 @@
     }
   }
 
-  async function loadCheckoutInfo() {
+  async function loadCheckoutInfo(session, signal) {
     submit.disabled = true;
     error.hidden = true;
     try {
-      const response = await fetch(api('checkout-info'), {credentials:'same-origin',cache:'no-store'});
+      const response = await fetch(api('checkout-info'), {credentials:'same-origin',cache:'no-store',signal});
       const info = await jsonResponse(response, 'Não foi possível carregar as informações do operador.');
+      if (session !== checkoutSession || !modal.open) return;
       if (info.simulation !== true || info.environment !== 'simulation') throw new Error('Somente o simulador está disponível neste checkout.');
       renderBusiness(form.querySelector('.payment-legal'), info);
       form.querySelector('.payment-legal').hidden = false;
+      checkoutReady = true;
       submit.disabled = false;
     } catch (reason) {
+      if (session !== checkoutSession || signal.aborted) return;
       error.textContent = reason instanceof Error ? reason.message : 'Erro inesperado ao carregar as informações do operador.';
       error.hidden = false;
     }
   }
 
   function close() {
+    checkoutSession++;
+    sessionController?.abort();
+    checkoutReady = false;
+    submitting = false;
+    checkingStatus = false;
     clearInterval(pollTimer);
-    modal.close();
+    if (modal.open) modal.close();
   }
   modal.querySelectorAll('.payment-close').forEach(button => button.addEventListener('click', close));
-  modal.addEventListener('cancel', () => clearInterval(pollTimer));
+  modal.addEventListener('cancel', event => { event.preventDefault(); close(); });
   modal.addEventListener('click', event => {
     if (event.target === modal) close();
   });
@@ -180,7 +191,13 @@
     if (!button) return;
     event.preventDefault();
     event.stopImmediatePropagation();
-    if (window.portalDemo.getGames().length === 0) return;
+    if (modal.open || window.portalDemo.getGames().length === 0) return;
+    sessionController?.abort();
+    sessionController = new AbortController();
+    const session = ++checkoutSession;
+    checkoutReady = false;
+    submitting = false;
+    checkingStatus = false;
     clearInterval(pollTimer);
     orderToken = '';
     error.hidden = true;
@@ -193,12 +210,14 @@
     modal.showModal();
     modal.scrollTop = 0;
     modal.querySelector('.payment-back').focus({preventScroll:true});
-    loadCheckoutInfo();
+    loadCheckoutInfo(session, sessionController.signal);
   }, true);
 
   form.addEventListener('submit', async event => {
     event.preventDefault();
-    if (submitting) return;
+    if (submitting || !checkoutReady || !modal.open || !form.reportValidity()) return;
+    const session = checkoutSession;
+    const signal = sessionController.signal;
     submitting = true;
     submit.disabled = true;
     error.hidden = true;
@@ -210,12 +229,14 @@
         method: 'POST',
         headers: {'Content-Type':'application/json'},
         credentials: 'same-origin',
+        signal,
         body: JSON.stringify({
           buyer: {name:form.elements.name.value.trim(), email:form.elements.email.value.trim()},
           items,
         }),
       });
       const result = await jsonResponse(response, 'Não foi possível iniciar o pagamento de teste.');
+      if (session !== checkoutSession || !modal.open) return;
       if (result.simulation !== true || result.environment !== 'simulation') throw new Error('Resposta fora do ambiente de simulação.');
       orderToken = result.orderToken;
       form.hidden = true;
@@ -236,14 +257,17 @@
       modal.setAttribute('aria-labelledby', 'payment-result-title');
       section.querySelector('#payment-result-title').focus({preventScroll:true});
       section.scrollIntoView({block:'start'});
-      pollTimer = window.setInterval(checkStatus, 3000);
-      await checkStatus();
+      pollTimer = window.setInterval(() => checkStatus(session), 3000);
+      await checkStatus(session);
     } catch (reason) {
+      if (session !== checkoutSession || signal.aborted) return;
       error.textContent = reason instanceof Error ? reason.message : 'Erro inesperado ao gerar o PIX.';
       error.hidden = false;
     } finally {
-      submitting = false;
-      submit.disabled = false;
+      if (session === checkoutSession) {
+        submitting = false;
+        submit.disabled = !checkoutReady;
+      }
     }
   });
 
@@ -258,12 +282,14 @@
     }
   });
 
-  async function checkStatus() {
-    if (!orderToken || checkingStatus) return;
+  async function checkStatus(session) {
+    if (!orderToken || checkingStatus || session !== checkoutSession || !modal.open) return;
+    const signal = sessionController.signal;
     checkingStatus = true;
     try {
-      const response = await fetch(`${api('payment-status')}&token=${encodeURIComponent(orderToken)}`, {credentials:'same-origin',cache:'no-store'});
+      const response = await fetch(`${api('payment-status')}&token=${encodeURIComponent(orderToken)}`, {credentials:'same-origin',cache:'no-store',signal});
       const result = await jsonResponse(response, 'Não foi possível consultar o pedido.');
+      if (session !== checkoutSession || !modal.open) return;
       if (result.simulation !== true || result.environment !== 'simulation') throw new Error('Resposta fora do ambiente de simulação.');
       const status = modal.querySelector('.payment-status');
       status.textContent = ({
@@ -277,11 +303,12 @@
         clearInterval(pollTimer);
       }
     } catch (reason) {
+      if (session !== checkoutSession || signal.aborted) return;
       modal.querySelector('.payment-status').textContent = reason instanceof Error
         ? `Falha ao atualizar status: ${reason.message}`
         : 'Erro inesperado ao atualizar o status do pedido.';
     } finally {
-      checkingStatus = false;
+      if (session === checkoutSession) checkingStatus = false;
     }
   }
 })();
