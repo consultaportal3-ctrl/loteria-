@@ -5,7 +5,7 @@
 
   async function loadIdentity() {
     try {
-      const response = await fetch(new URL('api/business-info.php', location.href), {
+      const response = await fetch(new URL('api/blackcat-simulation?action=business-info', location.href), {
         credentials: 'same-origin',
         cache: 'no-store',
       });
@@ -16,6 +16,10 @@
         throw new Error('O servidor não respondeu como uma API válida.');
       }
       if (!response.ok) throw new Error(business.error || 'Os dados do operador não estão configurados.');
+      if (business.simulation === true) {
+        identity.textContent = business.notice;
+        return;
+      }
       identity.replaceChildren(document.createTextNode(
         `${business.publicName} · ${business.legalName} (CNPJ ${business.taxId}) · ${business.address} · ${business.contactEmail} · `,
       ));

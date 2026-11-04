@@ -170,67 +170,6 @@ function api_db(): PDO
     return $pdo;
 }
 
-function api_payment_mode(): string
-{
-    return api_env('PAYMENT_MODE', 'test');
-}
-
-function api_require_test_gateway(): string
-{
-    if (api_payment_mode() !== 'test') {
-        api_json(['error' => 'Pagamentos reais estão bloqueados. A integração aceita somente credenciais de teste.'], 503);
-    }
-    $token = api_env('MP_ACCESS_TOKEN');
-    if (!str_starts_with($token, 'TEST-')) {
-        api_json(['error' => 'Configure um access token de teste do Mercado Pago no ambiente seguro do servidor.'], 503);
-    }
-    if (!function_exists('curl_init') || !in_array('sqlite', PDO::getAvailableDrivers(), true)) {
-        api_json(['error' => 'O servidor precisa das extensões cURL e PDO SQLite do PHP.'], 503);
-    }
-    if (!function_exists('mb_strlen')) {
-        api_json(['error' => 'O servidor precisa da extensão mbstring do PHP.'], 503);
-    }
-    return $token;
-}
-
-function api_mp_request(string $token, string $method, string $path, ?array $payload = null, ?string $idempotencyKey = null): array
-{
-    $headers = ['Authorization: Bearer ' . $token, 'Accept: application/json'];
-    if ($payload !== null) {
-        $headers[] = 'Content-Type: application/json';
-    }
-    if ($idempotencyKey !== null) {
-        $headers[] = 'X-Idempotency-Key: ' . $idempotencyKey;
-    }
-
-    $curl = curl_init('https://api.mercadopago.com' . $path);
-    curl_setopt_array($curl, [
-        CURLOPT_CUSTOMREQUEST => $method,
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_CONNECTTIMEOUT => 5,
-        CURLOPT_TIMEOUT => 15,
-        CURLOPT_PROTOCOLS => CURLPROTO_HTTPS,
-        CURLOPT_HTTPHEADER => $headers,
-        CURLOPT_POSTFIELDS => $payload === null ? null : json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
-    ]);
-    $body = curl_exec($curl);
-    $status = (int)curl_getinfo($curl, CURLINFO_RESPONSE_CODE);
-    if ($body === false) {
-        $error = curl_error($curl);
-        curl_close($curl);
-        error_log('Mercado Pago request failed: ' . $error);
-        return [502, ['error'=>'Mercado Pago connection failed']];
-    }
-    curl_close($curl);
-
-    $data = json_decode($body, true);
-    if (!is_array($data)) {
-        error_log('Mercado Pago returned invalid JSON, HTTP ' . $status);
-        return [502, ['error'=>'Mercado Pago returned invalid JSON']];
-    }
-    return [$status, $data];
-}
-
 function api_choose(int $n, int $k): int
 {
     if ($k < 0 || $n < $k) {

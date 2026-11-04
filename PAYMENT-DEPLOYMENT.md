@@ -1,42 +1,47 @@
-# Configuração do checkout PIX de teste
+# Simulador local BlackCat
 
-Este checkout está permanentemente limitado a credenciais de teste do Mercado Pago. Ele não emite apostas ou bilhetes oficiais. Não altere o bloqueio para aceitar credenciais de produção sem autorização jurídica documentada e uma revisão independente de segurança.
+Este projeto usa um simulador proprio baseado no contrato publico https://docs.blackcatoficial.com/ . Nao e o sandbox oficial BlackCat e nao transmite requisicoes ao provedor. Nao gera PIX pagavel, cobranca, saque, bilhete ou aposta. Nao configure chaves reais.
 
-## Requisitos
+O layout e os campos existentes foram preservados. As mensagens identificam a simulacao. Nome e e-mail sao validados e descartados: nao sao armazenados, registrados em logs nem enviados ao gateway. Use somente dados ficticios. Nao ha consulta de CPF.
 
-- PHP 8.1 ou superior, com cURL, PDO SQLite e mbstring.
-- HTTPS para o site, para a URL de notificação e para as páginas de privacidade e termos.
-- `APP_DATA_DIR` criado previamente, gravável pelo usuário do PHP e fora da raiz pública do site. Restrinja o acesso à pasta e ao banco SQLite ao usuário do serviço. Nunca use uma pasta dentro do repositório ou `public_html`.
-- Uma aplicação e credenciais de teste configuradas no painel oficial do Mercado Pago. Nunca use nem cole tokens no código, no navegador, no Git ou nesta documentação.
+## Vercel
 
-## Variáveis do servidor
+api/blackcat-simulation.js e uma funcao Node.js sem dependencias externas, publicada pelo fluxo Git da Vercel. A raiz do projeto deve corresponder a raiz deste repositorio e a configuracao de saida nao deve excluir api/. As paginas permanecem em HTML estatico.
 
-Use `.env.example` como lista de nomes, mas injete valores pelo gerenciador de segredos do host ou pelo ambiente do processo PHP. O PHP deste projeto não carrega arquivos `.env` automaticamente.
+Nao e necessario cadastrar chave, banco ou segredo. O simulador e stateless e funciona entre instancias diferentes. O unico modo aceito e simulation; qualquer outro BLACKCAT_MODE retorna HTTP 503. Nao existe implementacao de modo real.
 
-- `PAYMENT_MODE`: deve ser `test`; qualquer outro modo é recusado.
-- `MP_ACCESS_TOKEN`: token de teste iniciado por `TEST-`.
-- `MP_WEBHOOK_SECRET`: chave de assinatura das notificações Webhook da aplicação Mercado Pago.
-- `APP_BASE_URL`: URL HTTPS pública do site de teste, sem barra final.
-- `APP_DATA_DIR`: diretório privado previamente criado fora da raiz pública.
-- `BUSINESS_PUBLIC_NAME`, `BUSINESS_LEGAL_NAME`, `BUSINESS_CNPJ`, `BUSINESS_ADDRESS` e `BUSINESS_CONTACT_EMAIL`: dados verdadeiros do operador, mostrados ao cliente antes de criar o pagamento. O CNPJ deve seguir o formato atual de 14 caracteres da Receita Federal (12 alfanuméricos e 2 dígitos finais) e ser conferido pelo operador; o sistema verifica o formato, mas não consegue confirmar a titularidade.
-- `BUSINESS_PRIVACY_URL` e `BUSINESS_TERMS_URL`: políticas públicas, válidas e servidas por HTTPS; aparecem antes do envio dos dados do cliente.
-- `ADMIN_PASSWORD_HASH`: hash criado com `password_hash()` em ambiente privado. Não use a senha em texto puro como valor desta variável.
+Variaveis opcionais:
+- BLACKCAT_MODE=simulation
+- BLACKCAT_SIMULATION_SCENARIO=paid (tambem aceita pending, cancelled, expired, rejected)
+- BLACKCAT_SIMULATION_DELAY_SECONDS=15 (inteiro entre 0 e 600)
 
-Se a conexão TLS terminar em um proxy reverso, configure o servidor PHP para reconhecer corretamente a requisição HTTPS. Não confie cegamente em cabeçalhos de proxy enviados pelo cliente.
-O endpoint público `APP_BASE_URL/api/business-info.php` disponibiliza somente os dados comerciais e as políticas do operador para o rodapé do site. Configure e confira esses dados antes de publicar o checkout.
+Mudancas de variaveis na Vercel precisam de novo deployment. Arquivos .env nao sao carregados pelo codigo. Os demais campos de .env.example pertencem ao painel PHP legado, caso hospedado separadamente; nao sao necessarios para a simulacao.
 
-## Configuração e teste
+## Rotas
 
-1. Publique em um ambiente de homologação HTTPS e configure as variáveis com dados reais e verificáveis do operador. Sem isso, o checkout deve permanecer indisponível.
-2. No painel do Mercado Pago, configure Webhooks de pagamentos apontando para `APP_BASE_URL/api/webhook.php`, copie a chave secreta da aplicação para o gerenciador de segredos e mantenha o token de teste.
-3. Abra `APP_BASE_URL/api/checkout-info.php`. A resposta deve conter apenas as informações públicas do operador e indicar `environment: test`. Erros de configuração são intencionais e devem ser resolvidos no servidor, nunca contornados no navegador.
-4. No site, gere um pedido com dados de teste, confira o nome/CNPJ/endereço e as políticas antes de prosseguir, valide o QR PIX no ambiente de teste do Mercado Pago e confirme que o pedido aparece em `APP_BASE_URL/painel.html#pedidos`.
-5. Teste também uma assinatura Webhook inválida (deve ser recusada), reenvio de uma notificação válida, divergência de valor/moeda/pedido e estados recusado, expirado e reembolsado. Verifique os logs do PHP e o banco fora da raiz pública.
+Todas as respostas usam JSON e Cache-Control: no-store.
 
-Não use dados pessoais reais de clientes durante testes. O nome e o e-mail informados no checkout são enviados ao Mercado Pago no ambiente de testes e armazenados junto ao pedido.
+- GET /api/blackcat-simulation?action=checkout-info: identifica ambiente simulado.
+- GET /api/blackcat-simulation?action=business-info: informa que nao existe recebedor financeiro.
+- POST /api/blackcat-simulation?action=create-payment: recebe {buyer: {name, email}, items}. Requer JSON e Origin com o host do site. Recalcula valores pelas regras das modalidades e ignora os precos enviados pelo navegador.
+- GET /api/blackcat-simulation?action=payment-status&token=...: retorna estados prefixados com simulated_.
 
-## Requisitos antes de qualquer operação real
+O gatewayFixture reproduz campos success, data.transactionId, status, amount e paymentData do contrato BlackCat. Seus dados de cliente sao fixtures ficticios, nunca transmitidos. A imagem e ilustrativa e nao pagavel. O codigo comeca com SIMULACAO-SEM-VALOR: e nao e um BR Code PIX.
 
-Pagamentos de produção continuam bloqueados no código. Antes de sequer considerar alterar esse bloqueio, confirme com assessoria jurídica e com as autoridades competentes se a atividade pretendida pode ser oferecida, quais autorizações/licenças são necessárias e se o operador está habilitado para vender ou intermediar apostas lotéricas. Obtenha também a aprovação comercial do Mercado Pago para a atividade, credenciais de produção, políticas finais, controles de privacidade/LGPD, suporte ao consumidor, segurança operacional e uma revisão jurídica e técnica independente.
+O token SIM. e apenas um fixture NAO ASSINADO, sem dados do comprador. Nao autentica clientes nem comprova pagamento. Pode ser alterado pelo visitante para explorar estados ficticios; nenhum consumidor deve trata-lo como pedido financeiro ou autorizacao para liberar produtos. Nao e gravado no painel administrativo e nunca limpa o carrinho. As simulacoes expiram apos dez minutos.
 
-Não apresente este site como oficial, afiliado ou autorizado pela CAIXA sem autorização verificável. A aprovação de uma cobrança por um provedor de pagamentos, por si só, não transforma uma combinação em aposta ou bilhete oficial.
+## Testes
+
+Em uma maquina com Node.js:
+
+    node --test tests/blackcat-simulation.test.cjs
+
+Depois do deployment, abra o checkout com uma combinacao no carrinho. Informe dados ficticios e aceite a simulacao. Confira a imagem nao pagavel, a copia do codigo e a transicao de estado apos 15 segundos. O carrinho deve permanecer intacto. Repita com outros cenarios nas variaveis de ambiente.
+
+## Gateway anterior e dados historicos
+
+Os endpoints PHP antigos de criacao, configuracao, status e webhook respondem HTTP 410. O cliente HTTP e as variaveis de credenciais do gateway anterior foram removidos. Nao ha processamento de webhooks: notificacoes externas nao aprovam nada.
+
+O painel PHP e seu banco foram preservados para consultar registros historicos. Nao recebem novos registros de simulacao. O campo historico mp_payment_id permanece por compatibilidade de dados e nao representa uma integracao ativa. PHP e SQLite nao sao usados pelo simulador Node.js na Vercel.
+
+Para um ambiente oficial de homologacao, obtenha as instrucoes especificas do provedor. A API publica informada e de producao. Cobrancas reais e emissao de bilhetes nao estao implementadas.

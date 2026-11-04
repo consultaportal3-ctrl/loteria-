@@ -4,13 +4,13 @@
   const finishButton = document.getElementById('finish-demo');
   if (!checkoutButton || !finishButton || !window.portalDemo) return;
 
-  const api = name => new URL(`api/${name}`, location.href).toString();
+  const api = name => new URL(`api/blackcat-simulation?action=${name}`, location.href).toString();
   async function jsonResponse(response, fallback) {
     let result;
     try {
       result = await response.json();
     } catch {
-      throw new Error('O servidor não respondeu como uma API válida. Verifique se o backend PHP está instalado e configurado.');
+      throw new Error('O simulador não respondeu como uma API válida. Confira a publicação da função na Vercel.');
     }
     if (!response.ok) throw new Error(result.error || fallback);
     return result;
@@ -40,7 +40,7 @@
       <header class="payment-header">
         <div><span class="payment-kicker">AMBIENTE DE TESTE</span><h2 id="payment-title" tabindex="-1">Forma de Pagamento</h2><p class="payment-intro">Para pagar suas compras, basta escolher a opção de sua preferência.</p></div>
       </header>
-      <p class="payment-disclaimer">Demonstração independente, sem vínculo com a CAIXA. Ambiente de testes do Mercado Pago: nenhum bilhete oficial é emitido e nenhuma aposta é concluída. Ao prosseguir, seu nome e e-mail serão enviados ao Mercado Pago apenas para este teste.</p>
+      <p class="payment-disclaimer">Demonstração independente, sem vínculo com a CAIXA. Simulador local BlackCat: nenhum dado é enviado ao gateway, nenhuma cobrança ou aposta é criada. Use somente nome e e-mail fictícios.</p>
       <h3 class="payment-cart-heading">Carrinho</h3>
       <div class="payment-layout">
         <section class="payment-order">
@@ -53,11 +53,11 @@
           <h3>Dados do apostador:</h3>
           <label>Nome completo<input name="name" autocomplete="name" maxlength="100" required></label>
           <label>E-mail<input name="email" type="email" autocomplete="email" maxlength="254" required></label>
-          <label class="payment-consent"><input name="consent" type="checkbox" required>Concordo que meus dados sejam usados neste pedido de teste e enviados ao Mercado Pago. Li as informações do operador e as políticas abaixo.</label>
+          <label class="payment-consent"><input name="consent" type="checkbox" required>Entendi que este fluxo é uma simulação, não gera cobrança nem bilhete oficial, e estou usando dados fictícios.</label>
           <p class="payment-legal" hidden></p>
           <h3 class="payment-choice-heading">Escolha o meio de pagamento:</h3>
           <h4 class="payment-method-title">Pix</h4>
-          <button type="submit" class="payment-submit payment-option" disabled><span class="payment-pix-brand"><span aria-hidden="true">❖</span> pix</span><span class="payment-option-caption">Gerar PIX de teste</span><span class="payment-option-arrow" aria-hidden="true">›</span></button>
+          <button type="submit" class="payment-submit payment-option" disabled><span class="payment-pix-brand"><span aria-hidden="true">❖</span> pix</span><span class="payment-option-caption">Simular PIX</span><span class="payment-option-arrow" aria-hidden="true">›</span></button>
         </section>
       </div>
       <p class="payment-error" role="alert" hidden></p>
@@ -67,24 +67,24 @@
         <div><span class="payment-kicker">PEDIDO DE TESTE</span><h2 id="payment-result-title" tabindex="-1">Forma de Pagamento</h2><p class="payment-intro">Utilize o QR Code ou copie o código PIX abaixo.</p></div>
         <button type="button" class="payment-close" aria-label="Fechar">×</button>
       </header>
-      <p class="payment-disclaimer">Demonstração independente, sem vínculo com a CAIXA. PIX de teste: nenhum bilhete oficial é emitido e nenhuma aposta é concluída.</p>
+      <p class="payment-disclaimer">Demonstração independente, sem vínculo com a CAIXA. Simulador local BlackCat: a imagem e o código abaixo são ilustrativos e não podem ser pagos. Nenhuma aposta é concluída.</p>
       <h3 class="payment-cart-heading">Carrinho</h3>
       <div class="payment-result-panel">
       <div class="payment-option payment-pix-banner"><span class="payment-pix-brand"><span aria-hidden="true">❖</span> pix</span><span class="payment-option-caption">Ambiente de teste</span></div>
       <h3>Dados do apostador:</h3>
       <dl class="payment-customer-details"><dt>Nome:</dt><dd class="payment-customer-name"></dd><dt>E-mail:</dt><dd class="payment-customer-email"></dd></dl>
       <div class="payment-qr-card">
-        <h3>Escaneie o código a seguir</h3>
-        <img class="payment-qr" alt="QR Code PIX de teste">
-        <h3>Ou copie este código para efetuar o pagamento de teste</h3>
-        <p class="payment-copy-help">No aplicativo do banco, escolha PIX Copia e Cola e cole o código abaixo.</p>
+        <h3>Prévia ilustrativa do PIX simulado</h3>
+        <img class="payment-qr" alt="Ilustração de simulação, sem valor de pagamento">
+        <h3>Código de simulação</h3>
+        <p class="payment-copy-help">Este código serve apenas para testar a cópia. Não é aceito em aplicativos bancários.</p>
       <label>PIX Copia e Cola<textarea class="payment-code" readonly rows="4"></textarea></label>
       <button type="button" class="payment-copy">Copiar código PIX</button>
       </div>
       <p class="payment-result-total"></p>
       <p class="payment-order-reference"></p>
       <p class="payment-operator"></p>
-      <p class="payment-status" role="status" aria-live="polite">Aguardando confirmação segura do Mercado Pago…</p>
+      <p class="payment-status" role="status" aria-live="polite">Aguardando resultado simulado…</p>
       <p class="payment-expiry"></p>
       <p class="payment-legal" hidden></p>
       </div>
@@ -95,7 +95,6 @@
   const submit = form.querySelector('[type="submit"]');
   let pollTimer = 0;
   let orderToken = '';
-  let submittedCart = '';
   let submitting = false;
   let checkingStatus = false;
 
@@ -134,6 +133,10 @@
   }
 
   function renderBusiness(target, business) {
+    if (business.simulation === true) {
+      target.textContent = business.notice;
+      return;
+    }
     target.replaceChildren(document.createTextNode(
       `${business.publicName} · ${business.legalName} (CNPJ ${business.taxId}), ${business.address}. Contato: ${business.contactEmail}. `,
     ));
@@ -151,8 +154,9 @@
     submit.disabled = true;
     error.hidden = true;
     try {
-      const response = await fetch(api('checkout-info.php'), {credentials:'same-origin',cache:'no-store'});
+      const response = await fetch(api('checkout-info'), {credentials:'same-origin',cache:'no-store'});
       const info = await jsonResponse(response, 'Não foi possível carregar as informações do operador.');
+      if (info.simulation !== true || info.environment !== 'simulation') throw new Error('Somente o simulador está disponível neste checkout.');
       renderBusiness(form.querySelector('.payment-legal'), info);
       form.querySelector('.payment-legal').hidden = false;
       submit.disabled = false;
@@ -177,6 +181,8 @@
     event.preventDefault();
     event.stopImmediatePropagation();
     if (window.portalDemo.getGames().length === 0) return;
+    clearInterval(pollTimer);
+    orderToken = '';
     error.hidden = true;
     modal.querySelector('.payment-result').hidden = true;
     modal.setAttribute('aria-labelledby', 'payment-title');
@@ -200,8 +206,7 @@
       const items = window.portalDemo.getGames();
       if (!items.length) throw new Error('O carrinho está vazio. Adicione uma combinação antes de continuar.');
       renderOrderSummary(items);
-      submittedCart = JSON.stringify(items);
-      const response = await fetch(api('create-payment.php'), {
+      const response = await fetch(api('create-payment'), {
         method: 'POST',
         headers: {'Content-Type':'application/json'},
         credentials: 'same-origin',
@@ -211,6 +216,7 @@
         }),
       });
       const result = await jsonResponse(response, 'Não foi possível iniciar o pagamento de teste.');
+      if (result.simulation !== true || result.environment !== 'simulation') throw new Error('Resposta fora do ambiente de simulação.');
       orderToken = result.orderToken;
       form.hidden = true;
       const section = modal.querySelector('.payment-result');
@@ -222,9 +228,10 @@
       section.querySelector('.payment-result-total').textContent = `Total do pedido: ${money(result.amount / 100)}`;
       renderBusiness(section.querySelector('.payment-legal'), result);
       section.querySelector('.payment-legal').hidden = false;
-      section.querySelector('.payment-qr').src = `data:image/png;base64,${result.qrCodeBase64}`;
+      section.querySelector('.payment-qr').src = result.qrCodeImage;
       section.querySelector('.payment-code').value = result.qrCode;
-      section.querySelector('.payment-status').textContent = 'PIX gerado. Aguardando confirmação segura do Mercado Pago…';
+      section.querySelector('.payment-copy').textContent = 'Copiar código de simulação';
+      section.querySelector('.payment-status').textContent = 'Simulação criada. Aguardando resultado simulado…';
       section.querySelector('.payment-expiry').textContent = result.expiresAt ? `Expira em ${new Date(result.expiresAt).toLocaleString('pt-BR')}` : '';
       modal.setAttribute('aria-labelledby', 'payment-result-title');
       section.querySelector('#payment-result-title').focus({preventScroll:true});
@@ -255,25 +262,18 @@
     if (!orderToken || checkingStatus) return;
     checkingStatus = true;
     try {
-      const response = await fetch(`${api('payment-status.php')}?token=${encodeURIComponent(orderToken)}`, {credentials:'same-origin',cache:'no-store'});
+      const response = await fetch(`${api('payment-status')}&token=${encodeURIComponent(orderToken)}`, {credentials:'same-origin',cache:'no-store'});
       const result = await jsonResponse(response, 'Não foi possível consultar o pedido.');
+      if (result.simulation !== true || result.environment !== 'simulation') throw new Error('Resposta fora do ambiente de simulação.');
       const status = modal.querySelector('.payment-status');
       status.textContent = ({
-        approved:'Pagamento de teste confirmado pelo Mercado Pago.',
-        rejected:'Pagamento recusado. O carrinho foi mantido.',
-        cancelled:'Pagamento cancelado. O carrinho foi mantido.',
-        expired:'PIX expirado. O carrinho foi mantido.',
-        refunded:'Pagamento reembolsado.',
-        charged_back:'Pagamento contestado.',
-        in_process:'Pagamento em análise pelo Mercado Pago…',
-        pending:'Aguardando confirmação segura do Mercado Pago…',
+        simulated_paid:'Simulação concluída: aprovação fictícia. Nenhuma cobrança ou aposta foi realizada. O carrinho foi mantido.',
+        simulated_rejected:'Recusa simulada. O carrinho foi mantido.',
+        simulated_cancelled:'Cancelamento simulado. O carrinho foi mantido.',
+        simulated_expired:'Expiração simulada. O carrinho foi mantido.',
+        simulated_pending:'Aguardando resultado simulado. Nenhuma cobrança real foi criada.',
       })[result.status] || `Status do pedido: ${result.status}`;
-      if (result.status === 'approved') {
-        clearInterval(pollTimer);
-        if (JSON.stringify(window.portalDemo.getGames()) === submittedCart) {
-          window.portalDemo.getGames().forEach(() => window.portalDemo.removeGame(0));
-        }
-      } else if (['rejected','cancelled','expired','refunded','charged_back'].includes(result.status)) {
+      if (['simulated_paid','simulated_rejected','simulated_cancelled','simulated_expired'].includes(result.status)) {
         clearInterval(pollTimer);
       }
     } catch (reason) {
