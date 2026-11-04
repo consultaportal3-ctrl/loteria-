@@ -170,6 +170,7 @@ function check(ok,message){if(!ok)throw new Error(message);}
       const clipped=await evaluate('Array.from(document.querySelectorAll(".product-card")).map(card=>({name:card.querySelector("h3").textContent,height:card.clientHeight,content:card.scrollHeight,bottom:card.getBoundingClientRect().bottom,buttonBottom:card.querySelector(".product-play").getBoundingClientRect().bottom})).filter(card=>card.content>card.height+1 || card.buttonBottom>card.bottom+1)');
       check(clipped.length===0,`Cards clipped at ${width}px: ${JSON.stringify(clipped)}`);
       const dimensions=await evaluate('Array.from(document.querySelectorAll(".product-card")).map(card=>({width:card.getBoundingClientRect().width,height:card.getBoundingClientRect().height,buttonBottom:card.querySelector(".product-play").getBoundingClientRect().bottom-card.getBoundingClientRect().top}))');
+      check(dimensions.every(d=>d.width<=294.5 && Math.abs(d.height-423)<=1),`Reference size not applied at ${width}px`);
       for(const key of ['width','height','buttonBottom'])check(Math.max(...dimensions.map(d=>d[key]))-Math.min(...dimensions.map(d=>d[key]))<=1,`Unequal card ${key} at ${width}px: ${JSON.stringify(dimensions)}`);
     }
     await command('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:1,mobile:true});
@@ -183,6 +184,7 @@ function check(ok,message){if(!ok)throw new Error(message);}
       await command('Emulation.setDeviceMetricsOverride',{width,height:1080,deviceScaleFactor:1,mobile:false});await pause(100);
       const cards=await evaluate('Array.from(document.querySelectorAll(".product-card")).map(c=>({name:c.querySelector("h3").textContent,width:c.getBoundingClientRect().width,height:c.getBoundingClientRect().height,content:c.scrollHeight,buttonBottom:c.querySelector(".product-play").getBoundingClientRect().bottom-c.getBoundingClientRect().top}))');
       check(cards.length===11,`Expected 11 cards, got ${cards.length}`);
+      check(cards.every(c=>Math.abs(c.width-294)<=1 && Math.abs(c.height-423)<=1),`Expected 294 x 423 px at ${width}px`);
       for(const key of ['width','height','buttonBottom'])check(Math.max(...cards.map(d=>d[key]))-Math.min(...cards.map(d=>d[key]))<=2,`Unequal ${key} at ${width}px: ${JSON.stringify(cards)}`);
       check(cards.every(c=>c.content<=c.height+2),`Cards clipped at ${width}px: ${JSON.stringify(cards)}`);
     }
