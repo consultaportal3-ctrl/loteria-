@@ -46,9 +46,9 @@
       <div class="brand"><h1>Prévia do site</h1><p>Acompanhe as alterações no computador e no celular.</p></div>
       <label class="field">Página
         <select id="page">
+          <option value="home.html">Página principal</option>
           <option value="painel.html">Painel da loja · demonstração</option>
           <option value="demonstracao.html">Tela de demonstra&#231;&#227;o</option>
-          <option value="home.html">Página principal</option>
           <option value="home.html#mega-da-virada">Mega da Virada</option>
           <option value="index.html">Confirmação de idade</option>
           <option value="carrinho.html#carrinho">Carrinho</option>
@@ -98,6 +98,11 @@
           if (['fit','actual'].includes(saved.scale)) $('scale').value = saved.scale;
         }
       } catch (_) {}
+      // Direct links let the preview open on the requested page and screen size.
+      const requestedView = new URLSearchParams(location.search);
+      if (allowedPages.includes(requestedView.get('page'))) $('page').value = requestedView.get('page');
+      if (Object.hasOwn(sizes,requestedView.get('device'))) $('device').value = requestedView.get('device');
+      if (['fit','actual'].includes(requestedView.get('scale'))) $('scale').value = requestedView.get('scale');
       function resize() {
         const [width,height] = sizes[$('device').value];
         const isPhone = ['phone','small'].includes($('device').value);
