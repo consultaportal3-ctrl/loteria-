@@ -41,6 +41,7 @@ test('BlackCat fixture contains documented fields and no submitted buyer data', 
   const fixture = sim.requestFixture([mega],'SIM-fixture');
   assert.equal(fixture.paymentMethod,'pix');
   assert.equal(fixture.items[0].unitPrice,600);
+  assert.equal(fixture.items[0].title,'Vasco PG');
   assert.equal(fixture.customer.document.type,'cpf');
   const result = sim.createSimulation({buyer,items:[mega]},env,now);
   assert.equal(result.simulation,true);
