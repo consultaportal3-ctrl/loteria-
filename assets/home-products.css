@@ -1,0 +1,139 @@
+.home-refresh .modalities{max-width:1670px;padding-top:24px}
+.home-refresh .modalities #modalities-title{font-size:68px}
+.home-refresh .modalities .section-heading{margin-bottom:60px}
+.home-refresh .game-cards{grid-template-columns:repeat(8,minmax(0,1fr));gap:36px}
+.home-refresh .game-cards>.product-card{grid-column:auto / span 2;min-height:564px}
+.home-refresh .game-cards>.product-card:nth-child(9){grid-column:2 / span 2}
+.home-refresh .product-card .product-header{height:76px;min-height:76px;padding-left:88px}
+.home-refresh .product-card .product-header h3{font-size:26px;letter-spacing:-.025em}
+.home-refresh .product-card:is(.product-mega,.product-virada) .product-header{background:#00a94f;color:#fff;padding-right:12px}
+.home-refresh .product-card:is(.product-mega,.product-virada) .product-header::before{display:block;width:100px}
+.home-refresh .product-card:is(.product-mega,.product-virada) .product-clover{display:grid;left:12px;grid-template-columns:repeat(2,18px);grid-template-rows:repeat(2,18px)}
+.home-refresh .product-card:is(.product-mega,.product-virada) .product-clover i{border-radius:10px 10px 2px 10px}
+.home-refresh .product-card .product-body{padding:20px 40px 24px}
+.home-refresh .product-card .product-prize{font-family:var(--font-display);line-height:1.16}
+.home-refresh .product-card .product-prize>strong{font-family:var(--font-display);font-size:34px;font-weight:900;line-height:1.16;letter-spacing:-.04em}
+.home-refresh .product-card .product-prize>b{font-family:var(--font-display);font-size:25px;line-height:1.2;letter-spacing:-.035em}
+.home-refresh .product-virada .product-prize>strong span{display:block}
+.home-refresh .product-card .product-contest{font-family:CampaignBook,Futura,sans-serif;font-size:18px;line-height:1.3;margin:4px -25px 14px}
+.home-refresh .product-card .product-draw{font-family:CampaignBook,Futura,sans-serif;font-size:19px;line-height:1.3;letter-spacing:0;margin:0 -22px 14px}
+.home-refresh .product-card .product-draw strong{font-family:var(--font-display);font-size:19px;line-height:1.3}
+.home-refresh .product-card .product-draw>span{font-size:19px;line-height:1.3;margin-top:0}
+.home-refresh .product-card .product-pool{font-family:var(--font-display);font-weight:900;font-size:24px;min-height:72px;max-width:none;margin-top:auto;padding:14px 8px;background:var(--product-button);color:#fff;border:0}
+.home-refresh .product-card.product-timemania .product-pool{color:#00863d;border:2px solid #00863d}
+.home-refresh .product-card .product-or{text-transform:uppercase;font-family:var(--font-text);font-weight:700;font-size:22px;padding:23px 0 17px}
+.home-refresh .product-card .product-play{font-family:var(--font-text);font-size:24px;font-weight:700;line-height:1.15;max-width:none;min-height:76px;border-width:2px;background:#fff;color:var(--game-color)}
+.home-refresh .product-card .product-play>span{font-family:CampaignBook,Futura,sans-serif;font-size:23px;line-height:1.15}
+.home-refresh .product-no-pool .product-draw{margin-top:auto;margin-bottom:auto;padding:22px 0}
+.home-refresh .product-no-pool .product-play{margin-top:auto}
+@media(min-width:1101px) and (max-width:1500px){
+  .home-refresh .game-cards{gap:24px}
+  .home-refresh .product-card .product-header{padding-left:65px}
+  .home-refresh .product-card .product-header h3{font-size:20px}
+  .home-refresh .product-card .product-body{padding-inline:22px}
+  .home-refresh .product-card .product-prize>strong{font-size:25px}
+  .home-refresh .product-card .product-prize>b{font-size:20px}
+  .home-refresh .product-card .product-contest{font-size:14px;margin-inline:-14px}
+  .home-refresh .product-card .product-draw,.home-refresh .product-card .product-draw strong,.home-refresh .product-card .product-draw>span{font-size:16px}
+  .home-refresh .product-card .product-pool{font-size:19px}
+  .home-refresh .product-card .product-play,.home-refresh .product-card .product-play>span{font-size:20px}
+}
+@media(max-width:1100px){
+  .home-refresh .game-cards{grid-template-columns:repeat(4,minmax(0,1fr));gap:26px}
+  .home-refresh .game-cards>.product-card:nth-child(9){grid-column:auto / span 2}
+  .home-refresh .game-cards>.product-card:last-child{grid-column:2 / span 2}
+}
+@media(max-width:600px){
+  .home-refresh .modalities #modalities-title{font-size:40px}
+  .home-refresh .modalities .section-heading{margin-bottom:34px}
+  .home-refresh .game-cards{grid-template-columns:minmax(0,1fr)}
+  .home-refresh .game-cards>.product-card,.home-refresh .game-cards>.product-card:nth-child(9),.home-refresh .game-cards>.product-card:last-child{grid-column:auto;min-height:550px}
+  .home-refresh .product-card .product-header{padding-left:76px}
+  .home-refresh .product-card .product-header h3{font-size:23px}
+  .home-refresh .product-card .product-body{padding-inline:30px}
+  .home-refresh .product-card .product-prize>strong{font-size:30px}
+  .home-refresh .product-card .product-prize>b{font-size:23px}
+  .home-refresh .product-card .product-contest{font-size:16px;margin-inline:-15px}
+  .home-refresh .product-card .product-pool{font-size:22px}
+}
+@media(max-width:350px){
+  .home-refresh .modalities #modalities-title{font-size:34px}
+  .home-refresh .product-card .product-body{padding-inline:24px}
+  .home-refresh .product-card .product-prize>strong{font-size:26px}
+  .home-refresh .product-card .product-header h3{font-size:20px}
+}
+
+/* Keep the Mega da Virada card proportional to the supplied 380px reference. */
+.home-refresh .game-cards>.product-virada{width:100%;max-width:380px;justify-self:center;align-self:start;min-height:564px;container-type:inline-size}
+.home-refresh .product-virada .product-header{height:75px;min-height:75px;padding-left:23.16cqw}
+.home-refresh .product-virada .product-header h3{font-size:clamp(19px,6.84cqw,26px);white-space:nowrap}
+.home-refresh .product-virada .product-body{padding:20px 10.526cqw 22px}
+.home-refresh .product-virada .product-prize>strong{font-size:clamp(22px,8.63cqw,32.8px);line-height:1.2;letter-spacing:-.04em}
+.home-refresh .product-virada .product-prize>b{font-size:clamp(20px,6.58cqw,25px);line-height:1.2}
+.home-refresh .product-virada .product-contest{font-family:var(--font-text);font-size:clamp(14px,4.737cqw,18px);line-height:1.3;letter-spacing:-.025em;margin:4px -6.58cqw 12px}
+.home-refresh .product-virada .product-draw{font-family:var(--font-text);font-size:clamp(15px,5cqw,19px);line-height:1.3;letter-spacing:-.025em;margin:0 -6cqw 12px}
+.home-refresh .product-virada .product-draw strong,.home-refresh .product-virada .product-draw>span{font-size:clamp(15px,5cqw,19px)}
+.home-refresh .product-virada .product-pool{font-size:clamp(18px,6.316cqw,24px);min-height:71px;margin-top:0;white-space:nowrap}
+.home-refresh .product-virada .product-or{padding:23px 0 17px;font-size:21px}
+.home-refresh .product-virada .product-play{font-size:clamp(19px,6.316cqw,24px);min-height:75px}
+.home-refresh .product-virada .product-play>span{font-size:clamp(18px,6.053cqw,23px)}
+@media(min-width:1101px){
+  .home-refresh .modalities{width:88%;max-width:1628px;margin-inline:auto;padding-top:calc(52 * var(--home-unit))}
+}
+@media(min-width:1501px){
+  .home-refresh .game-cards>.product-card:nth-child(-n+4){width:100%;max-width:380px;height:564px;min-height:564px;align-self:start;justify-self:center;container-type:inline-size}
+  .home-refresh .product-card:nth-child(-n+4) .product-header{height:75px;min-height:75px;padding-left:23.16cqw}
+  .home-refresh .product-card:nth-child(-n+4) .product-header h3{font-size:clamp(20px,6.84cqw,26px)}
+  .home-refresh .product-card:nth-child(-n+4) .product-body{display:grid;grid-template-rows:82px 38px 112px 72px 60px 75px;align-content:start;align-items:start;padding:20px 10.526cqw 22px}
+  .home-refresh .product-card:nth-child(-n+4) .product-prize>strong{font-size:clamp(22px,8.63cqw,32.8px)}
+  .home-refresh .product-card:nth-child(-n+4) .product-prize>b{font-size:clamp(20px,6.58cqw,25px)}
+  .home-refresh .product-card:nth-child(-n+4) .product-contest{font-family:var(--font-text);font-size:clamp(14px,4.737cqw,18px);line-height:1.3;letter-spacing:-.025em;margin:0 -6.58cqw}
+  .home-refresh .product-card:nth-child(-n+4) .product-draw{font-family:var(--font-text);font-size:clamp(15px,5cqw,19px);line-height:1.3;letter-spacing:-.025em;margin:0 -6cqw}
+  .home-refresh .product-card:nth-child(-n+4) .product-draw strong,.home-refresh .product-card:nth-child(-n+4) .product-draw>span{font-size:clamp(15px,5cqw,19px)}
+  .home-refresh .product-card:nth-child(-n+4) .product-pool{height:72px;min-height:72px;margin:0;padding:14px 8px;font-size:clamp(18px,6.316cqw,24px);white-space:nowrap}
+  .home-refresh .product-card:nth-child(-n+4) .product-or{display:flex;align-items:center;justify-content:center;height:60px;padding:0;font-size:21px;font-weight:400}
+  .home-refresh .product-card:nth-child(-n+4) .product-play{height:75px;min-height:75px;font-size:clamp(19px,6.316cqw,24px)}
+  .home-refresh .product-card:nth-child(-n+4) .product-play>span{font-size:clamp(18px,6.053cqw,23px)}
+  .home-refresh .product-card.product-virada .product-body{grid-template-rows:118px 32px 88px 71px 62px 75px}
+  .home-refresh .product-card.product-virada .product-pool{height:71px;min-height:71px}
+  .home-refresh .product-card.product-virada .product-or{height:62px}
+}
+
+/* Shared clover and diagonal header treatment for every product. */
+.home-refresh .game-cards>.product-card:nth-child(n){container-type:inline-size}
+.home-refresh .game-cards .product-card:nth-child(n) .product-header{height:75px;min-height:75px;padding:0 12px 0 23.16cqw;background:var(--product-header);color:#fff}
+.home-refresh .game-cards .product-card:nth-child(n) .product-header::before{display:block;width:100px;background:#00000012;clip-path:polygon(0 0,100% 0,44% 100%,0 100%)}
+.home-refresh .game-cards .product-card:nth-child(n) .product-header h3{font-family:var(--font-display);font-size:clamp(18px,6.316cqw,24px);font-weight:900;line-height:1;letter-spacing:-.015em;white-space:nowrap}
+.home-refresh .game-cards .product-card:nth-child(n) .product-clover{display:block;position:absolute;left:12px;top:50%;transform:translateY(-50%);width:40px;height:40px;background:url('product-header-clover.svg') no-repeat center/contain}
+.home-refresh .game-cards .product-card:nth-child(n) .product-clover i{display:none}
+.home-refresh .game-cards .product-timemania:nth-child(n) .product-header,.home-refresh .game-cards .product-super:nth-child(n) .product-header{color:#00863d}
+.home-refresh .game-cards .product-dia:nth-child(n) .product-header{color:#8b760a}
+@media(max-width:600px){
+  .home-refresh .game-cards .product-card.product-quina .product-header{height:65px;min-height:65px;padding-left:88px}
+  .home-refresh .game-cards .product-card.product-quina .product-header h3{font-size:24px;line-height:1;letter-spacing:-.015em}
+}
+
+/* Size every remaining card from its own width, like the first row. */
+@media(min-width:651px){
+  .home-refresh .game-cards>.product-card:nth-child(n+5){width:100%;max-width:380px;min-height:564px;justify-self:center;container-type:inline-size}
+  .home-refresh .product-card:nth-child(n+5) .product-body{padding-inline:10.526cqw}
+  .home-refresh .product-card:nth-child(n+5) .product-prize{margin-inline:-6cqw}
+  .home-refresh .product-card:nth-child(n+5) .product-prize>strong{font-size:min(8.63cqw,32.8px);letter-spacing:-.04em;white-space:nowrap}
+  .home-refresh .product-card:nth-child(n+5) .product-prize>b{font-size:min(6.58cqw,25px)}
+  .home-refresh .product-card:nth-child(n+5) .product-contest{font-family:var(--font-text);font-size:min(4.737cqw,18px);line-height:1.3;letter-spacing:-.025em;margin-inline:-6.58cqw;white-space:nowrap}
+  .home-refresh .product-card:nth-child(n+5) .product-draw{font-family:var(--font-text);font-size:min(5cqw,19px);line-height:1.3;letter-spacing:-.025em;margin-inline:-6cqw}
+  .home-refresh .product-card:nth-child(n+5) .product-draw strong,.home-refresh .product-card:nth-child(n+5) .product-draw>span{font-size:min(5cqw,19px);line-height:1.3}
+  .home-refresh .product-card:nth-child(n+5) .product-pool{font-size:min(6.316cqw,24px);white-space:nowrap}
+  .home-refresh .product-card:nth-child(n+5) .product-play{font-size:min(6.316cqw,24px)}
+  .home-refresh .product-card:nth-child(n+5) .product-play>span{font-size:min(6.053cqw,23px)}
+}
+@media(min-width:1501px){
+  .home-refresh .game-cards>.product-card:nth-child(n+5){height:564px;align-self:start}
+  .home-refresh .product-card:nth-child(n+5) .product-body{display:grid;grid-template-rows:82px 38px 112px 72px 60px 75px;align-content:start;align-items:start;padding-block:20px 22px}
+  .home-refresh .product-card:nth-child(n+5) .product-contest,.home-refresh .product-card:nth-child(n+5) .product-draw{margin-block:0}
+  .home-refresh .product-card:nth-child(n+5) .product-pool{height:72px;min-height:72px;margin:0;padding:14px 8px}
+  .home-refresh .product-card:nth-child(n+5) .product-or{display:flex;align-items:center;justify-content:center;height:60px;padding:0;font-size:21px;font-weight:400}
+  .home-refresh .product-card:nth-child(n+5) .product-play{height:75px;min-height:75px}
+  .home-refresh .product-card.product-no-pool:nth-child(n+5) .product-body{grid-template-rows:82px 38px 244px 75px}
+  .home-refresh .product-card.product-no-pool:nth-child(n+5) .product-draw{align-self:center;padding:0}
+}

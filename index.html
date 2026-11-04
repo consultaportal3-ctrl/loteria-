@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0067b1">
+  <meta name="description" content="Portal da Sorte: demonstração independente para explorar modalidades. Sem vínculo com a CAIXA e sem apostas ou pagamentos oficiais.">
+  <title>Portal da Sorte | Demonstração</title>
+  <link rel="icon" href="assets/demo-portal-logo.svg" type="image/svg+xml">
+
+  <style>
+.cookie-notice{position:fixed;left:12px;bottom:12px;z-index:1000;width:438px;max-width:calc(100vw - 24px);max-height:calc(100dvh - 24px);overflow:auto;padding:28px 26px 24px;border-radius:26px;background:#f8fafb;color:#3d4c60;box-shadow:0 8px 28px #0003;font:15px/1.7 Arial,sans-serif}.cookie-notice[hidden],.cookie-settings-link[hidden]{display:none}.cookie-heading{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:12px;color:#0064b9}.cookie-heading h2{margin:0;font:bold 16px/1.5 Arial,sans-serif}.cookie-heading span{font-size:14px}.cookie-notice p{margin:0 0 6px}.cookie-description{padding:10px;border:1px solid #9ba7b5;border-radius:4px;font-style:italic}.cookie-links{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:10px 0 28px;color:#0064b9}.cookie-link{padding:0;border:0;background:none;color:inherit;font:inherit;font-weight:700;text-decoration:underline;cursor:pointer}.cookie-actions{display:flex;align-items:center;justify-content:space-between;gap:16px}.cookie-actions button{font:700 14px Arial,sans-serif}.cookie-choice{min-height:48px;padding:12px 30px;border:1px solid #3d4c60;border-radius:28px;background:transparent;color:#3d4c60}.cookie-accept{border-color:#0064b9;background:#0064b9;color:#fff;box-shadow:0 10px 20px #0064b922}.cookie-choice:hover{filter:brightness(.94)}.cookie-settings-link{position:fixed;bottom:12px;left:12px;z-index:999;padding:8px 14px;border:1px solid #ccd3da;border-radius:20px;background:#f8fafb;color:#0064b9;font:14px Arial,sans-serif;box-shadow:0 2px 8px #0002}#cookie-preferences{color:#3d4c60;font-family:Arial,sans-serif}#cookie-preferences h2{color:#0064b9;font-size:21px}#cookie-preferences p{font-size:15px}#cookie-preferences label{display:flex;gap:12px;align-items:center;margin:18px 0;font-size:15px}#cookie-preferences input{width:18px;height:18px;accent-color:#0064b9}#cookie-preferences .cookie-actions{flex-wrap:wrap;justify-content:flex-end}#cookie-preferences .cookie-choice{font:700 14px Arial,sans-serif}#cookie-preferences .cookie-policy{padding-top:14px;border-top:1px solid #ccd3da}#cookie-preferences .cookie-policy h3{font-size:17px}@media(max-width:460px){.cookie-notice{padding:24px 20px}.cookie-actions{gap:12px}.cookie-choice{padding:12px 22px}.cookie-links{margin-bottom:26px}}@media(max-width:350px){.cookie-actions{flex-wrap:wrap}.cookie-actions>.cookie-link{width:100%;text-align:left}.cookie-choice{flex:1}}
+  </style>
+  <link rel="preload" href="assets/site-regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/site-bold.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="assets/typography.css">
+  <link rel="stylesheet" href="assets/welcome.css?v=20261104-reference-title">
+  <script>
+    history.scrollRestoration = 'manual';
+    window.addEventListener('pageshow', () => window.scrollTo(0, 0));
+  </script>
+  <link rel="stylesheet" href="assets/mobile-viewport.css?v=20261103-1">
+  <style id="welcome-phone-reference">
+    @media(max-width:650px){
+      .welcome-page .topbar{height:17.06vw}
+      .welcome-page .topbar-inner{width:100%;height:100%;max-width:none;padding:0}
+      .welcome-page .portal-symbol{left:50%;right:auto;top:0;transform:translateX(-50%);width:23.36vw;height:17.06vw}
+      .welcome-page .official-link{margin-left:4.67vw;width:18.7vw;max-width:none;font-size:2.8vw;line-height:1.4;text-align:center}
+      .welcome-page .hero{position:relative;isolation:isolate;height:auto;min-height:max(139.02vw,calc(90svh - 17.06vw));background:linear-gradient(90deg,#1781b0,#289dac)}
+      .welcome-page .hero::before{content:'';position:absolute;inset:0;z-index:-1;background:#0067b1;clip-path:polygon(0 0,90% 0,0 93.2vw);pointer-events:none}
+      .welcome-page .hero-inner{display:block;width:100%;max-width:none;height:auto;min-height:inherit;margin:0;padding:0}
+      .welcome-page .title{padding:4.2vw 3vw 0;margin:0;font-size:5.3vw;line-height:1.14;letter-spacing:-.035em;white-space:nowrap;text-wrap:nowrap;text-align:center}
+      .welcome-page .age-panel{position:absolute;left:0;top:22.5vw;width:100%;max-width:none;margin:0;padding:0}
+      .welcome-page .accent{display:none}
+      .welcome-page .question{margin:0 0 1.55vw;font-size:4.2vw;line-height:1.3;letter-spacing:-.035em;white-space:nowrap}
+      .welcome-page .question br{display:none}
+      .welcome-page .choices{width:48.3vw;margin:0 auto;gap:.7vw}
+      .welcome-page .choice{flex:1;width:auto;max-width:none;min-height:32px;height:8.3vw;padding:0;border:1px solid #338d9e;border-radius:2px;font-size:3.2vw;line-height:1.2}
+      .welcome-page .choice.yes{color:#ffc400}
+      .welcome-page .notice{max-width:72vw;margin:10px auto 0;font-size:12px;line-height:1.4;text-align:center;white-space:normal}
+      .welcome-page .art{position:absolute;left:11.2vw;top:42.9vw;bottom:auto;width:31vw;max-width:none;margin:0}
+      .welcome-page .hero-art{display:block;width:100%;height:auto;max-height:none}
+      .welcome-page .age-seal{left:50%;right:auto;top:70.9vw;bottom:auto;transform:translateX(-50%);width:20vw;height:23vw}
+      .welcome-page footer{min-height:10svh}
+    }
+  </style>
+</head>
+<body class="welcome-page">
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="portal-symbol" href="home.html" aria-label="Portal da Sorte, página inicial">PORTAL<br>DA SORTE<small>Site independente</small></a>
+      <span class="official-link">Ir para o site da CAIXA.
+</span>
+    </div>
+  </header>
+  <main class="hero">
+    <div class="hero-inner">
+      <h1 class="title">Loterias Online da CAIXA</h1>
+      <p class="demo-disclosure"></p>
+      <section class="age-panel" aria-labelledby="age-question">
+        <span class="accent" aria-hidden="true"></span>
+        <h2 class="question" id="age-question">Você tem mais de <br>18 anos<span class="question-mark">?</span></h2>
+        <div class="choices">
+          <button type="button" class="choice" id="age-no">Não</button>
+          <button type="button" class="choice yes" id="age-yes">Sim</button>
+        </div>
+        <p class="notice" id="age-message" role="status" aria-live="polite"></p>
+      </section>
+      <div class="art" aria-hidden="true"><img class="hero-art" src="assets/campaign-tickets.png" width="796" height="483" alt=""></div>
+      <img class="age-seal" src="assets/age-18-official.png" width="87" height="102" alt="Apostar é para maiores de 18 anos">
+    </div>
+  </main>
+  <footer>
+    <button type="button" class="text-button" data-open-terms></button>
+  </footer>
+  <dialog id="terms" aria-labelledby="terms-title">
+    <h2 id="terms-title"></h2>
+    <h3>Portal da Sorte</h3>
+    <p>O Portal da Sorte é uma demonstração independente, não representa nem é afiliada à Caixa Econômica Federal ou às Loterias CAIXA, e não emite bilhetes oficiais.</p>
+    <h3>Acesso e idade</h3>
+    <p>O conteúdo é destinado a pessoas maiores de 18 anos. Ao selecionar “Sim”, você declara ter mais de 18 anos. Se não tiver, não prossiga.</p>
+    <h3>Links externos</h3>
+    <p>Os links identificados como oficiais abrem sites da CAIXA em uma nova aba. Serviços, cadastros, apostas e pagamentos são regidos pelos termos do próprio portal oficial.</p>
+    <h3>Dados e pagamentos</h3>
+    <p>Esta página não solicita CPF ou dados bancários. Qualquer checkout disponibilizado é exclusivamente de teste, não realiza cobrança real e não emite bilhetes oficiais. A confirmação de idade é temporária e não é salva por esta página.</p>
+    <h3>Jogo responsável</h3>
+    <p>Apostas envolvem risco de perda financeira e não garantem retorno. Não comprometa recursos essenciais.</p>
+    <form method="dialog"><button class="close">Entendi</button></form>
+  </dialog>
+  <section class="co
+  okie-notice" id="cookie-notice" role="region" aria-labelledby="cookie-title" hidden>
+    <div class="cookie-heading"><h2 id="cookie-title" tabindex="-1">Aviso de privacidade</h2><span>Cookies</span></div>
+    <p>Nosso site usa cookies para melhorar a navegação.</p>
+    <p class="cookie-description">Você pode escolher se permite cookies de análise, publicidade e personalização de anúncios.</p>
+    <div class="cookie-links">
+      <button type="button" class="cookie-link" data-cookie-details="privacy">Aviso de Privacidade</button>
+      <span aria-hidden="true">-</span>
+      <button type="button" class="cookie-link" data-cookie-details="cookies">Aviso sobre cookies</button>
+    </div>
+    <div class="cookie-actions">
+      <button type="button" class="cookie-link" data-cookie-details="options">Opções</button>
+      <button type="button" class="cookie-choice" id="cookie-reject">Rejeitar</button>
+      <button type="button" class="cookie-choice cookie-accept" id="cookie-accept">Aceitar</button>
+    </div>
+  </section>
+  <style>
+    .cookie-settings-link{display:grid;place-items:center;width:58px;height:58px;padding:0;border:0;border-radius:50%;background:#80b1d5;box-shadow:0 2px 9px #0004;transition:transform .15s,box-shadow .15s}
+    .cookie-settings-link:hover{transform:scale(1.05);box-shadow:0 3px 12px #0005}
+    .cookie-settings-link svg{display:block;width:48px;height:48px;pointer-events:none}
+    @media(prefers-reduced-motion:reduce){.cookie-settings-link{transition:none}}
+  </style>
+  <button type="button" class="cookie-settings-link" id="cookie-settings-link" aria-label="Preferências de cookies" title="Preferências de cookies" hidden>
+    <svg viewBox="0 0 48 48" fill="none" aria-hidden="true" focusable="false">
+      <path d="M30 7a7 7 0 0 0 8 9 6 6 0 0 0 5 7c1 11-7 19-18 19C14 42 6 34 6 24S14 6 24 6c2 0 4 .3 6 1Z" fill="#fff"/>
+      <g fill="#80b1d5">
+        <circle cx="21" cy="15" r="2.1"/>
+        <circle cx="14" cy="25" r="2"/>
+        <circle cx="25" cy="24" r="2.3"/>
+        <circle cx="33" cy="28" r="1.8"/>
+        <circle cx="22" cy="34" r="2"/>
+        <circle cx="30" cy="36" r="1.4"/>
+      </g>
+    </svg>
+  </button>
+  <dialog id="cookie-preferences" aria-labelledby="cookie-preferences-title">
+    <h2 id="cookie-preferences-title">Preferências de cookies</h2>
+    <p>Escolha quais categorias deseja permitir. Você pode alterar sua escolha a qualquer momento em “Preferências de cookies”.</p>
+    <label><input type="checkbox" checked disabled> Necessários — sempre ativos</label>
+    <label><input type="checkbox" id="cookie-analytics"> Análise de navegação</label>
+    <label><input type="checkbox" id="cookie-advertising"> Publicidade e personalização</label>
+    <section class="cookie-policy" id="cookie-privacy-policy">
+      <h3>Aviso de Privacidade</h3>
+      <p>Esta página guarda sua escolha de privacidade apenas neste navegador. Este aviso não envia dados pessoais a terceiros nem instala ferramentas de análise ou publicidade.</p>
+    </section>
+    <section class="cookie-policy" id="cookie-policy">
+      <h3>Aviso sobre cookies</h3>
+      <p>A preferência é salva no armazenamento local do navegador para lembrar sua decisão nas próximas visitas. Rejeitar mantém as categorias opcionais desativadas.</p>
+    </section>
+    <div class="cookie-actions">
+      <button type="button" class="cookie-choice" id="cookie-close">Fechar</button>
+      <button type="button" class="cookie-choice cookie-accept" id="cookie-save">Salvar preferências</button>
+    </div>
+  </dialog>
+  <script>
+    (() => {
+      const storageKey = 'site-cookie-consent-v1';
+      const notice = document.getElementById('cookie-notice');
+      const reopen = document.getElementById('cookie-settings-link');
+      const preferences = document.getElementById('cookie-preferences');
+      const analytics = document.getElementById('cookie-analytics');
+      const advertising = document.getElementById('cookie-advertising');
+      let consent = null;
+      try {
+        const saved = JSON.parse(localStorage.getItem(storageKey));
+        if (saved && saved.necessary === true && typeof saved.analytics === 'boolean' && typeof saved.advertising === 'boolean') consent = saved;
+      } catch (_) { /* Keep the notice usable when browser storage is unavailable. */ }
+      notice.hidden = !!consent;
+      reopen.hidden = !consent;
+      function saveConsent(allowAnalytics, allowAdvertising) {
+        consent = { necessary: true, analytics: allowAnalytics, advertising: allowAdvertising, updatedAt: new Date().toISOString() };
+        try { localStorage.setItem(storageKey, JSON.stringify(consent)); } catch (_) {}
+        if (preferences.open) preferences.close();
+        notice.hidden = true;
+        reopen.hidden = false;
+        reopen.focus({ preventScroll: true });
+        window.dispatchEvent(new CustomEvent('cookie-consent-change', { detail: { ...consent } }));
+      }
+      function openPreferences(section) {
+        analytics.checked = !!consent?.analytics;
+        advertising.checked = !!consent?.advertising;
+        preferences.showModal();
+        preferences.scrollTop = 0;
+        const target = section === 'privacy' ? document.getElementById('cookie-privacy-policy') : section === 'cookies' ? document.getElementById('cookie-policy') : null;
+        if (target) target.scrollIntoView({ block: 'nearest' });
+      }
+      document.getElementById('cookie-accept').addEventListener('click', () => saveConsent(true, true));
+      document.getElementById('cookie-reject').addEventListener('click', () => saveConsent(false, false));
+      document.getElementById('cookie-save').addEventListener('click', () => saveConsent(analytics.checked, advertising.checked));
+      document.getElementById('cookie-close').addEventListener('click', () => preferences.close());
+      document.querySelectorAll('[data-cookie-details]').forEach(button => button.addEventListener('click', () => openPreferences(button.dataset.cookieDetails)));
+      reopen.addEventListener('click', () => {
+        notice.hidden = false;
+        reopen.hidden = true;
+        document.getElementById('cookie-title').focus({ preventScroll: true });
+      });
+    })();
+  </script>
+  <script>
+    const terms = document.getElementById('terms');
+    const message = document.getElementById('age-message');
+    document.querySelectorAll('[data-open-terms]').forEach(button => {
+      button.addEventListener('click', () => terms.showModal());
+    });
+    document.getElementById('age-yes').addEventListener('click', () => {
+      window.location.assign('home.html');
+    });
+    document.getElementById('age-no').addEventListener('click', () => {
+      message.textContent = 'Este conteúdo é destinado a maiores de 18 anos. Você não pode prosseguir.';
+    });
+  </script>
+</body>
+</html>

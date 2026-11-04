@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#612c69">
+  <title>Bolões | Portal da Sorte</title>
+  <link rel="stylesheet" href="../assets/purchase.css">
+  <script src="../assets/purchase.js" defer></script>
+</head>
+<body>
+  <main class="purchase-card">
+    <a class="purchase-brand" href="../home.html" aria-label="Portal da Sorte, página inicial"><span class="purchase-symbol" aria-hidden="true">PS<span>✦</span></span><span>PORTAL<br>DA SORTE</span></a>
+    <p class="purchase-eyebrow">BOLÕES</p>
+    <h1>Compre seu bolão</h1>
+    <p class="purchase-intro">Escolha a modalidade e consulte as opções disponíveis para apostar em grupo.</p>
+    <label for="purchase-game">Qual modalidade você procura?</label>
+    <select id="purchase-game">
+      <option value="">Todas as modalidades</option>
+      <option value="mega">Mega-Sena</option>
+      <option value="facil">Lotofácil</option>
+      <option value="quina">Quina</option>
+      <option value="milionaria">+Milionária</option>
+      <option value="dupla">Dupla Sena</option>
+      <option value="timemania">Timemania</option>
+      <option value="dia">Dia de Sorte</option>
+      <option value="super">Super Sete</option>
+    </select>
+    <div class="purchase-summary" aria-live="polite"><span>Sua escolha</span><strong id="purchase-choice">Todas as modalidades</strong><p>Você poderá conferir os bolões, os valores e a disponibilidade no portal oficial.</p></div>
+    <a class="purchase-continue" href="https://www.loteriasonline.caixa.gov.br/silce-web/">Consultar bolões na CAIXA <span aria-hidden="true">↗</span></a>
+    <a class="purchase-back" id="purchase-back" href="../home.html#modalidades">Voltar às modalidades</a>
+    <p class="purchase-note">Esta página pertence ao Portal da Sorte, um site independente, sem vínculo com a CAIXA. A identificação e a compra são feitas no portal oficial. Nenhum dado pessoal ou pagamento é solicitado aqui.</p>
+  </main>
+</body>
+</html>

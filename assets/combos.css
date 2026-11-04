@@ -1,0 +1,97 @@
+.combos-section{width:88%;max-width:1670px;margin:0 auto;padding:30px 0 40px;scroll-margin-top:max(0px,calc(146px - var(--fixed-navigation-height,0px)));color:#0067b1;font-family:CampaignBook,Futura,sans-serif}
+#combos-title{margin:0;color:#afc2c7;font:400 60px/1.15 CampaignBook,Futura,sans-serif;letter-spacing:-2px}
+#combos-title strong{color:#0067b1;font-family:CampaignBold,'Arial Black',sans-serif;font-weight:900;letter-spacing:-1px}
+.combos-subtitle{margin:2px 6px 24px;font-size:15px;line-height:1.6;letter-spacing:.2px}
+.combos-carousel{position:relative;padding:0 clamp(42px,5.5vw,104px)}
+.combo-track{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(26px,9vw,178px);outline-offset:6px}
+.combo-card{min-width:0;display:flex;flex-direction:column;background:#fafafa}
+.combo-front{display:flex;flex:1;flex-direction:column}
+.combo-buy{border:0;font-family:var(--font-text);cursor:pointer}
+.combo-options{position:relative;min-height:458px;color:#fff;background:#006bb6;text-align:center;font-family:var(--font-text)}
+.combo-options-close{position:absolute;z-index:2;top:-8px;right:8px;display:grid;place-items:center;width:34px;height:34px;padding:0;border:0;border-radius:50%;background:#ee9739;color:#fff;font:400 32px/1 Arial;cursor:pointer}
+.combo-options-close svg{display:block;width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.5;stroke-linecap:round}
+.combo-options-top{padding:28px 15px 8px;background:#3eafad}
+.combo-options-carousel{display:grid;grid-template-columns:18px minmax(0,1fr) 18px;align-items:center;min-height:104px;padding:0 0 12px;border-bottom:1px solid #ffffff35}
+.combo-options-carousel>button{padding:0;border:0;background:none;color:#fff;font:700 32px/1 Arial;cursor:pointer}
+.combo-options-games{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;align-items:start}
+.combo-options-games>div{display:flex;flex-direction:column;gap:2px;min-width:0}
+.combo-options-games b{font:900 17px/1.15 var(--font-display)}
+.combo-options-games span{font:700 13px/1.25 var(--font-text)}
+.combo-options-top>p{margin:14px 0 8px;font:700 12px/1.35 var(--font-text)}
+.combo-preview-choice{display:flex;align-items:center;justify-content:center;gap:3px;font:700 12px/1.25 var(--font-text);cursor:pointer}
+.combo-preview-choice input{flex-shrink:0;width:11px;height:11px;margin:0;accent-color:#006bb6}
+.combo-options-bottom{padding:8px 22px 12px}
+.combo-options-bottom>p{margin:0 0 19px;font-size:19px;line-height:1.4}
+.combo-quantity{display:flex;align-items:center;justify-content:center;gap:14px}
+.combo-quantity button{width:36px;height:36px;padding:0;border:1px solid #50bbdf;background:transparent;color:#fff;font:700 25px/1 var(--font-text)}
+.combo-quantity output{min-width:40px;padding:3px 0;border-bottom:1px solid #50bbdf;font:900 20px/1.4 var(--font-display)}
+.combo-options-total{display:block;margin:17px 0 26px;font:900 23px/1.2 var(--font-display)}
+.combo-options-actions{display:grid;grid-template-columns:1fr 1fr;gap:30px}
+.combo-options-actions button{min-width:0;min-height:60px;padding:10px 6px;border:1px solid #fff;border-radius:3px;background:transparent;color:#fff;font:400 16px/1.3 var(--font-text);cursor:pointer}
+.combo-options-actions button:first-child{border-color:#fa9510;background:#fa9510}
+.combo-options-status{display:block;margin-top:10px;font-size:12px;line-height:1.4}
+.combo-options-status:empty{display:none}
+.combo-card[data-combo-index="5"] .combo-options-close{right:-8px}
+.combo-card[data-combo-index="5"] .combo-options-top{min-height:230px}
+.combo-card[data-combo-index="5"] .combo-options-carousel{grid-template-columns:12px minmax(0,1fr) 12px;align-items:start}
+.combo-card[data-combo-index="5"] .combo-options-carousel>button{align-self:center}
+.combo-card[data-combo-index="5"] .combo-options-games{gap:6px;padding-top:3px}
+.combo-card[data-combo-index="5"] .combo-options-games b{font-size:16px;letter-spacing:-.3px}
+.combo-card[data-combo-index="5"] .combo-options-games span{font-size:12px}
+.combo-card[data-combo-index="5"] .combo-options-top>p{font-weight:400}
+.combo-card[data-combo-index="5"] .combo-preview-choice{font-size:12px}
+.combo-card[data-combo-index="5"] .combo-quantity output{font:700 20px/1.4 var(--font-text)}
+.combo-card[data-combo-index="5"] .combo-quantity button:disabled{opacity:1}
+.combo-card[data-combo-index="5"] .combo-options-total{margin-bottom:22px;font:700 22px/1.25 var(--font-text)}
+@media(max-width:720px){.combo-card[data-combo-index="5"] .combo-options-games b{font-size:14px}.combo-card[data-combo-index="5"] .combo-options-games span{font-size:11px}.combo-card[data-combo-index="5"] .combo-preview-choice{font-size:11px}}
+@media(max-width:350px){.combo-card[data-combo-index="5"] .combo-options-games b{font-size:12px}.combo-card[data-combo-index="5"] .combo-options-games span{font-size:10px}}
+@media(max-width:1500px){.combo-options-actions{gap:16px}.combo-options-bottom{padding-inline:16px}.combo-options-games{gap:6px}.combo-options-games b{font-size:15px}.combo-options-games span{font-size:12px}}
+@media(max-width:350px){.combo-options-top{padding-inline:10px}.combo-options-games{gap:4px}.combo-options-games b{font-size:13px}.combo-options-games span{font-size:11px}.combo-options-top>p,.combo-preview-choice{font-size:11px}.combo-options-actions{gap:10px}.combo-options-actions button{font-size:14px}.combo-options-bottom>p{font-size:17px}.combo-options-total{font-size:21px}}
+.combo-mosaic{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(var(--combo-rows),minmax(0,1fr));height:256px;flex-shrink:0}
+.combo-tile{position:relative;isolation:isolate;display:flex;align-items:center;justify-content:center;flex-direction:column;min-width:0;padding:5px 3px;overflow:hidden;text-align:center;background:var(--tile-background);color:var(--tile-color)}
+.combo-tile:last-child:nth-child(odd){grid-column:1/-1}
+.combo-tile b{position:relative;z-index:1;font:900 18px/1.2 CampaignBold,'Arial Black',sans-serif;white-space:nowrap}
+.combo-tile b small{font:400 12px/1 CampaignBook,Futura,sans-serif}
+.combo-tile>span:last-child{position:relative;z-index:1;display:block;margin-top:3px;font-size:14px;line-height:1.2;white-space:nowrap}
+.combo-watermark{position:absolute;right:-8px;bottom:-18px;z-index:0;display:grid;grid-template-columns:repeat(2,29px);grid-template-rows:repeat(2,29px);gap:4px;opacity:.18;transform:scale(1.15)}
+.combo-watermark i{background:#fff;border-radius:50% 50% 5% 50%}
+.combo-watermark i:nth-child(2){transform:rotate(90deg)}
+.combo-watermark i:nth-child(3){transform:rotate(-90deg)}
+.combo-watermark i:nth-child(4){transform:rotate(180deg)}
+.combo-content{display:flex;flex:1;align-items:center;flex-direction:column;min-height:202px;padding:11px 20px 15px;text-align:center;color:#535b70}
+.combo-content h3{margin:0 0 6px;color:#2d61aa;font:900 23px/1.2 CampaignBold,'Arial Black',sans-serif;letter-spacing:-.7px}
+.combo-content p{margin:0 0 9px;font-size:12px;line-height:1.35;min-height:48px}
+.combo-price{display:block;margin:auto 0 12px;font:400 30px/1.1 CampaignBook,Futura,sans-serif;white-space:nowrap}
+.combo-buy{display:flex;align-items:center;justify-content:center;min-height:45px;width:170px;max-width:100%;padding:10px 14px;border-radius:2px;background:#fa9516;color:#fff;text-decoration:none;font-size:16px;line-height:1.3}
+.combo-buy:hover{background:#ed8509}
+.combo-arrow{position:absolute;top:50%;transform:translateY(-50%);display:grid;place-items:center;width:40px;height:56px;padding:0;border:0;background:transparent;color:#ff8a00}
+.combo-prev{left:-12px}.combo-next{right:-12px}
+.combo-arrow:disabled{color:#ffddb0;opacity:1;cursor:default}
+.combos-reference{margin:18px 6px 0;color:#7c8d98;font-size:11px;line-height:1.5}
+@media(max-width:1500px){.combo-track{gap:50px}.combos-carousel{padding-inline:48px}.combo-tile b{font-size:15px}.combo-tile>span:last-child{font-size:12px}.combo-tile b small{font-size:10px}.combo-content{padding-inline:14px}.combo-content h3{font-size:21px}#combos-title{font-size:54px}}
+@media(max-width:1100px){.combo-track{grid-template-columns:repeat(2,minmax(0,1fr));gap:36px}.combo-card:nth-child(3){display:none}.combos-carousel{padding-inline:36px}.combo-tile b{font-size:17px}.combo-tile>span:last-child{font-size:13px}.combo-content h3{font-size:22px}}
+@media(max-width:720px){.combos-section{width:calc(100% - 36px);padding-top:12px;padding-bottom:30px}#combos-title{font-size:40px;letter-spacing:-1.5px}.combos-subtitle{margin:10px 0 22px;font-size:13px}.combo-track{grid-template-columns:1fr;gap:0}.combo-card:nth-child(n+2){display:none}.combo-card{max-width:370px;width:100%;justify-self:center}.combos-carousel{padding-inline:27px}.combo-prev{left:-12px}.combo-next{right:-12px}.combo-arrow{width:34px}.combo-mosaic{height:256px}.combo-tile b{font-size:17px}.combo-tile>span:last-child{font-size:12px}.combo-content h3{font-size:23px}.combo-content p{font-size:12px}.combo-content{padding-inline:16px}.combo-tile b small{font-size:10px}.combos-reference{margin-inline:0}}
+@media(max-width:350px){#combos-title{font-size:34px}.combo-tile b{font-size:14px}.combo-tile>span:last-child{font-size:11px}.combo-tile b small{font-size:8px}.combo-content h3{font-size:21px}}
+@media(min-width:1101px){
+  .combos-section{width:96%;max-width:1690px;padding-top:20px}
+  #combos-title{font-size:68px;letter-spacing:-2px}
+  .combos-subtitle{font-size:18px;line-height:1.4;margin:2px 6px 34px}
+  .combos-carousel{padding-inline:60px}
+  .combo-track{gap:clamp(30px,4.5vw,80px)}
+  .combo-card{container-type:inline-size}
+  .combo-mosaic{height:318px}
+  .combo-tile b{font-size:min(4.75cqw,22px)}
+  .combo-tile b small{font-size:min(3.5cqw,16px)}
+  .combo-tile>span:last-child{font-size:min(3.9cqw,18px);margin-top:4px}
+  .combo-watermark{top:10px;right:-8px;bottom:auto;grid-template-columns:repeat(2,45px);grid-template-rows:repeat(2,45px);transform:none}
+  .combo-special .combo-mosaic{grid-template-columns:1fr}
+  .combo-special .combo-tile b{font-size:min(7.3cqw,34px)}
+  .combo-special .combo-tile>span:last-child{font-size:min(5.2cqw,24px);margin-top:24px}
+  .combo-special .combo-watermark{right:-50px;grid-template-columns:repeat(2,100px);grid-template-rows:repeat(2,115px);gap:8px}
+  .combo-content{min-height:254px;padding:16px 26px 20px}
+  .combo-content h3{font-size:26px;margin-bottom:8px}
+  .combo-content p{font-size:14px;line-height:1.45;min-height:60px;margin-bottom:12px}
+  .combo-price{font-size:34px;font-weight:700;margin:auto 0 16px}
+  .combo-buy{width:213px;min-height:56px;font-size:20px}
+  .combo-prev{left:-12px}.combo-next{right:-12px}
+}

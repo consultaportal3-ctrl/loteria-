@@ -1,0 +1,102 @@
+.phone-product-arrow{display:none}
+@media(max-width:650px){
+  .home-refresh:not([class*="-route"]) .campaign-navigation.is-fixed{display:none}
+  .home-refresh .modalities{width:100%;padding:24px 12px 54px;max-width:none}
+  .home-refresh .modalities #modalities-title{font-size:30px;letter-spacing:-1px;white-space:nowrap}
+  .home-refresh .modalities #modalities-title strong{font-size:26px;letter-spacing:-.7px}
+  .home-refresh .modalities .section-heading{margin:0 0 18px;justify-content:flex-start;text-align:left}
+  .home-refresh .modalities .section-heading>div{width:100%;text-align:left}
+  .phone-products-carousel{position:relative;padding:0 21px}
+  .home-refresh .game-cards{display:flex;gap:0;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding:8px 0 12px;align-items:flex-start}
+  .home-refresh .game-cards::-webkit-scrollbar{display:none}
+  .home-refresh .game-cards>.product-card,.home-refresh .game-cards>.product-card:nth-child(9),.home-refresh .game-cards>.product-card:last-child{flex:0 0 calc(100% - 14px);width:calc(100% - 14px);max-width:none;margin:0 7px;min-height:423px;height:423px;scroll-snap-align:center;container-type:inline-size;border-radius:10px}
+  .home-refresh .game-cards>.product-card:nth-child(n) .product-header{height:56px;min-height:56px;padding:0 8px 0 22cqw;gap:0;background:var(--product-header);color:#fff}
+  .home-refresh .game-cards>.product-card:nth-child(n) .product-header::before{display:block;width:80px;background:#00000012;clip-path:polygon(0 0,100% 0,44% 100%,0 100%)}
+  .home-refresh .game-cards>.product-card:nth-child(n) .product-header h3{font-family:var(--font-display);font-size:6.7cqw;font-weight:900;line-height:1;letter-spacing:-.025em;white-space:nowrap}
+  .home-refresh .game-cards>.product-card:nth-child(n) .product-clover{display:block;position:absolute;left:9px;top:50%;transform:translateY(-50%);width:30px;height:30px;background:url('product-header-clover.svg') center/contain no-repeat}
+  .home-refresh .game-cards>.product-card:nth-child(n) .product-clover i{display:none}
+  .home-refresh .game-cards>.product-timemania:nth-child(n) .product-header,.home-refresh .game-cards>.product-super:nth-child(n) .product-header{color:#00863d}
+  .home-refresh .game-cards>.product-dia:nth-child(n) .product-header{color:#8b760a}
+  .home-refresh .game-cards .product-card .product-body{display:flex;flex:1;flex-direction:column;padding:16px 12cqw 22px}
+  .home-refresh .game-cards .product-card .product-prize{margin:0 -9cqw}
+  .home-refresh .game-cards .product-card .product-prize>strong{font-size:8.8cqw;line-height:1.2;white-space:nowrap}
+  .home-refresh .game-cards .product-virada .product-prize>strong span{display:inline}
+  .home-refresh .game-cards .product-virada .product-prize>strong span::after{content:' '}
+  .home-refresh .game-cards .product-card .product-prize>b{font-size:6.8cqw;line-height:1.2}
+  .home-refresh .game-cards .product-card .product-contest{font-size:4.75cqw;line-height:1.3;margin:2px -10cqw 14px}
+  .home-refresh .game-cards .product-card .product-draw{font-family:var(--font-text);font-size:4.75cqw;line-height:1.3;margin:0 -10cqw 16px;letter-spacing:0}
+  .home-refresh .game-cards .product-card .product-draw strong,.home-refresh .game-cards .product-card .product-draw>span{font-size:4.75cqw;line-height:1.3}
+  .home-refresh .game-cards .product-card .product-pool{min-height:62px;padding:16px 4px;font-size:6.3cqw;margin-top:auto;white-space:nowrap}
+  .home-refresh .game-cards .product-card .product-or{padding:16px 0 12px;font-size:16px;line-height:18px}
+  .home-refresh .game-cards .product-card .product-play{min-height:56px;padding:4px;font-size:7cqw;line-height:1.1;border-width:1px}
+  .home-refresh .game-cards .product-card .product-play>span{font-size:7cqw;line-height:1.1}
+  .phone-product-arrow{display:grid;place-items:center;position:absolute;top:50%;transform:translateY(-50%);width:24px;height:44px;border:0;padding:0;background:transparent;color:#ff8a00}
+  .phone-product-arrow svg{width:24px;height:34px}
+  .phone-product-prev{left:-8px}.phone-product-next{right:-8px}
+  .phone-product-arrow:disabled{color:#ffddb0}
+  .home-refresh .combos-section{width:100%;padding:12px 12px 42px}
+  .home-refresh #combos-title{font-size:30px;letter-spacing:-1px}
+  .home-refresh #combos-title strong{font-size:26px}
+  .home-refresh .combos-subtitle{font-size:12px;line-height:1.2;margin:12px 5px 24px}
+  .home-refresh .combos-carousel{padding:0 27px}
+  .home-refresh .combo-card{max-width:none}
+  .home-refresh .combo-mosaic{height:240px}
+  .home-refresh .combo-special .combo-mosaic{grid-template-columns:1fr}
+  .home-refresh .combo-special .combo-tile b{font-size:26px;font-style:italic}
+  .home-refresh .combo-special .combo-tile>span:last-child{font-size:18px;margin-top:14px}
+  .home-refresh .combo-special .combo-watermark{top:8px;right:-28px;bottom:auto;grid-template-columns:repeat(2,58px);grid-template-rows:repeat(2,80px);transform:none}
+  .home-refresh .combo-content{min-height:188px;padding:10px 24px 0}
+  .home-refresh .combo-special .combo-content{display:grid;grid-template-rows:26px 66px 46px 40px;justify-items:center;min-height:188px}
+  .home-refresh .combo-special .combo-content p{min-height:0;margin:0}
+  .home-refresh .combo-special .combo-price{margin:0;align-self:center}
+  .home-refresh .combo-content h3{font-size:22px}
+  .home-refresh .combo-content p{font-size:12px;line-height:1.3}
+  .home-refresh .combo-price{font-size:27px;margin:14px 0 10px;font-weight:700}
+  .home-refresh .combo-buy{min-height:40px;width:160px;font-size:14px}
+  .home-refresh .combo-card .combo-options{min-height:428px}
+  .home-refresh .combo-card .combo-options-close{width:30px;height:30px;top:-8px;right:-8px}
+  .home-refresh .combo-card .combo-options-top{height:216px;padding:50px 14px 20px;background:#3eafad}
+  .home-refresh .combo-card .combo-options-carousel{display:grid;grid-template-columns:12px minmax(0,1fr) 12px;min-height:84px;padding:0 0 12px}
+  .home-refresh .combo-card .combo-options-carousel>button{display:block;font-size:27px;align-self:center}
+  .home-refresh .combo-card .combo-options-games{grid-template-columns:repeat(3,minmax(0,1fr));gap:0}
+  .home-refresh .combo-card .combo-options-games>div{gap:0}
+  .home-refresh .combo-card .combo-options-games b{font-size:16px;line-height:1.1}
+  .home-refresh .combo-card .combo-options-games span{font-size:12px;line-height:1.2}
+  .home-refresh .combo-card .combo-options-top>p{font-size:8px;line-height:1.2;margin:10px 4px 8px}
+  .home-refresh .combo-card .combo-preview-choice{font-size:8px;line-height:1.2;gap:2px}
+  .home-refresh .combo-card .combo-preview-choice input{width:9px;height:9px}
+  .home-refresh .combo-card .combo-options-bottom{padding:8px 21px}
+  .home-refresh .combo-card .combo-options-bottom>p{font-size:18px;line-height:1.4;margin:0 0 16px}
+  .home-refresh .combo-card .combo-quantity{gap:14px}
+  .home-refresh .combo-card .combo-quantity button{width:34px;height:34px;font-size:25px}
+  .home-refresh .combo-card .combo-quantity output{font-size:14px;min-width:40px}
+  .home-refresh .combo-card .combo-options-total{font-size:22px;line-height:1.2;margin:14px 0 4px}
+  .home-refresh .combo-card .combo-options-actions{grid-template-columns:1fr;gap:4px}
+  .home-refresh .combo-card .combo-options-actions button{height:38px;min-height:38px;padding:8px 6px;font-size:14px}
+  .home-refresh .combo-special .combo-options-carousel{display:block}
+  .home-refresh .combo-special .combo-options-carousel>button{display:none}
+  .home-refresh .combo-card:not(.combo-special) .combo-options-games{overflow:hidden;gap:4px}
+  .home-refresh .combo-card:not(.combo-special) .combo-options-games b{font-size:15px;overflow-wrap:anywhere}
+  .home-refresh .combo-card:not(.combo-special) .combo-options-games span{font-size:11px}
+  .home-refresh .combo-card .combo-tile b{font-size:16px}
+  .home-refresh .combo-card .combo-tile>span:last-child{font-size:11px}
+  .home-refresh .combo-special .combo-tile b{font-size:26px}
+  .home-refresh .combo-special .combo-tile>span:last-child{font-size:18px}
+  .home-refresh .combo-card[data-combo-index="0"] .combo-mosaic{height:188px}
+  .home-refresh .combo-card[data-combo-index="0"] .combo-tile b{font-size:14px}
+  .home-refresh .combo-card[data-combo-index="0"] .combo-tile>span:last-child{font-size:10px}
+  .home-refresh .combo-card[data-combo-index="0"] .combo-content{min-height:168px;padding:8px 20px 0}
+  .home-refresh .combo-card[data-combo-index="0"] .combo-content h3{font-size:20px}
+  .home-refresh .combo-card[data-combo-index="0"] .combo-content p{font-size:10px;line-height:1.2;min-height:36px}
+  .home-refresh .combo-card[data-combo-index="0"] .combo-price{font-size:25px;margin:14px 0 8px}
+  .home-refresh .combo-card[data-combo-index="0"] .combo-buy{width:126px;min-height:32px;padding:6px;font-size:12px}
+  .home-refresh .app-download{width:calc(100% - 60px);padding:20px 0 70px}
+  .home-refresh .app-download h2{font-size:18px;line-height:1.35;letter-spacing:0}
+  .home-refresh .app-download>p{font-size:15px;line-height:1.45;margin-top:10px}
+  .home-refresh .app-stores{grid-template-columns:142px;gap:50px;margin-top:38px}
+  .home-refresh .app-store-option{gap:8px}
+  .home-refresh .app-store-badge{width:142px;height:44px}
+  .home-refresh .app-store-qr,.home-refresh .app-store-qr img{width:142px;height:142px}
+  .home-refresh .app-store-qr{overflow:hidden}
+  .home-refresh .app-store-qr img{transform:scale(1.24)}
+}

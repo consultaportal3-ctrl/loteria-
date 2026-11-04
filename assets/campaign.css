@@ -1,0 +1,45 @@
+﻿@font-face{font-family:CampaignBook;src:url('campaign-book.woff2') format('woff2');font-display:swap}
+@font-face{font-family:CampaignBold;src:url('campaign-bold.woff2') format('woff2');font-weight:900;font-display:swap}
+/* Campaign assets from the public reference; the page remains an independent demo. */
+.site-header{position:relative;background:#ed3580;border:0;color:#fff}
+.site-header .container,.hero>.container,.hero .campaign-navigation{width:88%;max-width:1670px}
+.header-inner{position:relative;min-height:92px;padding:0;display:flex;align-items:center;justify-content:flex-start}
+.header-official{font:22px/1.4 CampaignBook,Futura,sans-serif;text-decoration:none}
+.header-official:hover{text-decoration:underline}
+.campaign-logo{position:absolute;left:55%;top:50%;transform:translate(-50%,-50%);display:flex;align-items:center}
+.campaign-logo svg{display:block}
+.demo-bar{position:absolute;top:10px;right:0;padding:0;max-width:300px;background:transparent;text-align:right;color:#fff;font:11px/1.5 Arial,sans-serif}
+.hero{position:relative;isolation:isolate;min-height:465px;background:#b53861 url('campaign-desktop.png') no-repeat center right;background-size:cover;color:#fff}
+.campaign-navigation{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:32px;padding-top:40px}
+.campaign-menu{display:flex;align-items:center;flex-wrap:wrap;gap:26px;row-gap:28px;max-width:1150px;flex:1;min-width:0}
+.campaign-menu a,.campaign-menu button{display:inline-block;flex-shrink:0;margin:0;padding:0;border:0;background:none;color:#fff;font:22px/1.45 CampaignBook,Futura,sans-serif;text-decoration:none;white-space:nowrap}
+.campaign-menu a:hover,.campaign-menu button:hover{text-decoration:underline;text-underline-offset:5px}
+.campaign-menu .active{color:#8bd4c3}
+.menu-break{flex-basis:100%;height:0;margin-top:-28px}
+.campaign-account{display:flex;align-items:stretch;align-self:center;flex-shrink:0;border:1px solid #ffd2e3;border-radius:2px;margin-top:12px;background:#ffffff08}
+.campaign-account .cart-button{border:0;border-right:1px solid #ffd2e3;border-radius:0;padding:12px 18px;min-height:50px;gap:12px;background:transparent;color:#fff}
+.campaign-account .cart-button b{width:auto;min-width:12px;height:auto;background:none;color:#fff;font-size:18px}
+.account-link{display:flex;align-items:center;justify-content:center;gap:4px;padding:12px 14px;color:#fff;text-decoration:none;font:20px/1.2 CampaignBook,Futura,sans-serif}
+.account-link:hover,.campaign-account .cart-button:hover{background:#ffffff12}
+.hero-layout{position:relative;z-index:1;display:block;min-height:0}
+.hero-copy{padding:54px 0 116px;max-width:1050px}
+.hero-copy h1{margin:0 0 28px;font-family:CampaignBold,'Arial Black',sans-serif;font-size:clamp(38px,3.65vw,70px);font-weight:900;line-height:1.2;letter-spacing:-1.7px;text-shadow:0 2px 1px #47233380,0 4px 3px #35101f99;white-space:nowrap}
+.hero-copy p{max-width:960px;margin:0;color:#fff;font:24px/1.5 CampaignBook,Futura,sans-serif;letter-spacing:-.6px;text-shadow:0 3px 2px #59233f99}
+.campaign-art{position:absolute;z-index:0;inset:0;pointer-events:none;overflow:hidden}
+.campaign-ribbon{position:absolute;bottom:-1px;right:16%;width:max-content;height:410px}
+.campaign-ribbon img{display:block;width:auto;height:100%;max-width:none}
+.campaign-tickets{position:absolute;right:4.8%;bottom:-20px;width:350px}
+.campaign-tickets img{display:block;width:100%;height:auto}
+@media(min-width:1200px){
+  .hero .campaign-navigation{display:block}
+  .hero .campaign-menu{width:100%;max-width:1160px;gap:26px;row-gap:0}
+  .hero .campaign-menu a,.hero .campaign-menu button{font-family:CampaignBook,Futura,sans-serif;font-size:20px;font-weight:400;line-height:32px;letter-spacing:0}
+  .hero .hero-copy h1{font-family:CampaignBold,'Arial Black',sans-serif;font-size:63px;font-weight:900;line-height:1.2;letter-spacing:-1.7px;text-shadow:0 2px 1px #47233380,0 4px 3px #35101f99}
+  .hero .hero-copy p{font-family:CampaignBook,Futura,sans-serif;font-size:24px;font-weight:400;line-height:1.5;letter-spacing:-.6px}
+  .hero .menu-break{height:28px;margin:0}
+  .hero .campaign-account{position:absolute;right:0;bottom:0;margin:0}
+}
+@media(min-width:1600px){.campaign-ribbon{right:20%}.hero-copy{padding-top:56px}.campaign-menu{max-width:1160px}}
+@media(max-width:1500px){.campaign-menu{gap:20px;row-gap:24px;max-width:1000px}.campaign-menu a,.campaign-menu button{font-size:18px}.menu-break{margin-top:-24px}.campaign-navigation{gap:24px}.hero-copy p{font-size:21px}.campaign-ribbon{right:15%;height:360px}.campaign-tickets{width:290px;right:4%}.hero-copy{padding-top:52px}}
+@media(max-width:1100px){.campaign-menu{gap:16px;row-gap:18px}.campaign-menu a,.campaign-menu button{font-size:16px}.menu-break{margin-top:-18px}.campaign-account .cart-button{padding:10px 12px}.account-link{font-size:17px;padding:10px}.hero-copy h1{font-size:42px;letter-spacing:-1px}.hero-copy p{font-size:19px;max-width:640px}.campaign-ribbon{right:8%}.campaign-tickets{right:2%;width:240px}.hero-copy{padding-bottom:155px}.hero{min-height:465px;background-image:url('campaign-tablet.png')}}
+@media(max-width:720px){.site-header .container,.hero>.container{width:calc(100% - 36px)}.header-inner{min-height:110px;padding:0;flex-wrap:nowrap}.header-official{font-size:14px;max-width:145px}.campaign-logo{left:auto;right:8px;transform:translateY(-50%);top:35px}.campaign-logo svg{width:45px;height:35px}.demo-bar{top:auto;bottom:12px;left:0;right:0;text-align:left;max-width:none;font-size:10px}.demo-bar br{display:none}.campaign-navigation{padding-top:24px;display:flex;flex-direction:column;align-items:stretch;gap:18px}.campaign-menu{gap:12px 17px;max-width:none;align-items:center}.campaign-menu a,.campaign-menu button{font-size:15px;line-height:1.35}.menu-break{display:none}.campaign-account{align-self:flex-end;margin:0}.campaign-account .cart-button{padding:8px 12px;min-height:40px}.campaign-account .cart-button b{font-size:15px}.account-link{font-size:16px;padding:8px 12px}.hero-copy{max-width:none;padding:30px 0 245px}.hero-copy h1{font-size:clamp(31px,7.7vw,48px);letter-spacing:-1px;white-space:normal;max-width:560px;line-height:1.15;margin-bottom:20px}.hero-copy p{font-size:17px;max-width:410px;letter-spacing:0}.campaign-ribbon{right:17%;height:230px;bottom:0}.campaign-tickets{width:190px;right:4%;bottom:-7px}.hero{min-height:0;background-image:url('campaign-mobile.png')}}

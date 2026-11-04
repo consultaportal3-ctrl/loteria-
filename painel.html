@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self'; connect-src 'self'; form-action 'self'; base-uri 'none'">
+  <title>Painel do site · Demonstração</title>
+  <link rel="icon" href="assets/demo-portal-logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/painel-demo.css?v=site-2">
+  <script src="assets/home-products.js?v=20261103-facil3821" defer></script>
+  <script src="assets/loteca-data.js" defer></script>
+  <script src="assets/loteca-rules.js" defer></script>
+  <script src="assets/super-rules.js" defer></script>
+  <script src="assets/painel-site.js?v=20261104-generated2" defer></script>
+  <script src="assets/admin-orders.js?v=20261104-test" defer></script>
+</head>
+<body>
+  <aside class="sidebar" id="sidebar">
+    <a class="brand" href="#visao"><img src="assets/demo-portal-logo.svg" width="40" height="40" alt=""><span>Painel do site<small>MODALIDADES E APOSTAS</small></span></a>
+    <p class="nav-label">MENU PRINCIPAL</p>
+    <nav aria-label="Seções do painel">
+      <a href="#visao" data-section="visao"><span data-icon="home"></span>Visão geral</a>
+      <a href="#vendas" data-section="vendas"><span data-icon="sales"></span>Apostas <b id="sales-badge">0</b></a>
+      <a href="#pedidos" data-section="pedidos"><span data-icon="ticket"></span>Pedidos <b id="orders-badge">0</b></a>
+      <a href="#produtos" data-section="produtos"><span data-icon="box"></span>Modalidades <b id="products-badge">0</b></a>
+      <a href="#pix" data-section="pix"><span data-icon="pix"></span>PIX <small>TESTE</small></a>
+      <a href="#gateway" data-section="gateway"><span data-icon="gateway"></span>Gateway <small>TESTE</small></a>
+    </nav>
+    <div class="sidebar-bottom"><div class="local-card"><i></i><span>Carrinho do site<small>Lido neste navegador</small></span></div><p>Modalidades e combinações do seu site. Sem cobranças reais.</p><a href="previa.html" class="exit-link">← Sair do painel</a></div>
+  </aside>
+  <div class="workspace">
+    <header class="topbar"><button type="button" class="menu-button" id="menu-toggle" aria-label="Abrir menu" aria-controls="sidebar" aria-expanded="false">☰</button><div><p>PAINEL DO SITE / AMBIENTE LOCAL</p><h1 id="page-title">Visão geral</h1></div><div class="top-actions"><span class="status-dot">DEMONSTRAÇÃO</span><a href="previa.html" class="button secondary">Sair</a></div></header>
+    <main>
+      <div class="test-banner"><span data-icon="info"></span><p><strong>Modo de demonstração.</strong> Este painel mostra as modalidades e o carrinho deste navegador, além dos pedidos de teste no servidor. Não registra apostas oficiais nem recebe pagamentos reais; o PIX fica restrito ao ambiente de testes do Mercado Pago.</p><span class="test-tag">SANDBOX</span></div>
+      <div id="panel-content"></div>
+      <footer class="panel-footer">Painel do site · Demonstração independente <span>Sem vínculo com instituições financeiras.</span></footer>
+    </main>
+  </div>
+  <div class="toast" id="panel-toast" role="status" hidden></div>
+
+</body>
+</html>
