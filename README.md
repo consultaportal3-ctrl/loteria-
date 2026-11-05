@@ -1,20 +1,20 @@
-# Vasco PG — prévia de loja de ventiladores
+﻿# Vasco PG — loja de ventiladores
 
-Site estático em HTML, CSS e JavaScript. Sem backend de pagamentos ou cadastro de clientes.
+Site em HTML, CSS e JavaScript, com checkout PIX BlackCat por função Node.js compatível com Vercel.
 
-- `index.html` e `ventilador.html`: produto, preço informado de R$ 63,00 por unidade e entrega informada de 7 dias.
-- `carrinho-loja.html`: quantidade, remoção e subtotal. O navegador guarda apenas o identificador do produto e a quantidade.
-- `checkout-loja.html`: resumo e formulário demonstrativo de endereço fictício. Nenhum endereço é salvo ou enviado; os campos são apagados ao sair da página.
-- `previa.html`: visualização da loja, carrinho e checkout em diferentes tamanhos de tela.
+- `index.html` e `ventilador.html`: produto a R$ 63,00 por unidade; modelo e voltagem ainda a confirmar.
+- `carrinho-loja.html`: quantidade, remoção e subtotal; o navegador guarda o produto e a quantidade.
+- `checkout-loja.html`: comprador, entrega, total com frete, PIX copia e cola e consulta do pagamento.
+- `api/blackcat.js`: integração de servidor, validação dos valores e recibos de consulta assinados.
+- `previa.html`: visualização das páginas em diferentes tamanhos.
 
-O cadastro ainda precisa de modelo, voltagem, foto real, disponibilidade, frete, identificação do vendedor, atendimento e políticas. O pagamento está desativado e nenhum pedido é criado. Não coloque chaves privadas no HTML ou JavaScript.
+O pagamento permanece indisponível até configurar as variáveis obrigatórias e publicar a função de servidor. Siga `PAYMENT-DEPLOYMENT.md`. Nenhuma chave privada deve ser incluída nos arquivos do site. A integração não foi validada com credenciais reais.
 
-## Desenvolvimento
+A entrega é acompanhada pelo vendedor no painel do gateway; não existe despacho automático nem banco de pedidos neste projeto. Complete foto, modelo, voltagem, disponibilidade, identificação do vendedor, atendimento e políticas da loja.
 
-Na pasta do projeto, execute `python -m http.server 8000` e abra `http://localhost:8000`.
+## Desenvolvimento e verificação
 
-O projeto pode ser publicado como site estático na Vercel, sem comando de build e sem variáveis de API.
+`python -m http.server 8000` permite visualizar as páginas, mas não executa a API. O pagamento requer hospedagem com funções Node.js e as variáveis indicadas na documentação.
 
-## Verificação
-
-Com Node.js instalado, execute `node tests/browser-smoke.cjs`. O script usa um navegador separado em modo headless; `BROWSER_PATH` pode indicar Chrome ou Edge e `BROWSER_CDP_PORT` pode apontar para uma sessão de teste já aberta. Os testes usam apenas dados fictícios.
+Com Node.js 22 ou superior, execute `node tests/pagamento.test.cjs`. Para verificar as páginas com Chrome ou Edge, execute `node tests/browser-smoke.cjs`. São usados somente fixtures locais, sem cobranças reais.
+![alt text](image.png)

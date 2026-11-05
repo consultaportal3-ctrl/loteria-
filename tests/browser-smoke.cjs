@@ -75,21 +75,32 @@ function check(ok,message){if(!ok)throw new Error(message);}
     check(await evaluate('document.querySelector("#summary .primary").disabled'),'Incomplete product can be purchased');
     await evaluate('document.getElementById("close-summary").click()');
   });
-  await run('fan delivery demo validates fields without saving or sending data',async()=>{
+  await run('PIX checkout stays disabled without API configuration',async()=>{
     await navigate('/index.html');
-    await evaluate('localStorage.setItem("vasco-pg-fan-cart-v1",JSON.stringify({product:"ventilador",quantity:1}))');
+    await evaluate('localStorage.setItem("vasco-pg-fan-cart-v1",JSON.stringify({product:"ventilador",quantity:1}));sessionStorage.clear()');
     await navigate('/checkout-loja.html');
-    const initialStorage=await evaluate('JSON.stringify({...localStorage})');
-    await evaluate('document.getElementById("preview-delivery").click()');
-    check(await evaluate('document.getElementById("delivery-review").hidden && document.getElementById("delivery-feedback").textContent.length>0'),'Missing address accepted');
-    await evaluate('window.deliveryRequests=0;window.fetch=()=>{deliveryRequests++;throw Error("Unexpected delivery request")};for(const [id,value] of Object.entries({name:"Pessoa Ficticia",cep:"00000-000",city:"Cidade Exemplo",street:"Rua Exemplo",number:"123",district:"Bairro Exemplo",state:"SP"}))document.getElementById("delivery-"+id).value=value;document.getElementById("preview-delivery").click()');
-    check(await evaluate('!document.getElementById("delivery-review").hidden && document.getElementById("delivery-review-name").textContent==="Pessoa Ficticia" && window.deliveryRequests===0'),'Address preview failed or sent a request');
-    check(await evaluate('JSON.stringify({...localStorage})')===initialStorage,'Address was persisted');
-    await evaluate('document.getElementById("clear-delivery").click()');
-    check(await evaluate('document.getElementById("delivery-name").value==="" && document.getElementById("delivery-review").hidden'),'Clear address failed');
-    await evaluate('document.getElementById("delivery-name").value="Pessoa Ficticia"');
-    await navigate('/checkout-loja.html');
-    check(await evaluate('document.getElementById("delivery-name").value===""'),'Address retained after reload');
+    await until('!!document.getElementById("payment-fields") && document.getElementById("payment-message").textContent!=="Carregando disponibilidade?"');
+    check(await evaluate('document.getElementById("payment-fields").disabled && document.getElementById("generate-pix").disabled'),'Unconfigured checkout enabled');
+  });
+  await run('PIX checkout displays server total and verifies status with local fixtures',async()=>{
+    await navigate('/index.html');
+    const script=await command('Page.addScriptToEvaluateOnNewDocument',{source:      'window.fixtureCalls=[];window.fetch=async(url,options)=>{fixtureCalls.push({url,options});let data=url.includes("action=config")?{enabled:true,unitPrice:6300,shipping:1200,states:["SP"]}:url.includes("action=status")?{status:"PAID",amount:13800,id:"TXN-FIXTURE"}:{id:"TXN-FIXTURE",amount:13800,status:"PENDING",code:"000201-FIXTURE-NOT-PAYABLE",receipt:"fixture-receipt"};return {ok:true,json:async()=>data};};'});
+    try{
+      await evaluate('sessionStorage.clear();localStorage.setItem("vasco-pg-fan-cart-v1",JSON.stringify({product:"ventilador",quantity:2}))');
+      await navigate('/checkout-loja.html');
+      await until('!!document.getElementById("generate-pix") && !document.getElementById("generate-pix").disabled');
+      check(await evaluate('document.getElementById("payment-total").textContent.includes("138,00")'),'Shipping missing from total');
+      await evaluate('for(const [key,value] of Object.entries({name:"Pessoa Teste",email:"fixture@example.com",phone:"11999999999",cpf:"52998224725",zipCode:"01001000",street:"Rua Teste",number:"1",neighborhood:"Centro",city:"Cidade",state:"SP"}))document.getElementById("payment-form").elements[key].value=value;document.getElementById("generate-pix").click()');
+      try{await until('!document.getElementById("pix-result").hidden');}catch(error){throw Error(error.message+' '+JSON.stringify(await evaluate('({message:document.getElementById("payment-message").textContent,valid:document.getElementById("payment-form").checkValidity(),calls:fixtureCalls,fields:Array.from(document.getElementById("payment-form").elements).map(e=>({name:e.name,value:e.value,valid:e.checkValidity()}))})')));}
+      check(await evaluate('document.getElementById("generate-pix").disabled && document.getElementById("pix-code").value==="000201-FIXTURE-NOT-PAYABLE"'),'PIX display or duplicate-click lock failed');
+      check(await evaluate('!JSON.stringify({...localStorage,...sessionStorage}).includes("52998224725") && !JSON.stringify({...localStorage,...sessionStorage}).includes("fixture@example.com")'),'Customer data saved in browser');
+      await evaluate('document.getElementById("check-payment").click()');
+      await until('document.getElementById("payment-message").textContent.includes("Pagamento confirmado")');
+      check(await evaluate('fixtureCalls.filter(c=>c.options?.method==="POST").length===1'),'More than one sale created');
+      await navigate('/checkout-loja.html');
+      try{await until('!document.getElementById("pix-result").hidden');}catch(error){throw Error(error.message+' '+JSON.stringify(await evaluate('({message:document.getElementById("payment-message").textContent,storage:{...sessionStorage},calls:fixtureCalls})')));}
+      check(await evaluate('!document.getElementById("payment-message").textContent.includes("Pagamento confirmado")'),'Reload trusted a stored paid status');
+    }finally{await command('Page.removeScriptToEvaluateOnNewDocument',{identifier:script.identifier});await evaluate('sessionStorage.clear()');}
   });
   await run('fan cart persists quantities and checkout remains nonpayable',async()=>{
     await navigate('/index.html');
