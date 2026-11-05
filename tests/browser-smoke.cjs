@@ -84,6 +84,35 @@ function check(ok,message){if(!ok)throw new Error(message);}
     check(await evaluate('document.querySelector("#summary .primary").disabled'),'Incomplete product can be purchased');
     await evaluate('document.getElementById("close-summary").click()');
   });
+  await run('fan cart persists quantities and checkout remains nonpayable',async()=>{
+    await navigate('/index.html');
+    await evaluate('localStorage.removeItem("vasco-pg-fan-cart-v1");document.getElementById("quantity").value="2";document.getElementById("add-to-cart").click()');
+    await until('location.pathname.endsWith("carrinho-loja.html") && document.readyState==="complete" && !!document.querySelector("[data-cart-total]")');
+    check(await evaluate('document.querySelector("[data-cart-count]").textContent==="2" && document.querySelector("[data-cart-total]").textContent.includes("126,00")'),'Added quantity or subtotal incorrect');
+    await evaluate('document.getElementById("cart-increase").click()');
+    await navigate('/carrinho-loja.html');
+    check(await evaluate('document.getElementById("cart-quantity").value==="3" && document.querySelector("[data-cart-total]").textContent.includes("189,00")'),'Cart did not persist');
+    await evaluate('document.getElementById("cart-quantity").value="0";document.getElementById("cart-quantity").dispatchEvent(new Event("change"))');
+    check(await evaluate('document.getElementById("cart-quantity").value==="3"'),'Invalid quantity changed cart');
+    await navigate('/checkout-loja.html');
+    check(await evaluate('document.querySelector("[data-cart-total]").textContent.includes("189,00") && document.querySelector(".order-summary button").disabled'),'Checkout is inconsistent or payment enabled');
+    for(const width of [320,390,768,1280]){
+      await command('Emulation.setDeviceMetricsOverride',{width,height:844,deviceScaleFactor:1,mobile:width<650});
+      for(const page of ['/index.html','/carrinho-loja.html','/checkout-loja.html']){
+        await navigate(page);
+        check(await evaluate('document.documentElement.scrollWidth<=innerWidth+1'),'Shop overflow: '+page+' '+width);
+      }
+    }
+    await navigate('/carrinho-loja.html');
+    await evaluate('document.getElementById("cart-remove").click()');
+    check(await evaluate('!document.querySelector("[data-cart-empty]").hidden && document.querySelector("[data-cart-content]").hidden'),'Removed product still shown');
+    await navigate('/checkout-loja.html');
+    check(await evaluate('!document.querySelector("[data-cart-empty]").hidden && document.querySelector("[data-cart-content]").hidden'),'Empty checkout displays order');
+    await evaluate('localStorage.setItem("vasco-pg-fan-cart-v1",JSON.stringify({product:"ventilador",quantity:999,unitPrice:1}))');
+    await navigate('/carrinho-loja.html');
+    check(await evaluate('!document.querySelector("[data-cart-empty]").hidden'),'Malformed cart accepted');
+    await evaluate('localStorage.removeItem("vasco-pg-fan-cart-v1")');
+  });
   await navigate('/home.html');
   await evaluate('localStorage.setItem("site-cookie-consent-v1",JSON.stringify({necessary:true,analytics:false,advertising:false}));localStorage.removeItem("portal-demo-games-v1")');
   await navigate('/home.html');

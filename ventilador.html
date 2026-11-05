@@ -7,12 +7,13 @@
   <meta name="description" content="Prévia Vasco PG: ventilador por R$ 63,00, com prazo de entrega informado de 7 dias. Modelo pendente de confirmação.">
   <title>Ventilador | Vasco PG</title>
   <link rel="icon" href="assets/vasco-pg-logo.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="assets/ventilador.css?v=20261105">
+  <link rel="stylesheet" href="assets/ventilador.css?v=20261105-cart">
   <script src="assets/ventilador.js?v=20261105" defer></script>
+  <script src="assets/loja-cart.js?v=20261105-cart" defer></script>
 </head>
 <body>
   <div class="preview-note">Prévia da loja · Produto em preparação · Pagamento desativado</div>
-  <header><a class="brand" href="index.html" aria-label="Vasco PG, início"><span class="brand-mark">VP</span>VASCO PG<small>CASA &amp; CONFORTO</small></a><a class="header-link" href="#detalhes">Informações do produto ↗</a></header>
+  <header><a class="brand" href="index.html" aria-label="Vasco PG, início"><span class="brand-mark">VP</span>VASCO PG<small>CASA &amp; CONFORTO</small></a><a class="header-link cart-link" href="carrinho-loja.html">Carrinho <span data-cart-count>0</span></a></header>
   <main>
     <p class="breadcrumb">Casa / Ventilação</p>
     <section class="product" aria-labelledby="product-title">
@@ -22,7 +23,9 @@
         <div class="delivery"><span aria-hidden="true">↗</span><div><strong>Entrega em 7 dias</strong><p>Prazo informado pelo vendedor. Frete e área de entrega a confirmar.</p></div></div>
         <label class="quantity-label" for="quantity">Quantidade</label><div class="quantity"><button id="decrease" type="button" aria-label="Diminuir quantidade">−</button><input id="quantity" type="number" min="1" max="10" step="1" value="1" inputmode="numeric"><button id="increase" type="button" aria-label="Aumentar quantidade">+</button></div>
         <p class="subtotal" aria-live="polite">Subtotal dos produtos <strong id="subtotal">R$ 63,00</strong></p>
-        <button class="primary" id="show-summary" type="button">Conferir resumo <span aria-hidden="true">→</span></button>
+        <button class="primary" id="add-to-cart" type="button">Adicionar ao carrinho <span aria-hidden="true">→</span></button>
+        <button class="secondary" id="show-summary" type="button">Conferir resumo do produto</button>
+        <p id="cart-message" class="cart-message" role="status" aria-live="polite"></p>
         <p class="checkout-note">Prévia sem cobrança. Nenhum pedido será enviado ou confirmado.</p>
       </div>
     </section>
