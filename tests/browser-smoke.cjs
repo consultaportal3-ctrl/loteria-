@@ -76,8 +76,13 @@ function check(ok,message){if(!ok)throw new Error(message);}
   await command('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:1,mobile:true});
   const checks = [];
   async function run(name,fn){if(process.env.BROWSER_CHECK_FILTER && !name.includes(process.env.BROWSER_CHECK_FILTER))return;try{await fn();checks.push({name,pass:true});console.log('PASS '+name);}catch(error){checks.push({name,pass:false,error:error.message});console.log('FAIL '+name+': '+error.message);}}
-  await run('welcome privacy notice has its stylesheet class',async()=>{
-    await navigate('/');check(await evaluate('document.getElementById("cookie-notice").classList.contains("cookie-notice")'),'Cookie notice class is broken');
+  await run('fan storefront displays supplied price and keeps payment disabled',async()=>{
+    await navigate('/');
+    check(await evaluate('document.getElementById("subtotal").textContent.includes("63,00")'),'Incorrect product price');
+    await evaluate('document.getElementById("increase").click();document.getElementById("show-summary").click()');
+    check(await evaluate('document.getElementById("summary").open && document.getElementById("summary-total").textContent.includes("126,00")'),'Incorrect summary total');
+    check(await evaluate('document.querySelector("#summary .primary").disabled'),'Incomplete product can be purchased');
+    await evaluate('document.getElementById("close-summary").click()');
   });
   await navigate('/home.html');
   await evaluate('localStorage.setItem("site-cookie-consent-v1",JSON.stringify({necessary:true,analytics:false,advertising:false}));localStorage.removeItem("portal-demo-games-v1")');
