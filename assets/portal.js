@@ -1,16 +1,16 @@
 (() => {
   'use strict';
   const games = [
-    { id: 'mega', name: 'Mega-Sena', color: '#188558', total: 60, count: 6, start: 1, description: 'Uma combinação de seis números para experimentar suas escolhas.' },
-    { id: 'facil', name: 'Lotofácil', color: '#963c92', total: 25, count: 15, start: 1, description: 'Monte sua combinação escolhendo quinze números no volante.' },
-    { id: 'quina', name: 'Quina', color: '#3253a1', total: 80, count: 5, start: 1, description: 'Cinco números e muitas combinações para você explorar.' },
-    { id: 'mania', name: 'Lotomania', color: '#c56619', total: 100, count: 50, start: 0, description: 'Explore um volante de cem números e escolha seus cinquenta.' },
-    { id: 'dupla', name: 'Dupla Sena', color: '#b33c50', total: 50, count: 6, start: 1, description: 'Escolha seis números e organize uma nova combinação.' },
-    { id: 'dia', name: 'Dia de Sorte', color: '#937015', total: 31, count: 7, start: 1, description: 'Combine sete números e escolha também seu mês da sorte.' },
-    { id: 'milionaria', name: '+Milionária', color: '#2b327d', total: 50, count: 6, start: 1, description: 'Escolha seus números e trevos.' },
-    { id: 'timemania', name: 'Timemania', color: '#00863d', total: 80, count: 10, start: 1, description: 'Escolha dez números e seu Time do Coração.' },
-    { id: 'loteca', name: 'Loteca', color: '#fa1829', description: 'Marque seus palpites para as 14 partidas.' },
-    { id: 'super', name: 'Super Sete', color: '#00863d', description: 'Escolha números de 0 a 9 em cada uma das sete colunas.' }
+    { id: 'mega', name: '6 de 60', color: '#188558', total: 60, count: 6, start: 1, description: 'Uma combinação de seis números para experimentar suas escolhas.' },
+    { id: 'facil', name: '15 de 25', color: '#963c92', total: 25, count: 15, start: 1, description: 'Monte sua combinação escolhendo quinze números no volante.' },
+    { id: 'quina', name: '5 de 80', color: '#3253a1', total: 80, count: 5, start: 1, description: 'Cinco números e muitas combinações para você explorar.' },
+    { id: 'mania', name: '50 de 100', color: '#c56619', total: 100, count: 50, start: 0, description: 'Explore um volante de cem números e escolha seus cinquenta.' },
+    { id: 'dupla', name: 'Duplo 6 de 50', color: '#b33c50', total: 50, count: 6, start: 1, description: 'Escolha seis números e organize uma nova combinação.' },
+    { id: 'dia', name: 'Números e mês', color: '#937015', total: 31, count: 7, start: 1, description: 'Combine sete números e escolha também seu mês da sorte.' },
+    { id: 'milionaria', name: '6 + 2 extras', color: '#2b327d', total: 50, count: 6, start: 1, description: 'Escolha seus números e trevos.' },
+    { id: 'timemania', name: 'Números e time', color: '#00863d', total: 80, count: 10, start: 1, description: 'Escolha dez números e seu Time do Coração.' },
+    { id: 'loteca', name: 'Palpites de futebol', color: '#fa1829', description: 'Marque seus palpites para as 14 partidas.' },
+    { id: 'super', name: 'Sete colunas', color: '#00863d', description: 'Escolha números de 0 a 9 em cada uma das sete colunas.' }
   ];
   const months = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
   window.portalMonths = Object.freeze([...months]);
@@ -31,7 +31,7 @@
     super: { color: '#00863d', header: '#bddb29', button: '#85a332', amount: '12.300.000,00', short: '12,3 Milhões', contest: '915', day: 'Segunda-Feira', date: '26/10/2026', price: '3,00' }
   };
   const products = [
-    ...(window.homeProductReference ? [{id:'virada',name:'Mega da Virada',route:'virada'}] : []),
+    ...(window.homeProductReference ? [{id:'virada',name:'Especial anual',route:'virada'}] : []),
     ...games.slice(0, 3),
     games.find(game => game.id === 'milionaria'),
     games.find(game => game.id === 'mania'),
@@ -84,9 +84,9 @@
       const color = draw?.color || game.color;
       const prizeAmount = game.id === 'virada' ? `<span>R$</span>${draw.amount}` : `R$ ${draw.amount}`;
       const countdown = draw.close ? `<span data-product-close="${draw.close}">${window.homeProductReference.countdown(draw.close)}</span>` : '<span>Calendário da imagem de referência</span>';
-      const prize = `<div class="product-prize"><strong>${prizeAmount}</strong><b>(R$${draw.short})</b></div><p class="product-contest">${draw.close ? 'Prêmio estimado' : 'Exemplo de prêmio'} do concurso ${draw.contest}</p><p class="product-draw">${draw.label || 'Sorteio'} <strong>${draw.day}<br>${draw.date} às ${draw.time || '21h00'}</strong>${countdown}</p>`;
-      const action = game.external ? `<a class="product-play" href="#informacoes" data-local-info>Ver modalidade<span>Referência: R$ ${draw.price}</span></a>` : `<button type="button" class="product-play" data-game="${gameRoute}">Aposte<span>por R$ ${draw.price}</span></button>`;
-      const pool = draw.pool === false ? '' : `<button type="button" class="product-pool" data-game="${gameRoute}" aria-label="Compre seu bolão de ${game.name}: abrir aposta">Compre seu bolão</button><span class="product-or">ou</span>`;
+      const prize = `<div class="product-prize"><strong>${prizeAmount}</strong><b>(R$${draw.short})</b></div><p class="product-contest">Valor ilustrativo · modelo ${draw.contest}</p><p class="product-draw">Calendário de exemplo <strong>${draw.day}<br>${draw.date} às ${draw.time || '21h00'}</strong>${countdown}</p>`;
+      const action = game.external ? `<a class="product-play" href="#informacoes" data-local-info>Ver modelo<span>Referência: R$ ${draw.price}</span></a>` : `<button type="button" class="product-play" data-game="${gameRoute}">Simular<span>valor R$ ${draw.price}</span></button>`;
+      const pool = draw.pool === false ? '' : `<button type="button" class="product-pool" data-game="${gameRoute}" aria-label="Explorar o modelo ${game.name}">Explorar em grupo</button><span class="product-or">ou</span>`;
       return `<article class="game-card product-card product-${game.id}${draw.pool === false ? ' product-no-pool' : ''}" style="--game-color:${color};--product-header:${draw.header || color};--product-button:${draw.button || color}"><header class="product-header"><span class="product-clover" aria-hidden="true"><i></i><i></i><i></i><i></i></span><h3>${game.name.toLowerCase()}</h3></header><div class="product-body">${prize}${pool}${action}</div></article>`;
     }).join('');
     byId('no-results').hidden = visible.length > 0;
@@ -137,7 +137,7 @@
     }
     cart.forEach((item, index) => {
       const game = {...games.find(candidate => candidate.id === item.game)};
-      if (item.special === 'virada') game.name = 'Mega da Virada';
+      if (item.special === 'virada') game.name = 'Especial anual';
       const article = document.createElement('article');
       article.className = 'cart-item';
       article.dataset.game=item.game;
@@ -304,7 +304,7 @@
     syncNavigation();
   });
   window.portalDemo = {
-    getGames: () => cart.map(item => ({ ...item, numbers: [...item.numbers], ...(item.trevos ? {trevos:[...item.trevos]} : {}), ...(item.picks ? {picks:[...item.picks]} : {}), ...(item.columns ? {columns:item.columns.map(column=>[...column])} : {}), referencePrice: referencePrice(item), name: item.special === 'virada' ? 'Mega da Virada' : games.find(game => game.id === item.game).name })),
+    getGames: () => cart.map(item => ({ ...item, numbers: [...item.numbers], ...(item.trevos ? {trevos:[...item.trevos]} : {}), ...(item.picks ? {picks:[...item.picks]} : {}), ...(item.columns ? {columns:item.columns.map(column=>[...column])} : {}), referencePrice: referencePrice(item), name: item.special === 'virada' ? 'Especial anual' : games.find(game => game.id === item.game).name })),
     recordGeneratedGame: item => {
       try {
         const saved=JSON.parse(localStorage.getItem(generatedStorageKey)||'[]');

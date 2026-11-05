@@ -31,19 +31,19 @@ html{scroll-padding-top:calc(var(--fixed-navigation-height,0px) + 24px)}
 .product-clover i:nth-child(2){transform:rotate(90deg);opacity:.7}
 .product-clover i:nth-child(3){transform:rotate(-90deg);opacity:.7}
 .product-clover i:nth-child(4){transform:rotate(180deg)}
-.product-card.product-mega .product-header{height:60px;min-height:60px;padding:0 62px 0 68px;gap:0;background:#ffb3cf url('product-mega-header.png') no-repeat center;background-size:100% 100%;color:#a90070}
+.product-card.product-mega .product-header{height:60px;min-height:60px;padding:0 62px 0 68px;gap:0;background:#ffb3cf url('vasco-pg-pattern.svg') no-repeat center;background-size:100% 100%;color:#a90070}
 .product-mega .product-header::before,.product-mega .product-header .product-clover{display:none}
 .product-card.product-mega .product-header h3{font-size:22px;line-height:1;letter-spacing:-.5px}
-.product-card.product-facil .product-header{height:60px;min-height:60px;padding:0 16px 0 68px;gap:0;background:#92278f url('product-lotofacil-header.png') no-repeat center;background-size:100% 100%;color:#fff}
+.product-card.product-facil .product-header{height:60px;min-height:60px;padding:0 16px 0 68px;gap:0;background:#92278f url('vasco-pg-pattern.svg') no-repeat center;background-size:100% 100%;color:#fff}
 .product-facil .product-header::before,.product-facil .product-header .product-clover{display:none}
 .product-card.product-facil .product-header h3{font-size:22px;line-height:1;letter-spacing:-.5px}
 .product-card .product-header{height:60px;min-height:60px;padding:0 16px 0 68px;gap:0}
 .product-card .product-header h3{font-size:22px;line-height:1;letter-spacing:-.5px}
 .product-card .product-clover{position:absolute;left:12px;top:50%;transform:translateY(-50%)}
-.product-card.product-quina .product-header{background:#32318e url('product-quina-header.png') no-repeat center;background-size:100% 100%;color:#fff}
-.product-card.product-milionaria .product-header{background:#2b327d url('product-milionaria-header.png') no-repeat center;background-size:100% 100%;color:#fff}
+.product-card.product-quina .product-header{background:#32318e url('vasco-pg-pattern.svg') no-repeat center;background-size:100% 100%;color:#fff}
+.product-card.product-milionaria .product-header{background:#2b327d url('vasco-pg-pattern.svg') no-repeat center;background-size:100% 100%;color:#fff}
 .product-quina .product-header::before,.product-quina .product-header .product-clover,.product-milionaria .product-header::before,.product-milionaria .product-header .product-clover{display:none}
-.product-card.product-mania .product-header{background:#ed7900 url('product-lotomania-header.png') no-repeat center;background-size:100% 100%;color:#fff}
+.product-card.product-mania .product-header{background:#ed7900 url('vasco-pg-pattern.svg') no-repeat center;background-size:100% 100%;color:#fff}
 .product-card.product-dupla .product-header{background:#af3c50;color:#fff}
 .product-card.product-dia .product-header{background:#926e12;color:#fff}
 .product-card:is(.product-mania,.product-dupla,.product-dia) .product-header{height:57px;min-height:57px;padding-left:65px}
@@ -53,16 +53,16 @@ html{scroll-padding-top:calc(var(--fixed-navigation-height,0px) + 24px)}
 .product-card.product-mania .product-header{padding-left:68px}
 .product-card.product-mania .product-header h3{font-size:22px}
 .product-mania .product-header::before,.product-mania .product-header .product-clover{display:none}
-.product-card.product-timemania .product-header{background:#fff200 url('product-timemania-header.png') no-repeat center;background-size:100% 100%;color:#00863d}
-.product-card.product-loteca .product-header{background:#fa1829 url('product-loteca-header.png') no-repeat center;background-size:100% 100%;color:#fff}
-.product-card.product-super .product-header{background:#bddb29 url('product-super-header.png') no-repeat center;background-size:100% 100%;color:#00863d}
-.product-card.product-dia .product-header{background:#e8c41e url('product-dia-header.png') no-repeat center;background-size:100% 100%;color:#8b760a}
-.product-card.product-dupla .product-header{background:#af2942 url('product-dupla-header.png') no-repeat center;background-size:100% 100%;color:#fff}
+.product-card.product-timemania .product-header{background:#fff200 url('vasco-pg-pattern.svg') no-repeat center;background-size:100% 100%;color:#00863d}
+.product-card.product-loteca .product-header{background:#fa1829 url('vasco-pg-pattern.svg') no-repeat center;background-size:100% 100%;color:#fff}
+.product-card.product-super .product-header{background:#bddb29 url('vasco-pg-pattern.svg') no-repeat center;background-size:100% 100%;color:#00863d}
+.product-card.product-dia .product-header{background:#e8c41e url('vasco-pg-pattern.svg') no-repeat center;background-size:100% 100%;color:#8b760a}
+.product-card.product-dupla .product-header{background:#af2942 url('vasco-pg-pattern.svg') no-repeat center;background-size:100% 100%;color:#fff}
 .product-card:is(.product-timemania,.product-loteca,.product-super,.product-dia,.product-dupla) .product-header::before,.product-card:is(.product-timemania,.product-loteca,.product-super,.product-dia,.product-dupla) .product-clover{display:none}
 .product-card.product-timemania .product-pool{border:1px solid #85a332;color:#00863d}
 .product-no-pool .product-draw{margin-top:auto;margin-bottom:auto;padding-block:22px}
 @media(min-width:1101px){.game-cards>.product-card:nth-last-child(2):nth-child(4n+1){grid-column:2}}
-.product-body{position:relative;isolation:isolate;display:flex;flex:1;flex-direction:column;align-items:stretch;padding:18px 24px 26px;text-align:center;color:#0c3154;font-family:CampaignBook,Futura,sans-serif;background:#fff url('products-clovers.png') no-repeat center bottom;background-size:100% auto}
+.product-body{position:relative;isolation:isolate;display:flex;flex:1;flex-direction:column;align-items:stretch;padding:18px 24px 26px;text-align:center;color:#0c3154;font-family:CampaignBook,Futura,sans-serif;background:#fff url('vasco-pg-pattern.svg') no-repeat center bottom;background-size:100% auto}
 .product-prize{display:flex;flex-direction:column;color:var(--game-color);font-family:CampaignBold,'Arial Black',sans-serif;line-height:1.2;white-space:nowrap}
 .product-prize>strong{font-size:clamp(22px,1.8vw,35px);font-weight:900;letter-spacing:-1px}
 .product-prize>b{font-size:24px;font-weight:900;letter-spacing:-.8px}

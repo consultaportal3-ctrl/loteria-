@@ -164,10 +164,10 @@
     ['modalidades','combos','baixar-aplicativo'].forEach(id => { byId(id).hidden = true; });
     document.querySelectorAll('.campaign-menu .active').forEach(item => item.classList.remove('active'));
     document.querySelector('[data-nav-game="dupla"]').classList.add('active');
-    heroTitle.textContent = 'Dupla Sena';
+    heroTitle.textContent = 'Duplo 6 de 50';
     heroSubtitle.textContent = 'A mesma aposta, duas chances de ganhar.';
-    heroTicket.setAttribute('src', 'assets/dupla-sena-ticket.png');
-    document.title = 'Portal da Sorte | Demonstração';
+    heroTicket.setAttribute('src', 'assets/vasco-pg-illustration.svg');
+    document.title = 'Vasco PG | Demonstração';
     window.scrollTo({top:0,behavior:'instant'});
     window.dispatchEvent(new Event('scroll'));
     byId('dupla-title').focus({preventScroll:true});

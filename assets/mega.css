@@ -59,7 +59,7 @@
 .mega-all-bets{display:inline-block;max-width:100%;min-height:28px;padding:6px 10px;border:1px solid #36c9b9;border-radius:0;background:#fff;color:#28466b;font:400 12px/1.4 var(--font-text);text-align:left;cursor:pointer}
 .mega-recent-game{padding-bottom:22px}
 .mega-recent-header{position:relative;display:flex;align-items:center;justify-content:space-between;height:42px;min-height:42px;gap:12px;padding:0 8px 0 61px;background:#ffb2d0;color:#a90070}
-.mega-recent-header:before{content:"";position:absolute;inset:0 auto 0 0;width:51px;background:url('product-mega-header.png') left center/auto 100% no-repeat}
+.mega-recent-header:before{content:"";position:absolute;inset:0 auto 0 0;width:51px;background:url('vasco-pg-pattern.svg') left center/auto 100% no-repeat}
 .mega-recent-header strong{font:900 18px/1 var(--font-display);letter-spacing:-.4px}
 .mega-recent-header button{display:grid;place-items:center;flex-shrink:0;width:28px;height:36px;border:0;background:transparent;color:#fff;padding:2px;cursor:pointer}
 .mega-recent-header button svg{width:18px;height:20px}
@@ -77,12 +77,12 @@
 .facil-page .mega-numbers button[aria-pressed=true]{background:#92278f;border-color:#92278f}
 .facil-page .mega-numbers button:hover{background:#f8edf8;color:#92278f;border-color:#92278f}
 .recent-facil .mega-recent-header{background:#92278f;color:#fff}
-.recent-facil .mega-recent-header:before{background-image:url('product-lotofacil-header.png')}
+.recent-facil .mega-recent-header:before{background-image:url('vasco-pg-pattern.svg')}
 .quina-page #quina-title{margin:0 0 20px;color:#006bb6;font:900 clamp(34px,3vw,54px)/1.15 var(--font-display);letter-spacing:-1.2px}
 .quina-page .mega-numbers button[aria-pressed=true]{background:#32318e;border-color:#32318e}
 .quina-page .mega-numbers button:hover{background:#efeffa;color:#32318e;border-color:#32318e}
 .recent-quina .mega-recent-header{background:#32318e;color:#fff}
-.recent-quina .mega-recent-header:before{background-image:url('product-quina-header.png')}
+.recent-quina .mega-recent-header:before{background-image:url('vasco-pg-pattern.svg')}
 .milionaria-page #milionaria-title{margin:0 0 20px;color:#006bb6;font:900 clamp(34px,3vw,54px)/1.15 var(--font-display);letter-spacing:-1.2px}
 .milionaria-page .mega-numbers button[aria-pressed=true]{background:#2b327d;border-color:#2b327d}
 .milionaria-page .mega-options{flex-wrap:wrap}
@@ -97,7 +97,7 @@
 .milionaria-trevos button:hover{color:#8faeb5}
 .milionaria-trevos button[aria-pressed=true]:hover{color:#424b96}
 .recent-milionaria .mega-recent-header{background:#2b327d;color:#fff}
-.recent-milionaria .mega-recent-header:before{background-image:url('product-milionaria-header.png')}
+.recent-milionaria .mega-recent-header:before{background-image:url('vasco-pg-pattern.svg')}
 .mega-recent-game .recent-trevos{color:#2b327d;font-weight:700}
 @media(max-width:450px){.milionaria-page #milionaria-title{font-size:34px}.milionaria-trevos button>b{font-size:clamp(22px,7vw,30px)}}
 @media(max-width:450px){.quina-page #quina-title{font-size:34px}}
@@ -190,7 +190,7 @@
 .mania-page .mega-ticket-bottom{padding:30px 0 32px}
 .mania-page .mega-add:disabled{opacity:1}
 .recent-mania .mega-recent-header{background:#ed7900;color:#fff}
-.recent-mania .mega-recent-header:before{background-image:url('product-lotomania-header.png')}
+.recent-mania .mega-recent-header:before{background-image:url('vasco-pg-pattern.svg')}
 .mania-route .campaign-tickets{width:140px;right:5.5%;bottom:-2px}
 .mania-page .recent-mania .mega-recent-numbers{gap:10px 14px}
 @media(max-width:1100px){.mania-page .mega-numbers{grid-template-columns:repeat(12,minmax(0,1fr));gap:20px 5px}.mania-page .mega-numbers button{font-size:17px}.mania-page .mega-toolbar{width:100%}.mania-page .mega-toolbar button{min-width:130px}.mania-route .campaign-tickets{width:125px;right:3%}.mania-route .hero .hero-copy p{max-width:65%}}
@@ -218,7 +218,7 @@
 .timemania-team-controls button{min-height:38px;padding:8px 18px;border:1px solid #36c9b9;background:#fff;color:#56617c;font:700 14px var(--font-text)}
 .timemania-page .mega-ticket-bottom{padding-top:30px}
 .recent-timemania .mega-recent-header{background:#fff200;color:#00863d}
-.recent-timemania .mega-recent-header:before{background-image:url('product-timemania-header.png')}
+.recent-timemania .mega-recent-header:before{background-image:url('vasco-pg-pattern.svg')}
 .recent-timemania .mega-recent-header button{color:#fff}
 .timemania-route .campaign-tickets{width:140px;right:5.5%;bottom:-2px}
 @media(max-width:1100px){.timemania-page .mega-numbers{grid-template-columns:repeat(12,minmax(0,1fr));gap:20px 5px}.timemania-route .campaign-tickets{width:125px;right:3%}.timemania-route .hero .hero-copy p{max-width:65%}}
@@ -256,7 +256,7 @@
 .dupla-page .mega-numbers button:hover{background:#fff0f3;border-color:#af2942;color:#af2942}
 .dupla-page .mega-numbers button[aria-pressed=true]:hover{background:#922238;color:#fff}
 .recent-dupla .mega-recent-header{background:#af2942;color:#fff}
-.recent-dupla .mega-recent-header:before{background-image:url('product-dupla-header.png')}
+.recent-dupla .mega-recent-header:before{background-image:url('vasco-pg-pattern.svg')}
 .dupla-route .campaign-tickets{width:140px;right:5.5%;bottom:-2px}
 @media(max-width:1100px){.dupla-route .campaign-tickets{width:125px;right:3%}.dupla-route .hero .hero-copy p{max-width:65%}}
 @media(max-width:720px){.dupla-route .campaign-tickets{width:110px;right:5%;bottom:-5px}.dupla-route .hero .hero-copy p{max-width:100%}}
@@ -276,7 +276,7 @@
 .loteca-selection-summary p{margin:0}
 .loteca-sr-only{position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
 .recent-loteca .mega-recent-header{background:#fa1829;color:#fff}
-.recent-loteca .mega-recent-header:before{background-image:url('product-loteca-header.png')}
+.recent-loteca .mega-recent-header:before{background-image:url('vasco-pg-pattern.svg')}
 .recent-loteca .mega-recent-numbers{gap:8px 12px;font-size:12px}
 .loteca-route .campaign-tickets{width:140px;right:5.5%;bottom:-2px}
 @media(max-width:1100px){.loteca-route .campaign-tickets{width:125px;right:3%}.loteca-route .hero .hero-copy p{max-width:65%}.loteca-table th,.loteca-table td{padding-inline:3px}.loteca-table .loteca-date{display:none}}
@@ -305,7 +305,7 @@
 .dia-month-progress{position:relative;height:5px;margin-top:16px;background:#cde2e2}
 .dia-month-progress span{position:absolute;top:0;bottom:0;left:0;background:#45bcac}
 .recent-dia .mega-recent-header{background:#e8c41e;color:#75620e}
-.recent-dia .mega-recent-header:before{background-image:url('product-dia-header.png')}
+.recent-dia .mega-recent-header:before{background-image:url('vasco-pg-pattern.svg')}
 .recent-dia .mega-recent-header button{color:#fff}
 .mega-recent-game .recent-dia-month{display:flex;align-items:center;gap:3px;margin:0 10px;color:#8c7700;font:700 14px/1.4 var(--font-text)}
 .recent-dia-month:before{content:'';flex:0 0 16px;width:16px;height:16px;background:url('month-calendar.svg') center/contain no-repeat}
@@ -330,7 +330,7 @@
 .super-column button:hover{border-color:#00863d;color:#00863d;background:#f4f9de}
 .super-column button[aria-pressed=true]:hover{background:#6d8727;color:#fff}
 .recent-super .mega-recent-header{background:#bddb29;color:#00863d}
-.recent-super .mega-recent-header:before{background-image:url('product-super-header.png')}
+.recent-super .mega-recent-header:before{background-image:url('vasco-pg-pattern.svg')}
 .recent-super .mega-recent-header button{color:#fff}
 .recent-super .mega-recent-numbers{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));width:204px;max-width:calc(100% - 20px);gap:0;margin:36px auto 24px;text-align:center;color:#000}
 .recent-super-column{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0}

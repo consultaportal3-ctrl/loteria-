@@ -15,12 +15,12 @@ window.homeProductReference = {
   },
   countdown(close) {
     const minutes = Math.ceil((Date.parse(close) - Date.now()) / 60000);
-    if (minutes <= 0) return 'Apostas encerradas<br>para este concurso';
+    if (minutes <= 0) return 'Exemplo encerrado<br>sem valor financeiro';
     const days = Math.floor(minutes / 1440);
-    if (days > 1) return `Apostas se encerram em ${days} dias`;
+    if (days > 1) return `Exemplo termina em ${days} dias`;
     const hours = Math.floor(minutes / 60), remaining = minutes % 60;
     const text = hours ? `${hours} ${hours === 1 ? 'hora' : 'horas'} e ${remaining} minutos` : `${remaining} ${remaining === 1 ? 'minuto' : 'minutos'}`;
-    return `Apostas se encerram em<br>${text}`;
+    return `Exemplo termina em<br>${text}`;
   }
 };
 setInterval(() => {

@@ -182,7 +182,7 @@
     const number = Number(button.dataset.timemaniaNumber);
     if (selected.has(number)) selected.delete(number);
     else if (selected.size < Number(quantity.value)) selected.add(number);
-    else { update('Desmarque um número para escolher outro. A Timemania permite exatamente 10 números.'); return; }
+    else { update('Desmarque um número para escolher outro. A Números e time permite exatamente 10 números.'); return; }
     update();
   });
   repeats.addEventListener('change', () => update());
@@ -234,10 +234,10 @@
     ['modalidades','combos','baixar-aplicativo'].forEach(id => { byId(id).hidden = true; });
     document.querySelectorAll('.campaign-menu .active').forEach(item => item.classList.remove('active'));
     document.querySelector('[data-nav-game="timemania"]').classList.add('active');
-    heroTitle.textContent = 'Timemania';
-    heroSubtitle.textContent = 'Com a Timemania, seu palpite no futebol pode render uma bolada.';
-    heroTicket.setAttribute('src', 'assets/timemania-ticket.png');
-    document.title = 'Portal da Sorte | Demonstração';
+    heroTitle.textContent = 'Números e time';
+    heroSubtitle.textContent = 'Com a Números e time, seu palpite no futebol pode render uma bolada.';
+    heroTicket.setAttribute('src', 'assets/vasco-pg-illustration.svg');
+    document.title = 'Vasco PG | Demonstração';
     window.scrollTo({top:0, behavior:'instant'});
     window.dispatchEvent(new Event('scroll'));
     byId('timemania-title').focus({preventScroll:true});

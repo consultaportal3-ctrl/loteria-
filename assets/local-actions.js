@@ -13,7 +13,7 @@
     event.preventDefault();
     const card = trigger.closest('.combo-card,.product-card');
     const title = card?.querySelector('h3')?.textContent || trigger.textContent.trim();
-    let description = 'Esta modalidade ainda não possui um volante nesta demonstração. Você pode escolher Mega-Sena ou Lotofácil pelo menu para montar suas combinações.';
+    let description = 'Esta modalidade ainda não possui um volante nesta demonstração. Você pode escolher 6 de 60 ou 15 de 25 pelo menu para montar suas combinações.';
     if (card?.classList.contains('combo-card')) {
       description = `${card.querySelector('.combo-content p').textContent} Valor de referência: ${card.querySelector('.combo-price').textContent}. A montagem deste pacote ainda não está disponível.`;
     } else if (trigger.classList.contains('account-link')) {

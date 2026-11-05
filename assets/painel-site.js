@@ -6,7 +6,7 @@
   const paths={home:'M3 10 12 3l9 7v11h-6v-7H9v7H3Z',sales:'M4 18 20 4M10 4h10v10',box:'m3 7 9-4 9 4v10l-9 4-9-4Zm0 0 9 4 9-4M12 11v10',pix:'m12 2 10 10-10 10L2 12Z',gateway:'M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5M8 12l3 3 5-6',info:'M12 11v6m0-11v1M22 12a10 10 0 1 1-20 0 10 10 0 0 1 20 0Z',ticket:'M4 5h16v5a2 2 0 0 0 0 4v5H4v-5a2 2 0 0 0 0-4ZM12 5v14'};
   const icon = name => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${paths[name]||paths.box}"/></svg>`;
   document.querySelectorAll('[data-icon]').forEach(node=>{node.innerHTML=icon(node.dataset.icon);});
-  const definitions=[['virada','Mega da Virada','mega-da-virada'],['mega','Mega-Sena','mega-sena'],['facil','Lotofácil','lotofacil'],['quina','Quina','quina'],['milionaria','+Milionária','mais-milionaria'],['mania','Lotomania','lotomania'],['timemania','Timemania','timemania'],['dupla','Dupla Sena','dupla-sena'],['loteca','Loteca','loteca'],['dia','Dia de Sorte','dia-de-sorte'],['super','Super Sete','super-sete']];
+  const definitions=[['virada','Especial anual','mega-da-virada'],['mega','6 de 60','mega-sena'],['facil','15 de 25','lotofacil'],['quina','5 de 80','quina'],['milionaria','6 + 2 extras','mais-milionaria'],['mania','50 de 100','lotomania'],['timemania','Números e time','timemania'],['dupla','Duplo 6 de 50','dupla-sena'],['loteca','Palpites de futebol','loteca'],['dia','Números e mês','dia-de-sorte'],['super','Sete colunas','super-sete']];
   const catalogue=definitions.map(([id,name,route])=>({id,name,route,...window.homeProductReference.draws[id]}));
   const cartKey='portal-demo-games-v1';
   const generatedKey='portal-demo-generated-games-v1';

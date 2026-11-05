@@ -22,7 +22,7 @@
   modal.innerHTML = `
     <div class="payment-masthead">
       <button type="button" class="payment-back payment-close">‹ Voltar ao carrinho</button>
-      <span class="payment-brand">PORTAL<br>DA SORTE</span>
+      <span class="payment-brand">VASCO<br>PG</span>
       <span class="payment-demo-label">Demonstração independente</span>
     </div>
     <section class="payment-hero" aria-labelledby="payment-hero-title">
@@ -31,16 +31,16 @@
           <span class="payment-hero-cart">Meu carrinho · <span class="payment-cart-count">0</span></span>
           <h2 id="payment-hero-title">Compra de<br>Apostas</h2>
           <p>Confira todas as suas apostas e escolha sua forma de pagamento.</p>
-          <span class="payment-hero-notice">Ambiente de teste · sem vínculo com a CAIXA · não emite bilhetes oficiais</span>
+          <span class="payment-hero-notice">Ambiente de teste · sem pagamentos reais · não emite bilhetes oficiais</span>
         </div>
-        <img class="payment-hero-art" src="assets/campaign-tickets.png" width="796" height="483" alt="" aria-hidden="true">
+        <img class="payment-hero-art" src="assets/vasco-pg-illustration.svg" width="796" height="483" alt="" aria-hidden="true">
       </div>
     </section>
     <form class="payment-form">
       <header class="payment-header">
         <div><span class="payment-kicker">AMBIENTE DE TESTE</span><h2 id="payment-title" tabindex="-1">Forma de Pagamento</h2><p class="payment-intro">Para pagar suas compras, basta escolher a opção de sua preferência.</p></div>
       </header>
-      <p class="payment-disclaimer">Demonstração independente, sem vínculo com a CAIXA. Simulador local BlackCat: nenhum dado é enviado ao gateway, nenhuma cobrança ou aposta é criada. Use somente nome e e-mail fictícios.</p>
+      <p class="payment-disclaimer">Demonstração independente, sem pagamentos reais. Simulador local BlackCat: nenhum dado é enviado ao gateway, nenhuma cobrança ou aposta é criada. Use somente nome e e-mail fictícios.</p>
       <h3 class="payment-cart-heading">Carrinho</h3>
       <div class="payment-layout">
         <section class="payment-order">
@@ -67,7 +67,7 @@
         <div><span class="payment-kicker">PEDIDO DE TESTE</span><h2 id="payment-result-title" tabindex="-1">Forma de Pagamento</h2><p class="payment-intro">Utilize o QR Code ou copie o código PIX abaixo.</p></div>
         <button type="button" class="payment-close" aria-label="Fechar">×</button>
       </header>
-      <p class="payment-disclaimer">Demonstração independente, sem vínculo com a CAIXA. Simulador local BlackCat: a imagem e o código abaixo são ilustrativos e não podem ser pagos. Nenhuma aposta é concluída.</p>
+      <p class="payment-disclaimer">Demonstração independente, sem pagamentos reais. Simulador local BlackCat: a imagem e o código abaixo são ilustrativos e não podem ser pagos. Nenhuma aposta é concluída.</p>
       <h3 class="payment-cart-heading">Carrinho</h3>
       <div class="payment-result-panel">
       <div class="payment-option payment-pix-banner"><span class="payment-pix-brand"><span aria-hidden="true">❖</span> pix</span><span class="payment-option-caption">Ambiente de teste</span></div>

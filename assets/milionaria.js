@@ -199,12 +199,12 @@
     if(!active) return;
     document.body.classList.add('mega-route');
     ['modalidades','combos','baixar-aplicativo'].forEach(id=>{byId(id).hidden=true;});
-    heroTitle.textContent='+Milionária';
-    heroSubtitle.textContent='Quer mais? +Milionária! Mais prêmios, com mais chances de ganhar! Aposte!';
-    heroTicket.setAttribute('src','assets/reference-milionaria.png');
+    heroTitle.textContent='6 + 2 extras';
+    heroSubtitle.textContent='Quer mais? 6 + 2 extras! Mais prêmios, com mais chances de ganhar! Aposte!';
+    heroTicket.setAttribute('src','assets/vasco-pg-illustration.svg');
     document.querySelectorAll('.campaign-menu .active').forEach(item=>item.classList.remove('active'));
     document.querySelector('[data-nav-game="milionaria"]').classList.add('active');
-    document.title = 'Portal da Sorte | Demonstração';
+    document.title = 'Vasco PG | Demonstração';
     window.scrollTo({top:0,behavior:'instant'});
     window.dispatchEvent(new Event('scroll'));
     byId('milionaria-title').focus({preventScroll:true});

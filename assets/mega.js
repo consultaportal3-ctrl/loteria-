@@ -165,9 +165,9 @@
   function route() {
     const virada = window.location.hash === '#mega-da-virada';
     document.body.classList.toggle('virada-route', virada);
-    instructions.innerHTML = virada ? 'A Mega da Virada é o concurso especial da Mega-Sena que acontece anualmente na virada do ano. Considerado o maior concurso das Loterias CAIXA, a Mega da Virada oferta prêmios bilionários e não acumula. Se ninguém acertar a faixa principal, de 6 números, o prêmio é dividido entre os acertadores da segunda faixa, com acerto de 5 números e assim por diante. Neste ano, o prêmio é estimado em R$ 1 bilhão! Não fique de fora, aposte!' : originalForm.instructions;
-    howToPlay.innerHTML = virada ? '<h2 id="mega-how-title">Como jogar</h2><p>As regras para jogar na Mega da Virada são as mesmas dos concursos regulares da Mega Sena. Para ganhar o prêmio principal é preciso acertar os 6 números dentre os 60 disponíveis. Também é possível ganhar prêmios acertando 5 ou 4 números. A diferença é que a Mega da Virada não acumula. Se ninguém acertar a Sena, o prêmio é destinado aos acertadores da Quina e assim por diante. Está disponível a opção de Surpresinha, quando o sistema escolhe os números aleatoriamente.</p>' : originalForm.how;
-    numbers.setAttribute('aria-label', `Volante da ${virada ? 'Mega da Virada' : 'Mega-Sena'}, números de 01 a 60`);
+    instructions.innerHTML = virada ? 'Explore uma combinação especial neste protótipo. Todos os valores e resultados são ilustrativos; não há participação em sorteios nem prêmios reais.' : originalForm.instructions;
+    howToPlay.innerHTML = virada ? '<h2 id="mega-how-title">Como jogar</h2><p>As regras para jogar na Especial anual são as mesmas dos concursos regulares da Mega Sena. Para ganhar o prêmio principal é preciso acertar os 6 números dentre os 60 disponíveis. Também é possível ganhar prêmios acertando 5 ou 4 números. A diferença é que a Especial anual não acumula. Se ninguém acertar a Sena, o prêmio é destinado aos acertadores da 5 de 80 e assim por diante. Está disponível a opção de Surpresinha, quando o sistema escolhe os números aleatoriamente.</p>' : originalForm.how;
+    numbers.setAttribute('aria-label', `Volante da ${virada ? 'Especial anual' : '6 de 60'}, números de 01 a 60`);
     document.querySelectorAll('.campaign-menu a[href="#mega-da-virada"]').forEach(link => link.classList.toggle('active', virada));
     if (['#lotofacil','#quina','#mais-milionaria'].includes(window.location.hash)) { byId('mega-view').hidden = true; return; }
     const wasActive = document.body.classList.contains('mega-route');
@@ -177,24 +177,24 @@
     ['modalidades','combos','baixar-aplicativo'].forEach(id => { byId(id).hidden = active; });
     document.querySelector('.hero-copy').hidden = false;
     document.querySelector('.campaign-art').hidden = false;
-    heroTitle.textContent = active ? 'Mega-Sena' : originalHero.title;
+    heroTitle.textContent = active ? '6 de 60' : originalHero.title;
     heroSubtitle.textContent = active ? 'A loteria que paga milhões para quem acerta os seis números sorteados.' : originalHero.subtitle;
-    heroTicket.setAttribute('src',active ? 'assets/reference-mega-sena.png' : originalHero.ticket);
+    heroTicket.setAttribute('src',active ? 'assets/vasco-pg-illustration.svg' : originalHero.ticket);
     document.querySelector('[data-nav-game="milionaria"]').classList.remove('active');
     document.querySelector('[data-nav-game="mega"]').classList.toggle('active', active && !virada);
     document.querySelector('[data-nav-game="facil"]').classList.remove('active');
     document.querySelector('[data-nav-game="quina"]').classList.remove('active');
     document.querySelector('.campaign-menu a[href="#inicio"]').classList.toggle('active', !active);
-    document.title = 'Portal da Sorte | Demonstração';
+    document.title = 'Vasco PG | Demonstração';
     contest.querySelector('h2').textContent = virada ? 'Concurso nº 3100' : originalContest.title;
     contest.querySelector('p').innerHTML = virada ? '<strong>Encerramento das Apostas:</strong> 31/12/2026 22h00<br><strong>Data do Sorteio:</strong> 01/01/2027 11h00<br><strong>Estimativa de prêmio:</strong> R$ 1.000.000.000,00' : originalContest.details;
     if (virada) {
       repeats.value = '1';
       update();
-      heroTitle.textContent = 'Mega da Virada';
-      heroSubtitle.textContent = 'Chegou a hora de apostar no maior prêmio das Loterias CAIXA. No portal você aposta online na Mega da Virada e concorre ao prêmio estimado de R$ 1 bilhão. É muito dinheiro para qualquer um!';
-      heroTicket.setAttribute('src', 'assets/mega-virada-ticket.png');
-      document.title = 'Portal da Sorte | Demonstração';
+      heroTitle.textContent = 'Especial anual';
+      heroSubtitle.textContent = 'Explore combinações no simulador Vasco PG. Valores ilustrativos, sem sorteios, prêmios ou cobranças reais.';
+      heroTicket.setAttribute('src', 'assets/vasco-pg-illustration.svg');
+      document.title = 'Vasco PG | Demonstração';
     }
     if (active) {
       window.scrollTo({top:0, behavior:'instant'});

@@ -13,10 +13,10 @@
       document.querySelector('.campaign-art').hidden=false;
       document.querySelector('.hero-copy h1').textContent='Carrinho de Apostas';
       document.querySelector('.hero-copy p').textContent='No carrinho estão todas as apostas que você selecionou. Basta seguir os passos para finalizar e depois é só torcer.';
-      document.querySelector('.campaign-tickets img').src='assets/campaign-tickets.png';
+      document.querySelector('.campaign-tickets img').src='assets/vasco-pg-illustration.svg';
       document.querySelectorAll('.campaign-menu .active').forEach(link=>link.classList.remove('active'));
       if(!dialog.open)dialog.show();
-      document.title = 'Portal da Sorte | Demonstração';
+      document.title = 'Vasco PG | Demonstração';
     }else if(dialog.open)dialog.close();
     previousHash=location.hash;
   }

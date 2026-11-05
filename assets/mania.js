@@ -113,7 +113,7 @@
     const number = Number(button.dataset.maniaNumber);
     if (selected.has(number)) selected.delete(number);
     else if (selected.size < Number(quantity.value)) selected.add(number);
-    else { update('Desmarque um número para escolher outro. A Lotomania permite exatamente 50 números.'); return; }
+    else { update('Desmarque um número para escolher outro. A 50 de 100 permite exatamente 50 números.'); return; }
     update();
   });
   repeats.addEventListener('change', () => update());
@@ -159,10 +159,10 @@
     ['modalidades','combos','baixar-aplicativo'].forEach(id => { byId(id).hidden = true; });
     document.querySelectorAll('.campaign-menu .active').forEach(item => item.classList.remove('active'));
     document.querySelector('[data-nav-game="mania"]').classList.add('active');
-    heroTitle.textContent = 'Lotomania';
-    heroSubtitle.textContent = 'Na Lotomania é fácil apostar e ganhar.';
-    heroTicket.setAttribute('src', 'assets/lotomania-ticket.png');
-    document.title = 'Portal da Sorte | Demonstração';
+    heroTitle.textContent = '50 de 100';
+    heroSubtitle.textContent = 'Na 50 de 100 é fácil apostar e ganhar.';
+    heroTicket.setAttribute('src', 'assets/vasco-pg-illustration.svg');
+    document.title = 'Vasco PG | Demonstração';
     window.scrollTo({top:0, behavior:'instant'});
     window.dispatchEvent(new Event('scroll'));
     byId('mania-title').focus({preventScroll:true});

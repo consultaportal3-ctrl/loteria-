@@ -94,10 +94,10 @@
     ['modalidades','combos','baixar-aplicativo'].forEach(id=>{byId(id).hidden=true;});
     document.querySelectorAll('.campaign-menu .active').forEach(item=>item.classList.remove('active'));
     document.querySelector('[data-nav-game="loteca"]').classList.add('active');
-    document.querySelector('.hero-copy h1').textContent='Loteca';
+    document.querySelector('.hero-copy h1').textContent='Palpites de futebol';
     document.querySelector('.hero-copy p').textContent='Você pode se tornar um campeão apostando na sua paixão pelo futebol!';
-    document.querySelector('.campaign-tickets img').setAttribute('src','assets/loteca-ticket.png');
-    document.title = 'Portal da Sorte | Demonstração';window.scrollTo({top:0,behavior:'instant'});window.dispatchEvent(new Event('scroll'));byId('loteca-title').focus({preventScroll:true});updateCart();
+    document.querySelector('.campaign-tickets img').setAttribute('src','assets/vasco-pg-illustration.svg');
+    document.title = 'Vasco PG | Demonstração';window.scrollTo({top:0,behavior:'instant'});window.dispatchEvent(new Event('scroll'));byId('loteca-title').focus({preventScroll:true});updateCart();
   }
   window.addEventListener('portal:cart-change',updateCart);window.addEventListener('hashchange',route);
   update();updateCart();route();

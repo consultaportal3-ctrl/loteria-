@@ -63,7 +63,7 @@
   .home-refresh .product-card .product-header h3{font-size:20px}
 }
 
-/* Keep the Mega da Virada card proportional to the supplied 380px reference. */
+/* Keep the Especial anual card proportional to the supplied 380px reference. */
 .home-refresh .game-cards>.product-virada{width:100%;max-width:380px;justify-self:center;align-self:start;min-height:564px;container-type:inline-size}
 .home-refresh .product-virada .product-header{height:75px;min-height:75px;padding-left:23.16cqw}
 .home-refresh .product-virada .product-header h3{font-size:clamp(19px,6.84cqw,26px);white-space:nowrap}

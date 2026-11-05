@@ -197,10 +197,10 @@
     ['modalidades','combos','baixar-aplicativo'].forEach(id => { byId(id).hidden = true; });
     document.querySelectorAll('.campaign-menu .active').forEach(item => item.classList.remove('active'));
     document.querySelector('[data-nav-game="dia"]').classList.add('active');
-    heroTitle.textContent = 'Dia de Sorte';
+    heroTitle.textContent = 'Números e mês';
     heroSubtitle.textContent = 'Seu dia pode ser uma ótima inspiração para a sorte. Aposte!';
-    heroTicket.setAttribute('src', 'assets/dia-de-sorte-ticket.png');
-    document.title = 'Portal da Sorte | Demonstração';
+    heroTicket.setAttribute('src', 'assets/vasco-pg-illustration.svg');
+    document.title = 'Vasco PG | Demonstração';
     window.scrollTo({top:0,behavior:'instant'});
     window.dispatchEvent(new Event('scroll'));
     byId('dia-title').focus({preventScroll:true});

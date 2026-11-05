@@ -166,15 +166,15 @@
     ['modalidades','combos','baixar-aplicativo'].forEach(id => { byId(id).hidden = active; });
     document.querySelector('.hero-copy').hidden = false;
     document.querySelector('.campaign-art').hidden = false;
-    heroTitle.textContent = active ? 'Lotofácil' : originalHero.title;
+    heroTitle.textContent = active ? '15 de 25' : originalHero.title;
     heroSubtitle.textContent = active ? 'Ganhar ficou fácil, aposte!' : originalHero.subtitle;
-    heroTicket.setAttribute('src','assets/reference-lotofacil.png');
+    heroTicket.setAttribute('src','assets/vasco-pg-illustration.svg');
     document.querySelector('[data-nav-game="milionaria"]').classList.remove('active');
     document.querySelector('[data-nav-game="mega"]').classList.remove('active');
     document.querySelector('[data-nav-game="quina"]').classList.remove('active');
     document.querySelector('[data-nav-game="facil"]').classList.add('active');
     document.querySelector('.campaign-menu a[href="#inicio"]').classList.toggle('active', !active);
-    document.title = 'Portal da Sorte | Demonstração';
+    document.title = 'Vasco PG | Demonstração';
     if (active) {
       window.scrollTo({top:0, behavior:'instant'});
       window.dispatchEvent(new Event('scroll'));

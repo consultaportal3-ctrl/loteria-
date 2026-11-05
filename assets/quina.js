@@ -166,15 +166,15 @@
     ['modalidades','combos','baixar-aplicativo'].forEach(id => { byId(id).hidden = active; });
     document.querySelector('.hero-copy').hidden = false;
     document.querySelector('.campaign-art').hidden = false;
-    heroTitle.textContent = active ? 'Quina' : originalHero.title;
+    heroTitle.textContent = active ? '5 de 80' : originalHero.title;
     heroSubtitle.textContent = active ? 'Seis sorteios na semana e muitas chances de ganhar!' : originalHero.subtitle;
-    heroTicket.setAttribute('src','assets/reference-quina.png');
+    heroTicket.setAttribute('src','assets/vasco-pg-illustration.svg');
     document.querySelector('[data-nav-game="milionaria"]').classList.remove('active');
     document.querySelector('[data-nav-game="mega"]').classList.remove('active');
     document.querySelector('[data-nav-game="facil"]').classList.remove('active');
     document.querySelector('[data-nav-game="quina"]').classList.add('active');
     document.querySelector('.campaign-menu a[href="#inicio"]').classList.toggle('active', !active);
-    document.title = 'Portal da Sorte | Demonstração';
+    document.title = 'Vasco PG | Demonstração';
     if (active) {
       window.scrollTo({top:0, behavior:'instant'});
       window.dispatchEvent(new Event('scroll'));

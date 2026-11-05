@@ -9,7 +9,7 @@
   function update(){
     choice.textContent=select.selectedOptions[0].textContent;
     back.href=`../home.html#${routes[select.value]||'modalidades'}`;
-    document.title=select.value?`Bolão de ${choice.textContent} | Portal da Sorte`:'Bolões | Portal da Sorte';
+    document.title=select.value?`Bolão de ${choice.textContent} | Vasco PG`:'Bolões | Vasco PG';
   }
   select.addEventListener('change',update);
   update();
