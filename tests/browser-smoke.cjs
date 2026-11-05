@@ -84,6 +84,22 @@ function check(ok,message){if(!ok)throw new Error(message);}
     check(await evaluate('document.querySelector("#summary .primary").disabled'),'Incomplete product can be purchased');
     await evaluate('document.getElementById("close-summary").click()');
   });
+  await run('fan delivery demo validates fields without saving or sending data',async()=>{
+    await navigate('/index.html');
+    await evaluate('localStorage.setItem("vasco-pg-fan-cart-v1",JSON.stringify({product:"ventilador",quantity:1}))');
+    await navigate('/checkout-loja.html');
+    const initialStorage=await evaluate('JSON.stringify({...localStorage})');
+    await evaluate('document.getElementById("preview-delivery").click()');
+    check(await evaluate('document.getElementById("delivery-review").hidden && document.getElementById("delivery-feedback").textContent.length>0'),'Missing address accepted');
+    await evaluate('window.deliveryRequests=0;window.fetch=()=>{deliveryRequests++;throw Error("Unexpected delivery request")};for(const [id,value] of Object.entries({name:"Pessoa Ficticia",cep:"00000-000",city:"Cidade Exemplo",street:"Rua Exemplo",number:"123",district:"Bairro Exemplo",state:"SP"}))document.getElementById("delivery-"+id).value=value;document.getElementById("preview-delivery").click()');
+    check(await evaluate('!document.getElementById("delivery-review").hidden && document.getElementById("delivery-review-name").textContent==="Pessoa Ficticia" && window.deliveryRequests===0'),'Address preview failed or sent a request');
+    check(await evaluate('JSON.stringify({...localStorage})')===initialStorage,'Address was persisted');
+    await evaluate('document.getElementById("clear-delivery").click()');
+    check(await evaluate('document.getElementById("delivery-name").value==="" && document.getElementById("delivery-review").hidden'),'Clear address failed');
+    await evaluate('document.getElementById("delivery-name").value="Pessoa Ficticia"');
+    await navigate('/checkout-loja.html');
+    check(await evaluate('document.getElementById("delivery-name").value===""'),'Address retained after reload');
+  });
   await run('fan cart persists quantities and checkout remains nonpayable',async()=>{
     await navigate('/index.html');
     await evaluate('localStorage.removeItem("vasco-pg-fan-cart-v1");document.getElementById("quantity").value="2";document.getElementById("add-to-cart").click()');
