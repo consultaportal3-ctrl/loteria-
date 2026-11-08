@@ -90,8 +90,14 @@ test('live payments persist, deduplicate, verify upstream amounts and never regi
     assert.equal(status, 403);
     assert.equal(body.error.includes('test-only-secret'), false);
     delete process.env.BLACKCAT_API_KEY;
-    assert.throws(() => payments.config(), error => error.status === 503);
+    assert.throws(() => payments.config(), error => error.status === 503 && error.message.includes('BLACKCAT_API_KEY') && !error.message.includes('test-only-secret'));
     process.env.BLACKCAT_API_KEY = 'test-only-secret';
+    process.env.BLACKCAT_WEBHOOK_SECRET = 'too-short';
+    assert.throws(() => payments.config(), error => error.status === 503 && error.message.includes('BLACKCAT_WEBHOOK_SECRET') && !error.message.includes('too-short'));
+    process.env.BLACKCAT_WEBHOOK_SECRET = 'a'.repeat(64);
+    process.env.APP_BASE_URL = 'invalid-test-address';
+    assert.throws(() => payments.config(), error => error.status === 503 && error.message.includes('APP_BASE_URL') && !error.message.includes('invalid-test-address') && !error.message.includes('KV_REST_API_URL'));
+    process.env.APP_BASE_URL = 'https://example.test';
     process.env.KV_REST_API_URL = 'https://vercel-test.upstash.io';
     process.env.KV_REST_API_TOKEN = 'test-only-vercel-token';
     assert.equal(payments.config().redis, 'https://test.upstash.io', 'explicit Upstash configuration takes precedence');

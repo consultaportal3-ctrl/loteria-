@@ -108,7 +108,8 @@
   function configureEnvironment(info) {
     live = info.environment === 'live' && info.simulation === false;
     if (!live && (info.environment !== 'simulation' || info.simulation !== true)) throw new Error('Ambiente de pagamento inválido.');
-    if (!live) return;
+    form.querySelector('.payment-consent').hidden = false;
+    if (!live) { submit.querySelector('.payment-option-caption').textContent = 'Simular PIX'; return; }
     modal.querySelector('.payment-brand').textContent = info.publicName || 'L7 PG';
     modal.querySelectorAll('.payment-live-field').forEach(label => { label.hidden = false; label.querySelector('input').required = true; });
     modal.querySelector('.payment-demo-label').textContent = 'Operador independente';
@@ -180,6 +181,8 @@
 
   async function loadCheckoutInfo(session, signal) {
     submit.disabled = true;
+    submit.querySelector('.payment-option-caption').textContent = 'Verificando configuração…';
+    form.querySelector('.payment-consent').hidden = true;
     error.hidden = true;
     try {
       const response = await fetch(api('checkout-info'), {credentials:'same-origin',cache:'no-store',signal});
@@ -192,6 +195,7 @@
       submit.disabled = false;
     } catch (reason) {
       if (session !== checkoutSession || signal.aborted) return;
+      submit.querySelector('.payment-option-caption').textContent = 'PIX indisponível';
       error.textContent = reason instanceof Error ? reason.message : 'Erro inesperado ao carregar as informações do operador.';
       error.hidden = false;
     }
