@@ -12,6 +12,11 @@ const sequence = n => Array.from({length:n},(_,i) => i + 1);
 test('production cannot be enabled by changing mode', () => {
   for (const mode of ['live','production','test']) assert.throws(() => sim.info({BLACKCAT_MODE:mode}),e => e.status === 503);
 });
+
+test('production deployment cannot generate simulated payment codes', () => {
+  assert.throws(() => sim.info({VERCEL_ENV:'production', BLACKCAT_MODE:'simulation'}), error => error.status === 503);
+  assert.throws(() => sim.createSimulation({buyer, items:[mega]}, {VERCEL_ENV:'production', BLACKCAT_MODE:'simulation'}, now), error => error.status === 503);
+});
 test('server ignores browser prices and recalculates combinations and repeats', () => {
   assert.equal(sim.priceItems([mega]).amount,600);
   assert.equal(sim.priceItems([{...mega,numbers:sequence(8)}]).amount,16800);

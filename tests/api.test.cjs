@@ -44,6 +44,24 @@ test('real payment routes stay disabled without live configuration', async () =>
   assert.equal(checkout.data.simulation, true);
 });
 
+test('production checkout reports configuration errors instead of falling back to simulation', async () => {
+  const previousDeployment = process.env.VERCEL_ENV;
+  const previousMode = process.env.BLACKCAT_MODE;
+  try {
+    process.env.VERCEL_ENV = 'production';
+    for (const mode of ['', 'simulation']) {
+      process.env.BLACKCAT_MODE = mode;
+      const checkout = await request(require('../api/checkout-info.js'));
+      assert.equal(checkout.status, 503);
+      assert.match(checkout.data.error, /BLACKCAT_MODE=live/);
+      assert.equal(checkout.data.simulation, undefined);
+    }
+  } finally {
+    if (previousDeployment === undefined) delete process.env.VERCEL_ENV; else process.env.VERCEL_ENV = previousDeployment;
+    if (previousMode === undefined) delete process.env.BLACKCAT_MODE; else process.env.BLACKCAT_MODE = previousMode;
+  }
+});
+
 test('business identity validates configuration and methods', async () => {
   process.env.BUSINESS_PUBLIC_NAME = '';
   assert.equal((await request(business)).status, 503);

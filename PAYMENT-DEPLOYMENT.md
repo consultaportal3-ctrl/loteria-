@@ -1,6 +1,6 @@
 ﻿# Pagamentos BlackCat em Node.js / Vercel
 
-A pasta api usa JavaScript. O checkout suporta simulacao local e PIX real BlackCat. O modo padrao continua sendo simulation ate as credenciais de producao serem configuradas. Remover avisos visuais ou mudar somente BLACKCAT_MODE nao conecta uma conta de pagamentos.
+A pasta api usa JavaScript. O checkout suporta simulacao local e PIX real BlackCat. No deployment de producao da Vercel, a simulacao e bloqueada: sem modo live e credenciais validas, o checkout informa configuracao pendente em vez de gerar um codigo ficticio. Remover avisos visuais ou mudar somente BLACKCAT_MODE nao conecta uma conta de pagamentos.
 
 ## Ativar o PIX real na Vercel
 
@@ -56,7 +56,7 @@ A integracao implementa a cobranca e sua confirmacao. Nao existe neste repositor
 
 ## Simulacao local
 
-Com BLACKCAT_MODE=simulation (ou sem modo configurado), /api/checkout-info identifica a simulacao. O navegador usa /api/blackcat-simulation?action=... para criar e consultar fixtures. O codigo SIMULACAO-SEM-VALOR nao e um PIX pagavel, nao utiliza credenciais nem transmite dados a BlackCat. Nao use dados reais na simulacao.
+Em desenvolvimento ou preview, com BLACKCAT_MODE=simulation (ou sem modo configurado), /api/checkout-info identifica a simulacao. O navegador usa /api/blackcat-simulation?action=... para criar e consultar fixtures. O codigo SIMULACAO-SEM-VALOR nao e um PIX pagavel, nao utiliza credenciais nem transmite dados a BlackCat. Nao use dados reais na simulacao. Com VERCEL_ENV=production, tanto o checkout em modo simulado quanto o endpoint de simulacao retornam HTTP 503. O arquivo .env.example exemplifica agora a configuracao de modo live.
 
 Variaveis opcionais: BLACKCAT_SIMULATION_SCENARIO=paid (pending, cancelled, expired, rejected) e BLACKCAT_SIMULATION_DELAY_SECONDS=15 (0 a 600). A funcao de simulacao continua rejeitando outros modos e nunca encaminha fixtures para cobrancas reais.
 
