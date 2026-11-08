@@ -10,6 +10,7 @@ test('live payments persist, deduplicate, verify upstream amounts and never regi
   const originalFetch = global.fetch;
   const records = new Map();
   let creates = 0, reportedStatus = 'PENDING', reportedAmount = 600, failCreate = false;
+  let sellerResponse = {cnpj:'12.345.678/0001-90'};
   Object.assign(process.env, {BLACKCAT_MODE:'live', BLACKCAT_API_KEY:'test-only-secret', BLACKCAT_WEBHOOK_SECRET:'a'.repeat(64),
     APP_BASE_URL:'https://example.test', UPSTASH_REDIS_REST_URL:'https://test.upstash.io', UPSTASH_REDIS_REST_TOKEN:'test-only-token',
     BUSINESS_PUBLIC_NAME:'Teste', BUSINESS_LEGAL_NAME:'Teste Ltda', BUSINESS_CNPJ:'12345678000190', BUSINESS_ADDRESS:'Rua de teste',
@@ -35,7 +36,7 @@ test('live payments persist, deduplicate, verify upstream amounts and never regi
       throw new Error('Unexpected Redis command: ' + op);
     }
     assert.equal(options.headers['X-API-Key'], 'test-only-secret');
-    if (url === 'https://api.blackcatoficial.com/api/sales/seller') return response({success:true, data:{cnpj:'12.345.678/0001-90'}});
+    if (url === 'https://api.blackcatoficial.com/api/sales/seller') return response({success:true, data:sellerResponse});
     if (url === 'https://api.blackcatoficial.com/api/sales/create-sale') {
       creates++;
       if (failCreate) throw new Error('Timeout with unknown provider outcome');
@@ -50,6 +51,13 @@ test('live payments persist, deduplicate, verify upstream amounts and never regi
     throw new Error('Unexpected URL: ' + url);
   };
   try {
+    await payments.verifySeller({taxId:' 12.345.678/0001-90 '});
+    await assert.rejects(payments.verifySeller({taxId:'12345678000191'}), error => error.status === 503 && error.message.includes('1234******0191') && error.message.includes('1234******0190') && !error.message.includes('12345678000190'));
+    sellerResponse = {};
+    await assert.rejects(payments.verifySeller({taxId:'12345678000190'}), error => error.status === 503 && error.message.includes('não informou data.cnpj') && !error.message.includes('não corresponde'));
+    sellerResponse = {cnpj:12345678000190};
+    await assert.rejects(payments.verifySeller({taxId:'12345678000190'}), error => error.status === 503 && error.message.includes('formato inválido'));
+    sellerResponse = {cnpj:'12.345.678/0001-90'};
     const input = {requestId:randomUUID(), consent:true, buyer:{name:'Cliente Teste', email:'cliente@example.invalid', phone:'11999999999', cpf:'52998224725'}, items:[{game:'mega', numbers:[1,2,3,4,5,6], referencePrice:0.01}]};
     assert.throws(() => payments.validateBuyer({...input.buyer, cpf:'11111111111'}), error => error.status === 422);
     await assert.rejects(payments.createPayment({...input, consent:false}), error => error.status === 422);

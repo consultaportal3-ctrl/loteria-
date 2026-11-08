@@ -67,6 +67,8 @@ test('business identity validates configuration and methods', async () => {
   assert.equal((await request(business)).status, 503);
   Object.assign(process.env, {BUSINESS_PUBLIC_NAME:'Teste', BUSINESS_LEGAL_NAME:'Teste Ltda', BUSINESS_CNPJ:'12345678000190', BUSINESS_ADDRESS:'Rua de teste', BUSINESS_CONTACT_EMAIL:'teste@example.invalid', BUSINESS_PRIVACY_URL:'https://example.test/privacy', BUSINESS_TERMS_URL:'https://example.test/terms'});
   assert.equal((await request(business)).data.legalName, 'Teste Ltda');
+  process.env.BUSINESS_CNPJ = '12.345.678/0001-90';
+  assert.equal((await request(business)).data.taxId, '12345678000190');
   assert.equal((await request(business, {method:'POST'})).status, 405);
   process.env.BUSINESS_PRIVACY_URL = 'http://example.test/privacy';
   assert.equal((await request(business)).status, 503);
