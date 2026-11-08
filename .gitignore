@@ -2,11 +2,19 @@
 .env.*
 !.env.example
 
+**/logs/
+3/stat
+
 .portal-browser-*/
 /*-preview.png
 /previa-*.png
+/api/data/
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
 /.loteria-publicacao-*/
 /loteria-github.zip
 /loteria-publicacao.json
 /debug.log
-/.store-cleanup/
+/.vscode/
+/.loja-publicacao-*/

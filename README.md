@@ -1,20 +1,24 @@
-﻿# Vasco PG — loja de ventiladores
+# L7 PG — Portal de modalidades
 
-Site em HTML, CSS e JavaScript, com checkout PIX BlackCat por função Node.js compatível com Vercel.
+Site em HTML, CSS e JavaScript, com carrinho de combinações e integração PIX BlackCat em funções Node.js para Vercel.
 
-- `index.html` e `ventilador.html`: produto a R$ 63,00 por unidade; modelo e voltagem ainda a confirmar.
-- `carrinho-loja.html`: quantidade, remoção e subtotal; o navegador guarda o produto e a quantidade.
-- `checkout-loja.html`: comprador, entrega, total com frete, PIX copia e cola e consulta do pagamento.
-- `api/blackcat.js`: integração de servidor, validação dos valores e recibos de consulta assinados.
-- `previa.html`: visualização das páginas em diferentes tamanhos.
+- `index.html`: entrada do site.
+- `home.html` e `compra-bolao/`: páginas de modalidades e combinações.
+- `carrinho.html`: carrinho e checkout.
+- `api/` e `lib/`: funções do servidor, pagamentos e persistência.
+- `painel.html`: painel local e consulta ao banco histórico, conforme as limitações da documentação.
 
-O pagamento permanece indisponível até configurar as variáveis obrigatórias e publicar a função de servidor. Siga `PAYMENT-DEPLOYMENT.md`. Nenhuma chave privada deve ser incluída nos arquivos do site. A integração não foi validada com credenciais reais.
+Para configurar credenciais, armazenamento Redis, identidade do recebedor e modo de pagamento, siga [PAYMENT-DEPLOYMENT.md](PAYMENT-DEPLOYMENT.md). As chaves privadas devem ficar nas variáveis do servidor. Subir os arquivos ao GitHub não ativa os pagamentos automaticamente.
 
-A entrega é acompanhada pelo vendedor no painel do gateway; não existe despacho automático nem banco de pedidos neste projeto. Complete foto, modelo, voltagem, disponibilidade, identificação do vendedor, atendimento e políticas da loja.
+O modo padrão é simulação. A integração real depende da configuração da conta BlackCat e de validação operacional. A confirmação do PIX não registra apostas nem emite bilhetes: essa etapa depende da operação do vendedor e não está integrada neste projeto.
 
-## Desenvolvimento e verificação
+## Verificação local
 
-`python -m http.server 8000` permite visualizar as páginas, mas não executa a API. O pagamento requer hospedagem com funções Node.js e as variáveis indicadas na documentação.
+Com Node.js 22.13 ou superior:
 
-Com Node.js 22 ou superior, execute `node tests/pagamento.test.cjs`. Para verificar as páginas com Chrome ou Edge, execute `node tests/browser-smoke.cjs`. São usados somente fixtures locais, sem cobranças reais.
-![alt text](image.png)
+```sh
+npm test
+node tests/browser-smoke.cjs
+```
+
+Os testes usam dados fictícios e não movimentam dinheiro. Um servidor estático permite visualizar as páginas; as rotas de API exigem um ambiente Node.js compatível ou a Vercel.

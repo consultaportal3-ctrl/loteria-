@@ -1,0 +1,63 @@
+/* This stylesheet is loaded only by home.html. */
+@font-face{font-family:HeaderCaixa;src:url('CAIXAStd-Book.woff') format('woff');font-style:normal;font-weight:400;font-display:swap}
+@font-face{font-family:HeaderCaixa;src:url('CAIXAStd-Bold.woff') format('woff');font-style:normal;font-weight:700;font-display:swap}
+.home-refresh .site-header{background:#005da8}
+.home-refresh .site-header .header-inner{min-height:88px}
+.home-refresh .site-header .campaign-logo{left:49%;right:auto;top:0;transform:translateX(-50%);width:121px;height:88px}
+.home-refresh .campaign-logo img{display:block;width:100%;height:100%;object-fit:contain}
+.home-refresh .site-header .campaign-logo.store-brand{display:flex;align-items:center;justify-content:center;color:#fff;text-align:center;text-decoration:none;font:800 14px/1.05 system-ui,sans-serif;letter-spacing:.08em}
+.home-refresh .header-version{color:#6690ad;font-size:16px}
+.home-refresh .site-header .header-official{font-family:HeaderCaixa,Futura,sans-serif;font-size:22px}
+.home-refresh .campaign-ribbon{display:none}
+.home-refresh .hero{background:linear-gradient(134.3deg,#0067b1 0%,#0067b1 49%,#198aaf 49.15%,#3cb8ad 100%)}
+.home-refresh .campaign-account,.home-refresh .campaign-account .cart-button{border-color:#a4dae3}
+.home-refresh .hero .hero-copy h1,.home-refresh .hero .hero-copy p{text-shadow:none}
+.home-refresh .hero .hero-copy p{font-family:HeaderCaixa,Futura,sans-serif}
+.home-refresh .campaign-menu .active{color:#35bfd0}
+@media(min-width:901px){
+  .home-refresh{--home-unit:min(1px,.052994171vw);--menu-unit:min(1px,.08vw)}
+  .home-refresh .site-header .container,.home-refresh .hero>.container,.home-refresh .hero .campaign-navigation{width:88%;max-width:1670px}
+  .home-refresh .site-header .header-inner{min-height:calc(88 * var(--home-unit))}
+  .home-refresh .site-header .header-official{font-size:calc(20 * var(--home-unit))}
+  .home-refresh .site-header .campaign-logo{width:calc(121 * var(--home-unit));height:calc(88 * var(--home-unit))}
+  .home-refresh:not([class*="-route"]) .hero{min-height:calc(467 * var(--home-unit))}
+  .home-refresh .hero .campaign-navigation:not(.is-fixed){display:block;padding-top:calc(40 * var(--home-unit))}
+  .home-refresh .hero .campaign-menu{max-width:calc(1100 * var(--menu-unit));gap:0 calc(25 * var(--menu-unit))}
+  .home-refresh .hero .campaign-navigation .campaign-menu :is(a,button){font-family:HeaderCaixa,Futura,sans-serif;font-size:calc(20 * var(--menu-unit));font-weight:400;line-height:calc(34 * var(--menu-unit));letter-spacing:0}
+  .home-refresh .hero .menu-break{display:block;flex-basis:100%;height:calc(26 * var(--menu-unit));margin:0}
+  .home-refresh .hero .fixed-menu-break{display:none}
+  .home-refresh .hero .campaign-account{position:absolute;right:0;top:calc(69 * var(--home-unit));bottom:auto;margin:0}
+  .home-refresh .hero .campaign-account .cart-button{min-height:calc(52 * var(--home-unit));padding:calc(12 * var(--home-unit)) calc(18 * var(--home-unit));gap:calc(10 * var(--home-unit));text-decoration:none}
+  .home-refresh .hero .campaign-account .cart-button b{font-size:calc(20 * var(--home-unit))}
+  .home-refresh .hero .account-link{font-size:calc(20 * var(--home-unit));padding:calc(12 * var(--home-unit)) calc(14 * var(--home-unit))}
+  .home-refresh:not([class*="-route"]) .hero .hero-copy{padding:calc(60 * var(--home-unit)) 0 calc(100 * var(--home-unit));max-width:calc(1100 * var(--home-unit))}
+  .home-refresh:not([class*="-route"]) .hero .hero-copy h1{font-size:calc(64 * var(--home-unit));line-height:1.14;margin:0 0 calc(30 * var(--home-unit));letter-spacing:-.035em}
+  .home-refresh:not([class*="-route"]) .hero .hero-copy p{font-size:calc(22 * var(--home-unit));line-height:1.5;letter-spacing:-.035em;max-width:calc(1000 * var(--home-unit))}
+  .home-refresh:not([class*="-route"]) .campaign-tickets{width:calc(410 * var(--home-unit));right:10%;bottom:0}
+}
+@media(min-width:1280px){
+  .home-refresh .hero .campaign-navigation .campaign-menu :is(a,button){font-size:20px;line-height:34px}
+  .home-refresh .site-header .header-official{font-size:20px}
+  .home-refresh:not([class*="-route"]) .hero .hero-copy{max-width:max(800px,calc(1100 * var(--home-unit)))}
+  .home-refresh:not([class*="-route"]) .hero .hero-copy h1{font-size:64px}
+  .home-refresh:not([class*="-route"]) .hero .hero-copy p{font-family:HeaderCaixa,Futura,sans-serif;font-size:22px;line-height:1.5;font-weight:400}
+  .home-refresh .hero .campaign-account .cart-button b{font-family:HeaderCaixa,Futura,sans-serif;font-weight:700}
+}
+@media(min-width:901px) and (max-width:1500px){
+  .home-refresh .hero .campaign-account{top:calc(40 * var(--home-unit) + 50 * var(--menu-unit))}
+}
+@media(max-width:900px){
+  .home-refresh .site-header .campaign-logo{left:50%;height:88px}
+  .home-refresh .hero .hero-copy h1{white-space:normal}
+  .home-refresh:not([class*="-route"]) .campaign-tickets{width:300px;right:5%;bottom:-10px}
+}
+@media(max-width:720px){
+  .home-refresh .site-header .header-inner{min-height:80px}
+  .home-refresh .site-header .header-official{font-size:14px}
+  .home-refresh .site-header .campaign-logo{left:auto;right:0;top:0;transform:none;width:100px;height:80px}
+  .home-refresh .header-version{font-size:10px;right:8px;top:4px}
+  .home-refresh .hero .hero-copy{padding:30px 0 250px}
+  .home-refresh .hero .hero-copy h1{font-size:clamp(31px,7.7vw,48px)}
+  .home-refresh .hero .hero-copy p{font-size:17px}
+  .home-refresh:not([class*="-route"]) .campaign-tickets{width:340px;max-width:85%;right:5%;bottom:-10px}
+}

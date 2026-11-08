@@ -1,49 +1,78 @@
-﻿# Pagamento PIX BlackCat
+﻿# Pagamentos BlackCat em Node.js / Vercel
 
-O checkout usa `/api/blackcat` no servidor (função Node.js da Vercel) para criar cobranças PIX e consultar seu status. A chave privada nunca é enviada ao navegador. Documentação: https://docs.blackcatoficial.com/ .
+A pasta api usa JavaScript. O checkout suporta simulacao local e PIX real BlackCat. O modo padrao continua sendo simulation ate as credenciais de producao serem configuradas. Remover avisos visuais ou mudar somente BLACKCAT_MODE nao conecta uma conta de pagamentos.
 
-## Condições confirmadas pelo vendedor
+## Ativar o PIX real na Vercel
 
-Ventilador: R$ 63,00 por unidade, de 1 a 10 unidades por pedido. Frete grátis para todos os estados e Distrito Federal. Entrega informada: 7 dias. O servidor ignora preços enviados pelo navegador e calcula o total.
+1. Crie ou conecte um banco Upstash Redis persistente ao projeto na Vercel. Utilize o token de leitura e escrita. Os pedidos nao usam SQLite nem o disco temporario das funcoes.
+2. Nas variaveis de ambiente de Production da Vercel, configure:
 
-## Ativação na Vercel
+    BLACKCAT_MODE=live
+    BLACKCAT_API_KEY=<chave da sua conta BlackCat>
+    BLACKCAT_WEBHOOK_SECRET=<segredo aleatorio com pelo menos 32 caracteres>
+    APP_BASE_URL=https://seu-dominio.com
+    UPSTASH_REDIS_REST_URL=https://seu-banco.upstash.io
+    UPSTASH_REDIS_REST_TOKEN=<token privado de leitura e escrita>
+    BUSINESS_PUBLIC_NAME=L7 PG
+    BUSINESS_LEGAL_NAME=<razao social>
+    BUSINESS_CNPJ=<CNPJ sem pontuacao>
+    BUSINESS_ADDRESS=<endereco>
+    BUSINESS_CONTACT_EMAIL=<email de atendimento>
+    BUSINESS_PRIVACY_URL=https://seu-dominio.com/privacidade
+    BUSINESS_TERMS_URL=https://seu-dominio.com/termos
 
-1. Redefina as chaves no painel BlackCat: a chave anterior apareceu numa captura de tela. Não use a chave exposta.
-2. Cadastre `BLACKCAT_API_KEY` como Secret no ambiente Production do projeto. Se for uma variável compartilhada da equipe, confirme sua disponibilidade no projeto.
-3. Publique os arquivos atualizados com a raiz atual, sem framework ou comando de build. Não exclua `api/` da publicação. Use Node.js 22 ou superior.
-4. Após mudar variáveis, faça um novo deployment.
-5. Abra `/api/blackcat?action=config`. HTTP 200 confirma a configuração local; não valida a chave na BlackCat. A conta e a chave ainda precisam de verificação com o provedor, sem criação automática de cobranças de teste.
+3. Gere o segredo do webhook localmente, por exemplo com:
 
-Somente `BLACKCAT_API_KEY` é obrigatória para este site. Não é necessária chave pública nem split para esse fluxo PIX.
+    node -e "process.stdout.write(require('node:crypto').randomBytes(32).toString('hex'))"
 
-Variáveis opcionais para alterar as condições confirmadas:
+4. Publique um novo deployment. As funcoes Node.js devem ser incluidas e a raiz deve corresponder a este repositorio. Nao e necessario instalar dependencias. Chaves ficam somente no servidor; nunca use prefixos publicos nem as coloque em HTML ou JavaScript do navegador. Arquivos .env nao sao carregados automaticamente pelo codigo.
+5. Abra o checkout. O servidor confere o CNPJ configurado com o recebedor da conta BlackCat. O formulario solicita nome, email, telefone e CPF validos. Confira tambem se a sua conta de gateway esta habilitada para os produtos vendidos.
 
-- `PAYMENT_SITE_URL`: origem HTTPS exata; padrão `https://loteria-taupe-iota.vercel.app`.
-- `PAYMENT_SHIPPING_CENTS`: frete fixo por pedido em centavos; padrão `0`, conforme autorizado.
-- `PAYMENT_ALLOWED_STATES`: UFs separadas por vírgula; padrão todos os estados e Distrito Federal.
-- `PAYMENT_TOKEN_SECRET`: segredo independente de pelo menos 32 caracteres para assinar os recibos. Se ausente, o servidor deriva uma chave de assinatura por HMAC-SHA256 a partir da chave privada, com contexto próprio. Nesse caso, redefinir a chave privada invalida os recibos anteriores; consulte essas transações no painel do provedor.
+Nao foi feita nenhuma cobranca real durante a implementacao. A integracao foi testada com respostas locais controladas. A homologacao na sua conta depende das configuracoes acima e de um teste operacional de ponta a ponta, incluindo conferencia no painel BlackCat.
 
-Não coloque segredos no Git, no HTML ou no JavaScript público. O arquivo `.env.example` contém apenas um modelo, sem chave real.
+## Rotas reais
 
-## Funcionamento e limites
+- GET /api/checkout-info: ambiente e identidade do operador; consulta o vendedor BlackCat no modo live.
+- GET /api/business-info: identidade configurada nas variaveis BUSINESS_*.
+- POST /api/create-payment: JSON {requestId, consent:true, buyer:{name,email,phone,cpf}, items}. Requer origem do proprio site e application/json. Retorna orderToken, orderId, amount em centavos, qrCode, qrCodeImage, expiresAt e status.
+- GET /api/payment-status?token=...: consulta novamente o gateway, confere identificador, metodo e valor e atualiza o pedido persistente.
+- POST /api/webhook?secret=...: notificacao com transactionId e externalReference. A URL com segredo e enviada automaticamente a BlackCat no campo postbackUrl. O segredo deve ser protegido tambem nos logs de infraestrutura. O evento recebido nunca aprova sozinho: o servidor consulta a API autenticada da BlackCat.
 
-O checkout exige nome, e-mail, telefone, CPF válido e endereço para o produto físico. Esses dados são enviados ao gateway ao gerar a cobrança. Não são salvos no armazenamento do navegador. O vendedor acompanha as transações e endereços pelo painel BlackCat.
+Os endpoints antigos com extensao .php foram removidos.
 
-- `GET /api/blackcat?action=config`: preço, frete e UFs públicas, sem segredos.
-- `POST /api/blackcat`: valida origem, JSON, comprador, quantidade e entrega; chama `/sales/create-sale` com `tangible: true`; retorna PIX copia e cola, ID e recibo assinado.
-- `GET /api/blackcat?action=status&receipt=...`: verifica o recibo e consulta `/sales/{id}/status` na BlackCat; confere ID e valor antes de retornar o status.
+## Pedidos, repeticoes e conciliacao
 
-O navegador guarda na sessão da aba apenas o código PIX, referência e recibo para permitir recuperação. O carrinho não é removido automaticamente. Nenhum status fornecido pelo navegador autoriza entrega.
+O servidor recalcula os precos e ignora valores enviados pelo navegador. O requestId deve ser um UUID aleatorio e funciona como token privado do pedido. O navegador o preserva na sessao para reutilizar o mesmo pedido ao fechar e reabrir o checkout. Nao compartilhe esse token.
 
-Não há repetição automática da criação. Uma tentativa marca a sessão da aba; resposta perdida bloqueia nova criação nessa aba e orienta consultar o vendedor. Isso não é idempotência global: outra aba, outro dispositivo ou uma requisição direta ainda pode criar uma cobrança distinta. Em caso de timeout, verifique primeiro o painel BlackCat.
+O Redis armazena o pedido antes de chamar a BlackCat. Uma chamada de criacao com resposta incerta nunca e repetida automaticamente: o pedido fica em conferencia, mesmo que o gateway possa ter criado uma cobranca. Confira a referencia externa no painel BlackCat e o webhook antes de iniciar outro pedido. Nao limpe o armazenamento do navegador nem troque o identificador para forcar nova cobranca. A protecao contra repeticoes se aplica ao mesmo identificador; outra sessao do navegador pode iniciar um novo pedido.
 
-A consulta de pagamento é manual. Não há webhook, banco de pedidos, estoque, cálculo de frete por CEP ou despacho automático. Recibos de consulta expiram em sete dias; o PIX tem validade solicitada de um dia. O cadastro atual ainda informa modelo e voltagem a confirmar; conclua os dados e condições comerciais da loja antes de divulgar.
+CPF e telefone sao enviados ao gateway e nao sao guardados pelo aplicativo. Pedidos guardam nome, email, combinacoes, valores, referencia externa, transacao e dados do PIX. A impressao digital dos dados impede reutilizar o identificador com outro comprador ou carrinho. Nao ha logs de credenciais ou corpos de requisicoes no codigo.
 
-## Verificação
+Os registros payments:order:*, payments:reference:*, payments:transaction:* e o indice payments:orders permanecem no Redis sem expiracao automatica. Configure backups e uma politica de retencao/exclusao adequada a sua operacao. O painel de pedidos SQLite antigo nao lista esses pedidos: consulte o painel BlackCat pela referencia externa e use um acesso administrativo restrito ao Redis para conciliacao tecnica. Nunca exponha o token Redis no navegador.
 
-Com Node.js 22 ou superior:
+## Pagamento e registro da aposta
 
-    node tests/pagamento.test.cjs
+A integracao implementa a cobranca e sua confirmacao. Nao existe neste repositorio uma API de registro de apostas ou emissao de bilhetes. Por isso, mesmo com status approved, fulfillmentStatus permanece awaiting_registration. O checkout informa que o registro e a entrega dependem do operador; ele nao apresenta PIX pago como bilhete emitido nem limpa o carrinho automaticamente. A entrega/registro efetivo deve ser realizado pela sua operacao ou por uma integracao especifica futura.
+
+## Simulacao local
+
+Com BLACKCAT_MODE=simulation (ou sem modo configurado), /api/checkout-info identifica a simulacao. O navegador usa /api/blackcat-simulation?action=... para criar e consultar fixtures. O codigo SIMULACAO-SEM-VALOR nao e um PIX pagavel, nao utiliza credenciais nem transmite dados a BlackCat. Nao use dados reais na simulacao.
+
+Variaveis opcionais: BLACKCAT_SIMULATION_SCENARIO=paid (pending, cancelled, expired, rejected) e BLACKCAT_SIMULATION_DELAY_SECONDS=15 (0 a 600). A funcao de simulacao continua rejeitando outros modos e nunca encaminha fixtures para cobrancas reais.
+
+## Painel historico Node.js
+
+/api/admin preserva a consulta ao store.sqlite do painel anterior. Requer Node.js 22.13 ou superior com node:sqlite, HTTPS, APP_DATA_DIR absoluto fora da raiz publica e volume persistente. SQLite nao serve como armazenamento persistente na Vercel. Para esse painel, use um servidor Node.js com volume persistente; o checkout real na Vercel utiliza Redis separadamente.
+
+ADMIN_PASSWORD_HASH utiliza scrypt. Gere com node lib/admin-password.js, fornecendo a senha pela entrada padrao e finalizando com EOF (Ctrl+Z e Enter no Windows; Ctrl+D no Linux). Configure somente o hash produzido no servidor. Hashes/sessoes PHP antigos nao sao reutilizados. Sessoes expiram em oito horas e o login limita cinco tentativas por 15 minutos por endereco do peer conectado (pode ser compartilhado atras de proxy).
+
+## Verificacao
+
+    node --test tests/blackcat-simulation.test.cjs tests/api.test.cjs tests/blackcat-payments.test.cjs
     node tests/browser-smoke.cjs
 
-Os testes usam respostas fictícias locais, sem dados de clientes e sem cobranças na BlackCat. O teste de navegador requer Chrome ou Edge. Um servidor HTTP estático permite visualizar o site, mas não executa as funções Node.js.
+Em ambientes que restringem subprocessos, Node.js recente permite executar os testes com --test-isolation=none. O teste de navegador usa Chrome/Edge em perfil separado e ambiente simulado, sem chamadas a contas reais.
+
+Documentacao oficial consultada:
+- https://docs.blackcatoficial.com/
+- https://upstash.com/docs/redis/features/restapi

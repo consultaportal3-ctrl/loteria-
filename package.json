@@ -1,0 +1,11 @@
+{
+  "name": "portal-da-sorte",
+  "version": "1.0.0",
+  "private": true,
+  "type": "commonjs",
+  "engines": {"node": ">=22.13.0"},
+  "scripts": {
+    "test": "node --test tests/blackcat-simulation.test.cjs tests/api.test.cjs tests/blackcat-payments.test.cjs",
+    "admin:password": "node lib/admin-password.js"
+  }
+}

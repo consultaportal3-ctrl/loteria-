@@ -1,5 +1,6 @@
 .git
-.store-cleanup
+.vscode
+.loja-publicacao-*
 .loteria-publicacao-*
 .portal-browser-*
 tests
@@ -8,3 +9,4 @@ debug.log
 loteria-github.zip
 loteria-publicacao.json
 .env*
+build_cart.py
