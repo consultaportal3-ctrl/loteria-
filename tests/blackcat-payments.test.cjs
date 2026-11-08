@@ -91,6 +91,17 @@ test('live payments persist, deduplicate, verify upstream amounts and never regi
     assert.equal(body.error.includes('test-only-secret'), false);
     delete process.env.BLACKCAT_API_KEY;
     assert.throws(() => payments.config(), error => error.status === 503);
+    process.env.BLACKCAT_API_KEY = 'test-only-secret';
+    process.env.KV_REST_API_URL = 'https://vercel-test.upstash.io';
+    process.env.KV_REST_API_TOKEN = 'test-only-vercel-token';
+    assert.equal(payments.config().redis, 'https://test.upstash.io', 'explicit Upstash configuration takes precedence');
+    delete process.env.UPSTASH_REDIS_REST_URL;
+    delete process.env.UPSTASH_REDIS_REST_TOKEN;
+    assert.equal(payments.config().redis, 'https://vercel-test.upstash.io');
+    assert.equal(payments.config().redisToken, 'test-only-vercel-token');
+    delete process.env.KV_REST_API_TOKEN;
+    process.env.KV_REST_API_READ_ONLY_TOKEN = 'read-only-test-token';
+    assert.throws(() => payments.config(), error => error.status === 503, 'a read-only token cannot replace the write token');
   } finally {
     global.fetch = originalFetch;
     for (const key of Object.keys(process.env)) if (!(key in originalEnv)) delete process.env[key];

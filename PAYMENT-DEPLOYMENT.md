@@ -4,7 +4,7 @@ A pasta api usa JavaScript. O checkout suporta simulacao local e PIX real BlackC
 
 ## Ativar o PIX real na Vercel
 
-1. Crie ou conecte um banco Upstash Redis persistente ao projeto na Vercel. Utilize o token de leitura e escrita. Os pedidos nao usam SQLite nem o disco temporario das funcoes.
+1. Crie ou conecte um banco Upstash Redis persistente ao projeto na Vercel. Utilize o token de leitura e escrita. Os pedidos nao usam SQLite nem o disco temporario das funcoes. A integracao da Vercel pode criar KV_REST_API_URL e KV_REST_API_TOKEN: o codigo aceita esses nomes automaticamente quando UPSTASH_REDIS_REST_URL e UPSTASH_REDIS_REST_TOKEN nao estiverem definidos. KV_REST_API_READ_ONLY_TOKEN nao serve para gravar pedidos.
 2. Nas variaveis de ambiente de Production da Vercel, configure:
 
     BLACKCAT_MODE=live
