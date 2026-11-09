@@ -170,7 +170,7 @@ function check(ok,message){if(!ok)throw new Error(message);}
       check(await evaluate('!document.querySelector("[name=cpf]").required && document.querySelector(".payment-live-field").getClientRects().length===0'), 'Direct PIX still requires gateway customer fields');
       check(await evaluate('document.querySelector(".payment-consent").textContent.includes("manualmente")'), 'Manual payment review is not explained');
       await evaluate('(()=>{const f=document.querySelector(".payment-form");f.elements.name.value="Cliente Teste";f.elements.email.value="cliente@example.invalid";f.elements.consent.checked=true;f.requestSubmit()})()');
-      await until('document.querySelector(".payment-status").textContent.includes("Não há confirmação bancária automática")');
+      await until('document.querySelector(".payment-status").textContent.includes("Pagamento aguardando conferência da loja")');
       check(liveRequest.buyer.cpf === undefined && liveRequest.buyer.phone === undefined, 'Direct PIX sent unnecessary document data');
       check(await evaluate('window.portalDemo.getGames().length===5'), 'Direct PIX removed the cart before bank review');
       check(await evaluate('!document.querySelector(".payment-legal").textContent.includes("undefined")'), 'Missing CNPJ leaked into merchant identity');

@@ -109,6 +109,7 @@
   function configureEnvironment(info) {
     live = info.environment === 'live' && info.simulation === false;
     manualPix = live && info.provider === 'direct-pix';
+    modal.querySelector('.payment-status').classList.toggle('payment-status--plain', manualPix);
     if (!live && (info.environment !== 'simulation' || info.simulation !== true)) throw new Error('Ambiente de pagamento inválido.');
     form.querySelector('.payment-consent').hidden = false;
     if (!live) { submit.querySelector('.payment-option-caption').textContent = 'Simular PIX'; return; }
@@ -339,7 +340,7 @@
       if (live ? result.environment !== 'live' || result.simulation !== false : result.simulation !== true || result.environment !== 'simulation') throw new Error('Resposta de pagamento em ambiente incorreto.');
       const status = modal.querySelector('.payment-status');
       status.textContent = ({
-        awaiting_manual_confirmation:'PIX gerado. Após pagar, aguarde o operador conferir o crédito no extrato. Não há confirmação bancária automática neste checkout.',
+        awaiting_manual_confirmation:'Pagamento aguardando conferência da loja.',
         manual_confirmed:'O operador confirmou manualmente o recebimento no extrato. O registro da aposta e a entrega do bilhete ainda dependem do operador.',
         approved:'Pagamento confirmado. O registro da aposta e a entrega do bilhete ainda dependem do operador. Contate-o com o número do pedido.',
         pending:'Aguardando confirmação do pagamento PIX.',
