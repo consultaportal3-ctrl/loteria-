@@ -11,7 +11,14 @@
 .cart-route .campaign-logo{left:49%}
 .cart-route .campaign-logo svg{width:40px;height:30px}
 .cart-route .hero{min-height:296px;background:#0067b1}
-.home-refresh.cart-route .campaign-art{display:none}
+.home-refresh.cart-route .campaign-art{display:block}
+@media(min-width:651px){
+  .home-refresh.cart-route .hero{background:linear-gradient(134.3deg,#0067b1 0%,#0067b1 49%,#198aaf 49.15%,#3cb8ad 100%)}
+  .home-refresh.cart-route .campaign-ribbon{display:none}
+  .home-refresh.cart-route .campaign-tickets{width:min(410px,32vw);right:10%;bottom:0}
+  .home-refresh.cart-route .campaign-tickets img{display:block;width:100%;height:auto}
+  .home-refresh.cart-route .hero .hero-copy{max-width:min(1100px,calc(82vw - min(410px,32vw)))}
+}
 .cart-route .hero .campaign-navigation{display:block;padding-top:24px;padding-bottom:20px}
 .cart-route .hero .campaign-menu{max-width:calc(100% - 175px);gap:17px;row-gap:10px}
 .cart-route .hero .menu-break{display:none}
