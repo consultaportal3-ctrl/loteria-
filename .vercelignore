@@ -10,3 +10,4 @@ loteria-github.zip
 loteria-publicacao.json
 .env*
 build_cart.py
+node_modules

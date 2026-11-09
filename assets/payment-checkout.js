@@ -5,6 +5,7 @@
   if (!checkoutButton || !finishButton || !window.portalDemo) return;
 
   let live = false;
+  let manualPix = false;
   const api = name => new URL(name === 'checkout-info' || live ? `api/${name}` : `api/blackcat-simulation?action=${name}`, location.href).toString();
   async function jsonResponse(response, fallback) {
     let result;
@@ -107,17 +108,22 @@
 
   function configureEnvironment(info) {
     live = info.environment === 'live' && info.simulation === false;
+    manualPix = live && info.provider === 'direct-pix';
     if (!live && (info.environment !== 'simulation' || info.simulation !== true)) throw new Error('Ambiente de pagamento inválido.');
     form.querySelector('.payment-consent').hidden = false;
     if (!live) { submit.querySelector('.payment-option-caption').textContent = 'Simular PIX'; return; }
     modal.querySelector('.payment-brand').textContent = info.publicName || 'L7 PG';
-    modal.querySelectorAll('.payment-live-field').forEach(label => { label.hidden = false; label.querySelector('input').required = true; });
+    modal.querySelectorAll('.payment-live-field').forEach(label => { label.hidden = manualPix; label.querySelector('input').required = !manualPix; });
     modal.querySelector('.payment-demo-label').textContent = 'Operador independente';
     modal.querySelector('.payment-hero-notice').textContent = 'Pagamento ao operador identificado abaixo. O PIX não comprova o registro da aposta.';
     modal.querySelectorAll('.payment-kicker').forEach(node => { node.textContent = 'PAGAMENTO PIX'; });
-    modal.querySelectorAll('.payment-disclaimer').forEach(node => { node.textContent = 'Confira os dados do recebedor no aplicativo do banco. Após o pagamento, o registro da aposta e a entrega do bilhete dependem da confirmação do operador.'; });
+    modal.querySelectorAll('.payment-disclaimer').forEach(node => { node.textContent = manualPix
+      ? 'PIX direto. Confira o titular e o valor no aplicativo do banco. O operador precisa conferir o crédito no extrato para confirmar o pagamento. O registro da aposta e a entrega do bilhete são etapas separadas.'
+      : 'Confira os dados do recebedor no aplicativo do banco. Após o pagamento, o registro da aposta e a entrega do bilhete dependem da confirmação do operador.'; });
     const consent = form.querySelector('.payment-consent');
-    consent.lastChild.textContent = 'Li os termos e a política de privacidade do operador e autorizo o envio dos dados necessários à BlackCat para processar este pagamento.';
+    consent.lastChild.textContent = manualPix
+      ? 'Entendi que este PIX vai para a chave do operador, que o recebimento será conferido manualmente no extrato e que o pagamento não comprova o registro da aposta.'
+      : 'Li os termos e a política de privacidade do operador e autorizo o envio dos dados necessários à BlackCat para processar este pagamento.';
     submit.querySelector('.payment-option-caption').textContent = 'Gerar PIX';
     modal.querySelector('.payment-pix-banner .payment-option-caption').textContent = 'Pagamento PIX';
     const headings = modal.querySelectorAll('.payment-qr-card h3');
@@ -167,9 +173,10 @@
       return;
     }
     target.replaceChildren(document.createTextNode(
-      `${business.publicName} · ${business.legalName} (CNPJ ${business.taxId}), ${business.address}. Contato: ${business.contactEmail}. `,
+      `${business.publicName} · ${business.legalName}${business.taxId ? ` (CNPJ ${business.taxId})` : ''}${business.address ? `, ${business.address}` : ''}.${business.contactEmail ? ` Contato: ${business.contactEmail}.` : ''} `,
     ));
     for (const [label, url] of [['Privacidade', business.privacyUrl], ['Termos', business.termsUrl]]) {
+      try { if (new URL(url).protocol !== 'https:') continue; } catch { continue; }
       const link = document.createElement('a');
       link.href = url;
       link.target = '_blank';
@@ -267,7 +274,7 @@
         credentials: 'same-origin',
         signal,
         body: JSON.stringify({
-          buyer: {name:form.elements.name.value.trim(), email:form.elements.email.value.trim(), ...(live ? {phone:form.elements.phone.value, cpf:form.elements.cpf.value} : {})},
+          buyer: {name:form.elements.name.value.trim(), email:form.elements.email.value.trim(), ...(live && !manualPix ? {phone:form.elements.phone.value, cpf:form.elements.cpf.value} : {})},
           items, ...(live ? {requestId, consent:form.elements.consent.checked} : {}),
         }),
       });
@@ -332,6 +339,8 @@
       if (live ? result.environment !== 'live' || result.simulation !== false : result.simulation !== true || result.environment !== 'simulation') throw new Error('Resposta de pagamento em ambiente incorreto.');
       const status = modal.querySelector('.payment-status');
       status.textContent = ({
+        awaiting_manual_confirmation:'PIX gerado. Após pagar, aguarde o operador conferir o crédito no extrato. Não há confirmação bancária automática neste checkout.',
+        manual_confirmed:'O operador confirmou manualmente o recebimento no extrato. O registro da aposta e a entrega do bilhete ainda dependem do operador.',
         approved:'Pagamento confirmado. O registro da aposta e a entrega do bilhete ainda dependem do operador. Contate-o com o número do pedido.',
         pending:'Aguardando confirmação do pagamento PIX.',
         cancelled:'Pagamento cancelado ou expirado. Consulte o operador antes de iniciar outro pedido.',
@@ -342,7 +351,7 @@
         simulated_expired:'Expiração simulada. O carrinho foi mantido.',
         simulated_pending:'Aguardando resultado simulado. Nenhuma cobrança real foi criada.',
       })[result.status] || `Status do pedido: ${result.status}`;
-      if (['approved','cancelled','refunded','simulated_paid','simulated_rejected','simulated_cancelled','simulated_expired'].includes(result.status)) {
+      if (['manual_confirmed','approved','cancelled','refunded','simulated_paid','simulated_rejected','simulated_cancelled','simulated_expired'].includes(result.status)) {
         clearInterval(pollTimer);
       }
     } catch (reason) {

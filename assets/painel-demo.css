@@ -15,3 +15,9 @@
 .modality-name{display:flex;align-items:center;gap:10px;white-space:nowrap}
 .modality-dot{display:inline-block;width:11px;height:11px;background:#7655d7;border-radius:4px;flex-shrink:0}
 .modality-virada,.modality-mega{background:#00a94f}.modality-facil{background:#92278f}.modality-quina{background:#32318e}.modality-milionaria{background:#2b327d}.modality-mania{background:#ed7900}.modality-timemania{background:#e6d900}.modality-dupla{background:#af2942}.modality-loteca{background:#fa1829}.modality-dia{background:#ad9718}.modality-super{background:#85a332}
+#direct-pix-panel label{display:block;margin:16px 0;font-size:14px;line-height:1.5}
+#direct-pix-panel label>input:not([type=checkbox]),#direct-pix-panel label>select{display:block;width:100%;max-width:100%;margin-top:7px;padding:11px;border:1px solid #d6d6e2;border-radius:7px;font:inherit}
+#direct-pix-panel input[type=checkbox]{width:auto;margin-right:8px;vertical-align:middle}
+#direct-pix-panel p,#direct-pix-panel h3{overflow-wrap:anywhere}
+#direct-pix-panel [hidden]{display:none!important}
+#direct-pix-panel .admin-error{color:#a52332}

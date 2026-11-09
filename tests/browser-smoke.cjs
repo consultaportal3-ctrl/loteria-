@@ -10,23 +10,45 @@ const pause = ms => new Promise(resolve => setTimeout(resolve,ms));
 let delayCreatePayment = 0;
 let blockCheckoutScript = false;
 let liveFixture = false;
+let directFixture = false;
+let pixPanelFixture = false;
+let pixPanelLoggedIn = false;
+let savedPixPanelSettings;
 let liveRequest;
 const liveInfo = {simulation:false, environment:'live', publicName:'Operador Teste', legalName:'Operador Teste Ltda', taxId:'12345678000190', address:'Endereco de teste', contactEmail:'teste@example.invalid', privacyUrl:'https://example.invalid/privacy', termsUrl:'https://example.invalid/terms'};
 const mime = {'.html':'text/html','.js':'text/javascript','.css':'text/css','.svg':'image/svg+xml','.png':'image/png','.woff2':'font/woff2','.woff':'font/woff','.webp':'image/webp'};
 const server = http.createServer((req,res) => {
   const url = new URL(req.url,'http://localhost');
+  if (pixPanelFixture && url.pathname === '/api/pix-settings') {
+    const reply = data => { res.setHeader('Content-Type','application/json'); res.end(JSON.stringify(data)); };
+    if (req.method === 'GET') {
+      if (url.searchParams.get('action') === 'session') return reply({authenticated:pixPanelLoggedIn, authConfigured:true, csrf:'browser-test-csrf'});
+      if (url.searchParams.get('action') === 'settings') return reply({settings:savedPixPanelSettings || null});
+      return reply({orders:[]});
+    }
+    let raw = ''; req.on('data', chunk => { raw += chunk; });
+    return req.on('end', () => {
+      const input = JSON.parse(raw);
+      if (input.action === 'login') { pixPanelLoggedIn = true; return reply({authenticated:true, csrf:'browser-test-csrf'}); }
+      if (input.action === 'save') { savedPixPanelSettings = input.settings; return reply({settings:savedPixPanelSettings}); }
+      if (input.action === 'logout') pixPanelLoggedIn = false;
+      return reply({authenticated:pixPanelLoggedIn});
+    });
+  }
   if (liveFixture && url.pathname.startsWith('/api/') && url.pathname !== '/api/blackcat-simulation') {
     const reply = data => { res.setHeader('Content-Type','application/json'); res.end(JSON.stringify(data)); };
-    if (url.pathname === '/api/checkout-info') return reply(liveInfo);
+    const info = {...liveInfo, provider:directFixture ? 'direct-pix' : 'blackcat', manualConfirmation:directFixture};
+    if (directFixture) delete info.taxId;
+    if (url.pathname === '/api/checkout-info') return reply(info);
     if (url.pathname === '/api/create-payment') {
       let raw = '';
       req.on('data', chunk => { raw += chunk; });
       return req.on('end', () => {
         liveRequest = JSON.parse(raw);
-        reply({...liveInfo, orderToken:liveRequest.requestId, orderId:'FIXTURE-NOT-A-CHARGE', amount:600, operator:'Operador Teste Ltda', qrCode:'TEST-FIXTURE-NOT-PAYABLE', qrCodeImage:'assets/blackcat-simulation-qr.svg', status:'pending'});
+        reply({...info, orderToken:liveRequest.requestId, orderId:'FIXTURE-NOT-A-CHARGE', amount:600, operator:'Operador Teste Ltda', qrCode:'TEST-FIXTURE-NOT-PAYABLE', qrCodeImage:'assets/blackcat-simulation-qr.svg', status:directFixture ? 'awaiting_manual_confirmation' : 'pending'});
       });
     }
-    if (url.pathname === '/api/payment-status') return reply({...liveInfo, status:'approved', fulfillmentStatus:'awaiting_registration'});
+    if (url.pathname === '/api/payment-status') return reply({...info, status:directFixture ? 'awaiting_manual_confirmation' : 'approved', fulfillmentStatus:'awaiting_registration'});
   }
   if (url.pathname === '/api/checkout-info') return handler({...req, url:'/api/blackcat-simulation?action=checkout-info', method:'GET', headers:req.headers}, res);
   if (url.pathname === '/api/blackcat-simulation') {
@@ -139,6 +161,22 @@ function check(ok,message){if(!ok)throw new Error(message);}
       await evaluate('document.querySelector(".payment-back").click()');
     } finally { liveFixture = false; }
   });
+  await run('direct PIX checkout hides gateway fields and keeps payment pending manual bank review',async()=>{
+    liveFixture = true; directFixture = true;
+    try {
+      await navigate('/carrinho.html');
+      await evaluate('document.querySelector("[data-cart-payment]").click()');
+      await until('!document.querySelector(".payment-submit").disabled');
+      check(await evaluate('!document.querySelector("[name=cpf]").required && document.querySelector(".payment-live-field").getClientRects().length===0'), 'Direct PIX still requires gateway customer fields');
+      check(await evaluate('document.querySelector(".payment-consent").textContent.includes("manualmente")'), 'Manual payment review is not explained');
+      await evaluate('(()=>{const f=document.querySelector(".payment-form");f.elements.name.value="Cliente Teste";f.elements.email.value="cliente@example.invalid";f.elements.consent.checked=true;f.requestSubmit()})()');
+      await until('document.querySelector(".payment-status").textContent.includes("Não há confirmação bancária automática")');
+      check(liveRequest.buyer.cpf === undefined && liveRequest.buyer.phone === undefined, 'Direct PIX sent unnecessary document data');
+      check(await evaluate('window.portalDemo.getGames().length===5'), 'Direct PIX removed the cart before bank review');
+      check(await evaluate('!document.querySelector(".payment-legal").textContent.includes("undefined")'), 'Missing CNPJ leaked into merchant identity');
+      await evaluate('document.querySelector(".payment-back").click()');
+    } finally { liveFixture = false; directFixture = false; }
+  });
   await run('closing cart restores the home heading',async()=>{
     await evaluate('window.portalCartPage.close()');await pause(150);
     check(await evaluate('document.querySelector(".hero-copy h1").textContent!=="Carrinho de Apostas"'),'Cart heading leaked into home');
@@ -193,6 +231,19 @@ function check(ok,message){if(!ok)throw new Error(message);}
       check(result.response.amount===result.total,`Wrong total: ${kind}`);
       check(result.length<=30 && !result.oversized,`Cart limit failed: ${kind}`);
     }
+  });
+  await run('PIX administration requires login and saves receiver configuration on the server',async()=>{
+    pixPanelFixture = true;
+    try {
+      await navigate('/painel.html#pix');
+      await until('Boolean(document.getElementById("direct-pix-login"))');
+      await evaluate('(()=>{const f=document.getElementById("direct-pix-login");f.elements.password.value="browser-test-password-only";f.requestSubmit()})()');
+      await until('Boolean(document.getElementById("direct-pix-form"))');
+      await evaluate('(()=>{const f=document.getElementById("direct-pix-form");f.elements.keyType.value="email";f.elements.key.value="pix@example.invalid";f.elements.receiverName.value="TITULAR TESTE";f.elements.city.value="BRASILIA";f.elements.enabled.checked=true;f.elements.ownershipConfirmed.checked=true;f.requestSubmit()})()');
+      await until('document.querySelector("#direct-pix-form [role=status]").textContent.includes("Configuração salva")');
+      check(savedPixPanelSettings?.key === 'pix@example.invalid' && savedPixPanelSettings?.ownershipConfirmed === true && savedPixPanelSettings?.enabled === true, 'Receiver configuration was not submitted');
+      check(await evaluate('!localStorage.getItem("pix-key") && !localStorage.getItem("admin-password")'), 'Credentials were stored in browser storage');
+    } finally { pixPanelFixture = false; }
   });
   await run('main auxiliary pages load without uncaught exceptions',async()=>{
     for(const page of ['/painel.html','/previa.html','/demonstracao.html','/compra-bolao/index.html'])await navigate(page);

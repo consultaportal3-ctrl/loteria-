@@ -203,6 +203,7 @@
     clearInterval(refreshTimer);
     nav.classList.toggle('active', location.hash === '#pedidos');
     if (location.hash !== '#pedidos') return;
+    if (document.getElementById('direct-pix-panel')) return;
     try {
       const result = await request('csrf');
       csrf = result.csrf;

@@ -1,8 +1,26 @@
 ﻿# Pagamentos BlackCat em Node.js / Vercel
 
-A pasta api usa JavaScript. O checkout suporta simulacao local e PIX real BlackCat. No deployment de producao da Vercel, a simulacao e bloqueada: sem modo live e credenciais validas, o checkout informa configuracao pendente em vez de gerar um codigo ficticio. Remover avisos visuais ou mudar somente BLACKCAT_MODE nao conecta uma conta de pagamentos.
+A pasta api usa JavaScript. O checkout suporta PIX direto por chave cadastrada no painel e, opcionalmente, BlackCat. O PIX direto ativo tem prioridade sobre o gateway. A simulacao fica restrita a desenvolvimento/preview. Na producao, sem uma opcao real configurada, o checkout informa a pendencia em vez de gerar codigo ficticio.
 
-## Ativar o PIX real na Vercel
+## PIX direto: cadastrar sua chave no painel
+
+Esta opcao gera um BR Code estatico e um QR Code PNG localmente, com chave PIX, valor recalculado no servidor e referencia unica do pedido. Nao chama a BlackCat e nao exige CNPJ do operador quando a chave usada e e-mail, telefone, CPF ou aleatoria. A chave precisa estar registrada no banco do titular informado. A validacao do aplicativo e de formato; somente o aplicativo bancario consulta o titular real no DICT. O cliente deve conferir o titular e o valor antes de pagar.
+
+1. Mantenha o Redis conectado ao projeto Vercel. Sao aceitos KV_REST_API_URL/KV_REST_API_TOKEN ou UPSTASH_REDIS_REST_URL/UPSTASH_REDIS_REST_TOKEN. O token precisa permitir escrita.
+2. Na Vercel, adicione ADMIN_PASSWORD como Secret em Production, com uma senha nova, exclusiva, de pelo menos 16 caracteres, e faca Redeploy. Alternativamente, configure ADMIN_PASSWORD_HASH no formato scrypt gerado por node lib/admin-password.js. Nao configure os dois com senhas diferentes: o hash tem prioridade. Nunca compartilhe a senha no chat.
+3. Abra /painel.html#pix no dominio da loja e entre com a senha administrativa. Essa senha fica apenas no servidor e nao e salva pelo aplicativo no armazenamento do navegador.
+4. Escolha o tipo da chave, informe a chave registrada no banco, o nome do titular (ate 25 caracteres) e a cidade (ate 15). Para telefone, use o formato internacional +55 seguido do DDD e numero. Marque a confirmacao de titularidade e Ativar PIX direto, e salve.
+5. Abra o checkout. O PIX direto ativado no Redis tem prioridade sobre a BlackCat. As mudancas da chave pelo painel passam a valer para novos pedidos sem novo deploy. O comprador informa nome e e-mail; nao sao solicitados CPF e telefone no modo direto.
+
+O recebimento NAO e confirmado automaticamente. A geracao do codigo, um clique do cliente ou uma imagem de comprovante nao aprovam pagamentos. Em /painel.html#pedidos, confira o credito e o valor no extrato bancario, informe a referencia da transacao e confirme manualmente. O estado salvo sera manual_confirmed, nunca uma confirmacao automatica do banco. O registro da aposta e a emissao do bilhete continuam sendo etapas separadas da operacao.
+
+Os codigos estaticos nao expiram e nao podem ser revogados pelo painel. Trocar a chave nao muda codigos/pedidos ja criados. Repetir o mesmo requestId preserva o pedido original. Os pedidos e as configuracoes ficam no Redis sem expiracao automatica; configure backups e retencao conforme sua operacao. Sessoes administrativas usam cookie Secure/HttpOnly/SameSite=Strict, expiram em oito horas e exigem CSRF e mesma origem nas alteracoes. O login limita cinco tentativas em 15 minutos por endereco do peer, podendo compartilhar o limite atras de proxy.
+
+Rotas adicionais: /api/pix-settings?action=session, settings ou orders para GET; acoes POST login, logout, save e confirm com CSRF. Configuracao, listagem e confirmacao exigem login. O status publico de um pedido direto exige seu token privado DP.; ele permite apenas consulta, sem aprovacao ou alteracao do recebedor. Webhooks BlackCat nao confirmam pedidos diretos.
+
+O gerador usa qrcode instalado via npm e verifica CRC16 conforme o Manual de Padroes para Iniciacao do Pix do Banco Central. Os testes decodificam o PNG com um leitor independente e conferem o codigo completo. Nenhum pagamento real foi feito durante os testes.
+
+## Ativar o PIX BlackCat na Vercel (opcional)
 
 1. Crie ou conecte um banco Upstash Redis persistente ao projeto na Vercel. Utilize o token de leitura e escrita. Os pedidos nao usam SQLite nem o disco temporario das funcoes. A integracao da Vercel pode criar KV_REST_API_URL e KV_REST_API_TOKEN: o codigo aceita esses nomes automaticamente quando UPSTASH_REDIS_REST_URL e UPSTASH_REDIS_REST_TOKEN nao estiverem definidos. KV_REST_API_READ_ONLY_TOKEN nao serve para gravar pedidos.
 2. Nas variaveis de ambiente de Production da Vercel, configure:
@@ -25,7 +43,7 @@ A pasta api usa JavaScript. O checkout suporta simulacao local e PIX real BlackC
 
     node -e "process.stdout.write(require('node:crypto').randomBytes(32).toString('hex'))"
 
-4. Publique um novo deployment. As funcoes Node.js devem ser incluidas e a raiz deve corresponder a este repositorio. Nao e necessario instalar dependencias. Chaves ficam somente no servidor; nunca use prefixos publicos nem as coloque em HTML ou JavaScript do navegador. Arquivos .env nao sao carregados automaticamente pelo codigo.
+4. Publique um novo deployment. As funcoes Node.js devem ser incluidas e a raiz deve corresponder a este repositorio. A Vercel instala as dependencias do package.json/package-lock.json; para desenvolvimento local, execute npm ci. Chaves privadas da API ficam somente no servidor; nunca use prefixos publicos nem as coloque em HTML ou JavaScript do navegador. Arquivos .env nao sao carregados automaticamente pelo codigo.
 5. Abra o checkout. O servidor confere o CNPJ configurado com o recebedor da conta BlackCat. O formulario solicita nome, email, telefone e CPF validos. Confira tambem se a sua conta de gateway esta habilitada para os produtos vendidos.
 
 Nao foi feita nenhuma cobranca real durante a implementacao. A integracao foi testada com respostas locais controladas. A homologacao na sua conta depende das configuracoes acima e de um teste operacional de ponta a ponta, incluindo conferencia no painel BlackCat.
@@ -68,7 +86,8 @@ ADMIN_PASSWORD_HASH utiliza scrypt. Gere com node lib/admin-password.js, fornece
 
 ## Verificacao
 
-    node --test tests/blackcat-simulation.test.cjs tests/api.test.cjs tests/blackcat-payments.test.cjs
+    npm ci
+    npm test
     node tests/browser-smoke.cjs
 
 Em ambientes que restringem subprocessos, Node.js recente permite executar os testes com --test-isolation=none. O teste de navegador usa Chrome/Edge em perfil separado e ambiente simulado, sem chamadas a contas reais.
@@ -76,3 +95,4 @@ Em ambientes que restringem subprocessos, Node.js recente permite executar os te
 Documentacao oficial consultada:
 - https://docs.blackcatoficial.com/
 - https://upstash.com/docs/redis/features/restapi
+- https://www.bcb.gov.br/content/estabilidadefinanceira/pix/Regulamento_Pix/II_ManualdePadroesparaIniciacaodoPix.pdf
