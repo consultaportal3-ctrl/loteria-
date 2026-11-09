@@ -265,6 +265,36 @@ function check(ok,message){if(!ok)throw new Error(message);}
       check(await evaluate('document.documentElement.scrollWidth<=innerWidth'),'Horizontal overflow after desktop Back at '+width);
     }
   });
+  await run('checkout banner fits phone and desktop reference proportions',async()=>{
+    for(const width of [360,390,430,1024,1366,1920]){
+      await command('Emulation.setDeviceMetricsOverride',{width,height:900,deviceScaleFactor:1,mobile:width<650});
+      await navigate('/carrinho.html');
+      await evaluate('if(!window.portalDemo.getGames().length)window.portalDemo.addMegaGame([1,2,3,4,5,6],1);window.portalDemo.openCart();document.querySelector("[data-cart-payment]").click()');
+      await until('document.querySelector(".payment-checkout").open && !document.querySelector(".payment-submit").disabled && document.querySelector(".payment-hero-art").naturalWidth>0');
+      const geometry=await evaluate(`(()=>{
+        const modal=document.querySelector('.payment-checkout');
+        const box=selector=>{const r=document.querySelector(selector).getBoundingClientRect();return {x:r.x,y:r.y,width:r.width,height:r.height,right:r.right,bottom:r.bottom};};
+        const image=document.querySelector('.payment-hero-art');
+        return {overflow:modal.scrollWidth>modal.clientWidth,hero:box('.payment-hero'),copy:box('.payment-hero-copy'),title:box('#payment-hero-title'),art:box('.payment-hero-art'),form:box('.payment-form'),ratio:image.naturalWidth/image.naturalHeight,notice:document.querySelector('.payment-hero-notice').getClientRects().length>0,brand:document.querySelector('.payment-brand').getClientRects().length>0};
+      })()`);
+      check(!geometry.overflow,'Checkout overflows at '+width);
+      check(geometry.art.x>=-1 && geometry.art.right<=width+1,'Ticket image is clipped at '+width);
+      check(Math.abs(geometry.art.width/geometry.art.height-geometry.ratio)<0.01,'Ticket image is distorted at '+width);
+      check(Math.abs(geometry.art.bottom-geometry.hero.bottom)<2 && Math.abs(geometry.form.y-geometry.hero.bottom)<2,'Image or payment section is detached from banner at '+width);
+      check(geometry.notice && geometry.brand,'Operator identification is hidden at '+width);
+      if(width<650){
+        check(geometry.art.y>=geometry.copy.bottom && geometry.art.width>=width-2,'Phone tickets are not below text at full width');
+        check(geometry.title.height>95 && geometry.title.height<135,'Phone title should occupy two readable lines');
+      }else check(geometry.art.x>=geometry.copy.right && geometry.art.width>=width*0.35,'Desktop tickets are not beside text at reference size');
+      if(width===390 || width===1366){
+        const screenshot=await command('Page.captureScreenshot',{format:'png'});
+        fs.writeFileSync(path.join(root,width===390?'checkout-phone-preview.png':'checkout-desktop-preview.png'),Buffer.from(screenshot.data,'base64'));
+      }
+      await evaluate('document.querySelector(".payment-back").click()');
+      await until('!document.querySelector(".payment-checkout").open && document.getElementById("cart-dialog").open');
+    }
+    await command('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:1,mobile:true});
+  });
   await run('back navigation closes checkout without changing the cart',async()=>{
     await navigate('/home.html#mega-sena');
     await evaluate('if(!window.portalDemo.getGames().length)window.portalDemo.addMegaGame([1,2,3,4,5,6],1)');
