@@ -157,6 +157,7 @@ function check(ok,message){if(!ok)throw new Error(message);}
       await until('document.querySelector(".payment-status").textContent.includes("Pagamento confirmado")');
       check(liveRequest.consent === true && typeof liveRequest.requestId === 'string' && liveRequest.buyer.phone === '11999999999', 'Missing live request fields');
       check(await evaluate('document.querySelector(".payment-status").textContent.includes("dependem do operador")'),'Payment was presented as a registered ticket');
+      check(await evaluate('document.querySelector(".payment-numbers-action").hidden'), 'Direct PIX button appeared in gateway checkout');
       check(await evaluate('window.portalDemo.getGames().length===5'),'Live fixture deleted cart before ticket delivery');
       await evaluate('document.querySelector(".payment-back").click()');
     } finally { liveFixture = false; }
@@ -164,6 +165,8 @@ function check(ok,message){if(!ok)throw new Error(message);}
   await run('direct PIX checkout hides gateway fields and keeps payment pending manual bank review',async()=>{
     liveFixture = true; directFixture = true;
     try {
+      await navigate('/carrinho.html');
+      await evaluate('if (!window.portalDemo.getGames().length) window.portalDemo.addComboPack("elas",1)');
       await navigate('/carrinho.html');
       await evaluate('document.querySelector("[data-cart-payment]").click()');
       await until('!document.querySelector(".payment-submit").disabled');
@@ -174,6 +177,16 @@ function check(ok,message){if(!ok)throw new Error(message);}
       check(liveRequest.buyer.cpf === undefined && liveRequest.buyer.phone === undefined, 'Direct PIX sent unnecessary document data');
       check(await evaluate('window.portalDemo.getGames().length===5'), 'Direct PIX removed the cart before bank review');
       check(await evaluate('!document.querySelector(".payment-legal").textContent.includes("undefined")'), 'Missing CNPJ leaked into merchant identity');
+      check(await evaluate('document.querySelector("#payment-selected-numbers").hidden'), 'Selected numbers should start collapsed');
+      await evaluate('document.querySelector(".payment-show-numbers").click()');
+      check(await evaluate('!document.querySelector("#payment-selected-numbers").hidden && document.querySelector(".payment-show-numbers").getAttribute("aria-expanded")==="true"'), 'Customer button did not reveal the order summary');
+      const selected = await evaluate('Array.from(document.querySelectorAll(".payment-selected-items li")).map(row=>({name:row.querySelector("strong").textContent,numbers:row.querySelector("p").textContent}))');
+      check(selected.length===liveRequest.items.length && selected.every((row,i)=>row.name===liveRequest.items[i].name && row.numbers.split(' | ')[0]===liveRequest.items[i].numbers.map(n=>String(n).padStart(2,'0')).join(' · ')), 'Revealed numbers differ from the PIX order');
+      check(await evaluate('document.querySelector(".payment-status").textContent.includes("Pagamento aguardando conferência da loja")'), 'Customer click approved payment');
+      check(await evaluate('document.querySelector("#payment-selected-numbers").textContent.includes("não emite bilhete oficial")'), 'Summary presented as an official ticket');
+      await evaluate('document.querySelector(".payment-back").click();document.querySelector("[data-cart-payment]").click()');
+      await until('!document.querySelector(".payment-submit").disabled');
+      check(await evaluate('document.querySelector("#payment-selected-numbers").hidden && document.querySelector(".payment-selected-items").children.length===0'), 'Previous order numbers leaked into a new checkout');
       await evaluate('document.querySelector(".payment-back").click()');
     } finally { liveFixture = false; directFixture = false; }
   });

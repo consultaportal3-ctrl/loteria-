@@ -90,6 +90,14 @@
       <p class="payment-operator"></p>
       <p class="payment-status" role="status" aria-live="polite">Aguardando resultado simulado…</p>
       <p class="payment-expiry"></p>
+      <div class="payment-numbers-action" hidden>
+        <button type="button" class="payment-show-numbers" aria-expanded="false" aria-controls="payment-selected-numbers">Já paguei — ver meus números</button>
+        <section id="payment-selected-numbers" hidden aria-labelledby="payment-numbers-title">
+          <h3 id="payment-numbers-title" tabindex="-1">Seus números escolhidos</h3>
+          <p>Resumo do pedido. Este botão não confirma o pagamento nem o registro da aposta e não emite bilhete oficial.</p>
+          <ul class="payment-selected-items"></ul>
+        </section>
+      </div>
       </div>
     </section>`;
   document.body.append(modal);
@@ -239,6 +247,10 @@
     orderToken = '';
     error.hidden = true;
     modal.querySelector('.payment-result').hidden = true;
+    modal.querySelector('.payment-numbers-action').hidden = true;
+    modal.querySelector('#payment-selected-numbers').hidden = true;
+    modal.querySelector('.payment-show-numbers').setAttribute('aria-expanded', 'false');
+    modal.querySelector('.payment-selected-items').replaceChildren();
     modal.setAttribute('aria-labelledby', 'payment-title');
     form.hidden = false;
     renderOrderSummary(window.portalDemo.getGames());
@@ -297,6 +309,18 @@
       section.querySelector('.payment-copy').textContent = live ? 'Copiar código PIX' : 'Copiar código de simulação';
       section.querySelector('.payment-status').textContent = live ? 'PIX criado. Aguardando pagamento…' : 'Simulação criada. Aguardando resultado simulado…';
       section.querySelector('.payment-expiry').textContent = result.expiresAt ? `Expira em ${new Date(result.expiresAt).toLocaleString('pt-BR')}` : '';
+      section.querySelector('.payment-numbers-action').hidden = !manualPix;
+      const selectedItems = section.querySelector('.payment-selected-items');
+      selectedItems.replaceChildren();
+      if (manualPix) items.forEach(item => {
+        const row = document.createElement('li');
+        const name = document.createElement('strong');
+        name.textContent = item.name;
+        const numbers = document.createElement('p');
+        numbers.textContent = describeItem(item);
+        row.append(name, numbers);
+        selectedItems.append(row);
+      });
       modal.setAttribute('aria-labelledby', 'payment-result-title');
       section.querySelector('#payment-result-title').focus({preventScroll:true});
       section.scrollIntoView({block:'start'});
@@ -312,6 +336,13 @@
         submit.disabled = !checkoutReady;
       }
     }
+  });
+
+  modal.querySelector('.payment-show-numbers').addEventListener('click', event => {
+    if (!manualPix || !orderToken) return;
+    modal.querySelector('#payment-selected-numbers').hidden = false;
+    event.currentTarget.setAttribute('aria-expanded', 'true');
+    modal.querySelector('#payment-numbers-title').focus();
   });
 
   modal.querySelector('.payment-copy').addEventListener('click', async event => {
