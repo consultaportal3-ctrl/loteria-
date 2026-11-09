@@ -1,0 +1,79 @@
+/* Shared reference sizes at 100% zoom for all eleven lottery pages. */
+@media(min-width:1101px){
+  .home-refresh.mega-route.virada-route:not(.cart-route) .site-header .header-inner{min-height:72px}
+  .home-refresh.mega-route.virada-route:not(.cart-route) .site-header .campaign-logo{height:72px}
+  .home-refresh.mega-route.virada-route:not(.cart-route) .hero{height:383px;min-height:383px}
+  .home-refresh.mega-route.virada-route:not(.cart-route) .hero .hero-copy{max-width:1140px}
+  .home-refresh.mega-route.virada-route:not(.cart-route) .hero .hero-copy p{max-width:1140px;font-size:20px;line-height:1.15}
+  .home-refresh.mega-route.virada-route:not(.cart-route) #mega-view{padding-top:39px}
+  .home-refresh.mega-route.virada-route:not(.cart-route) #mega-view .mega-contest{font-size:16px;line-height:1.25;margin-bottom:39px}
+  .home-refresh.mega-route.virada-route:not(.cart-route) #mega-view .mega-contest h2{font-size:30px;line-height:1.3;margin-bottom:20px}
+  .home-refresh.mega-route.virada-route:not(.cart-route) #mega-view .mega-contest p{font-size:16px;line-height:1.25;margin-bottom:23px}
+  .home-refresh.mega-route.virada-route:not(.cart-route) #mega-view .mega-results{font-size:16px;line-height:1.4;padding:5px 13px}
+}
+@media(min-width:1101px){
+  .home-refresh:is(.mega-route,.virada-route,.facil-route,.quina-route,.milionaria-route,.mania-route,.timemania-route,.dupla-route,.loteca-route,.dia-route,.super-route):not(.cart-route) .site-header .header-inner{min-height:70px}
+  .home-refresh:is(.mega-route,.virada-route,.facil-route,.quina-route,.milionaria-route,.mania-route,.timemania-route,.dupla-route,.loteca-route,.dia-route,.super-route):not(.cart-route) .site-header .campaign-logo{height:70px;width:99px}
+  .home-refresh:is(.mega-route,.virada-route,.facil-route,.quina-route,.milionaria-route,.mania-route,.timemania-route,.dupla-route,.loteca-route,.dia-route,.super-route):not(.cart-route) .site-header .header-official{font-size:18px}
+  .home-refresh:is(.mega-route,.virada-route,.facil-route,.quina-route,.milionaria-route,.mania-route,.timemania-route,.dupla-route,.loteca-route,.dia-route,.super-route):not(.cart-route) .hero{height:382px;min-height:382px}
+  .home-refresh:is(.mega-route,.virada-route,.facil-route,.quina-route,.milionaria-route,.mania-route,.timemania-route,.dupla-route,.loteca-route,.dia-route,.super-route):not(.cart-route) .hero .campaign-navigation:not(.is-fixed){padding-top:33px}
+  .home-refresh:is(.mega-route,.virada-route,.facil-route,.quina-route,.milionaria-route,.mania-route,.timemania-route,.dupla-route,.loteca-route,.dia-route,.super-route):not(.cart-route) .hero .campaign-navigation:not(.is-fixed) .campaign-menu{max-width:1100px;gap:0 20px}
+  .home-refresh:is(.mega-route,.virada-route,.facil-route,.quina-route,.milionaria-route,.mania-route,.timemania-route,.dupla-route,.loteca-route,.dia-route,.super-route):not(.cart-route) .hero .campaign-navigation:not(.is-fixed) .campaign-menu :is(a,button){font-size:18px;line-height:28px}
+  .home-refresh:is(.mega-route,.virada-route,.facil-route,.quina-route,.milionaria-route,.mania-route,.timemania-route,.dupla-route,.loteca-route,.dia-route,.super-route):not(.cart-route) .hero .campaign-navigation:not(.is-fixed) .menu-break{display:block;flex-basis:100%;height:21px;margin:0}
+  .home-refresh:is(.mega-route,.virada-route,.facil-route,.quina-route,.milionaria-route,.mania-route,.timemania-route,.dupla-route,.loteca-route,.dia-route,.super-route):not(.cart-route) .hero .campaign-navigation:not(.is-fixed) .campaign-account{top:57px}
+  .home-refresh:is(.mega-route,.virada-route,.facil-route,.quina-route,.milionaria-route,.mania-route,.timemania-route,.dupla-route,.loteca-route,.dia-route,.super-route):not(.cart-route) .hero .campaign-account .cart-button{min-height:43px;padding:10px 15px;gap:8px}
+  .home-refresh:is(.mega-route,.virada-route,.facil-route,.quina-route,.milionaria-route,.mania-route,.timemania-route,.dupla-route,.loteca-route,.dia-route,.super-route):not(.cart-route) .hero .campaign-account .cart-button b{font-size:16px}
+  .home-refresh:is(.mega-route,.virada-route,.facil-route,.quina-route,.milionaria-route,.mania-route,.timemania-route,.dupla-route,.loteca-route,.dia-route,.super-route):not(.cart-route) .hero .account-link{font-size:16px;padding:10px 11px}
+  .home-refresh:is(.mega-route,.virada-route,.facil-route,.quina-route,.milionaria-route,.mania-route,.timemania-route,.dupla-route,.loteca-route,.dia-route,.super-route):not(.cart-route) .hero .hero-layout{min-height:0}
+  .home-refresh:is(.mega-route,.virada-route,.facil-route,.quina-route,.milionaria-route,.mania-route,.timemania-route,.dupla-route,.loteca-route,.dia-route,.super-route):not(.cart-route) .hero .hero-copy{padding:49px 0 0;max-width:1100px}
+  .home-refresh:is(.mega-route,.virada-route,.facil-route,.quina-route,.milionaria-route,.mania-route,.timemania-route,.dupla-route,.loteca-route,.dia-route,.super-route):not(.cart-route) .hero .hero-copy h1{font-size:59px;line-height:1.15;margin-bottom:21px}
+  .home-refresh:is(.mega-route,.virada-route,.facil-route,.quina-route,.milionaria-route,.mania-route,.timemania-route,.dupla-route,.loteca-route,.dia-route,.super-route):not(.cart-route) .hero .hero-copy p{font-size:20px;line-height:1.5;max-width:1100px}
+  .home-refresh:is(.mega-route,.virada-route,.facil-route,.quina-route,.milionaria-route,.mania-route,.timemania-route,.dupla-route,.loteca-route,.dia-route,.super-route):not(.cart-route) .campaign-tickets{width:148px;right:10.7%;bottom:0}
+  .home-refresh:is(.mega-route,.virada-route,.facil-route,.quina-route,.milionaria-route,.mania-route,.timemania-route,.dupla-route,.loteca-route,.dia-route,.super-route):not(.cart-route) :is(#mega-view,#facil-view,#quina-view,#milionaria-view,#mania-view,#timemania-view,#dupla-view,#loteca-view,#dia-view,#super-view){width:88.5%;max-width:1670px;padding-top:39px}
+  .home-refresh:is(.mega-route,.virada-route,.facil-route,.quina-route,.milionaria-route,.mania-route,.timemania-route,.dupla-route,.loteca-route,.dia-route,.super-route):not(.cart-route) :is(#mega-view,#facil-view,#quina-view,#milionaria-view,#mania-view,#timemania-view,#dupla-view,#loteca-view,#dia-view,#super-view) .mega-contest{font-size:16px;line-height:1.25}
+  .home-refresh:is(.mega-route,.virada-route,.facil-route,.quina-route,.milionaria-route,.mania-route,.timemania-route,.dupla-route,.loteca-route,.dia-route,.super-route):not(.cart-route) :is(#mega-view,#facil-view,#quina-view,#milionaria-view,#mania-view,#timemania-view,#dupla-view,#loteca-view,#dia-view,#super-view) .mega-contest h2{font-size:30px;line-height:1.3;margin-bottom:20px}
+  .home-refresh:is(.mega-route,.virada-route,.facil-route,.quina-route,.milionaria-route,.mania-route,.timemania-route,.dupla-route,.loteca-route,.dia-route,.super-route):not(.cart-route) :is(#mega-view,#facil-view,#quina-view,#milionaria-view,#mania-view,#timemania-view,#dupla-view,#loteca-view,#dia-view,#super-view) .mega-contest p{font-size:16px;line-height:1.25;margin-bottom:23px}
+  .home-refresh:is(.mega-route,.virada-route,.facil-route,.quina-route,.milionaria-route,.mania-route,.timemania-route,.dupla-route,.loteca-route,.dia-route,.super-route):not(.cart-route) :is(#mega-view,#facil-view,#quina-view,#milionaria-view,#mania-view,#timemania-view,#dupla-view,#loteca-view,#dia-view,#super-view) .mega-results{font-size:16px;line-height:1.4;padding:5px 13px}
+  .home-refresh:is(.mega-route,.virada-route,.facil-route,.quina-route,.milionaria-route,.mania-route,.timemania-route,.dupla-route,.loteca-route,.dia-route,.super-route):not(.cart-route) :is(#mega-title,#facil-title,#quina-title,#milionaria-title,#mania-title,#timemania-title,#dupla-title,#loteca-title,#dia-title,#super-title){font-size:59px}
+}
+@media(min-width:901px){
+  .home-refresh{--home-unit:min(1px,.053022269vw);--menu-unit:var(--home-unit)}
+  .home-refresh .site-header .container,
+  .home-refresh .hero>.container,
+  .home-refresh .hero .campaign-navigation,
+  .home-refresh .modalities{width:88.5%;max-width:1670px}
+  .home-refresh .site-header .header-inner{min-height:calc(88 * var(--home-unit))}
+  .home-refresh .site-header .header-official{font-size:calc(22 * var(--home-unit))}
+  .home-refresh .site-header .campaign-logo{left:49%;height:calc(88 * var(--home-unit));width:calc(121 * var(--home-unit))}
+  .home-refresh .campaign-logo img{width:auto;height:100%;max-width:100%;object-fit:contain}
+  .home-refresh:not([class*="-route"]) .hero{height:calc(467 * var(--home-unit));min-height:calc(467 * var(--home-unit));overflow:hidden}
+  .home-refresh .hero .campaign-navigation:not(.is-fixed){padding-top:calc(40 * var(--home-unit))}
+  .home-refresh .hero .campaign-navigation:not(.is-fixed) .campaign-menu{max-width:calc(1100 * var(--home-unit));gap:0 calc(25 * var(--home-unit))}
+  .home-refresh .hero .campaign-navigation:not(.is-fixed) .campaign-menu :is(a,button){font-size:calc(22 * var(--home-unit));line-height:calc(34 * var(--home-unit))}
+  .home-refresh .hero .campaign-navigation:not(.is-fixed) .menu-break{height:calc(26 * var(--home-unit))}
+  .home-refresh .hero .campaign-navigation:not(.is-fixed) .campaign-account{top:calc(69 * var(--home-unit))}
+  .home-refresh:not([class*="-route"]) .hero .hero-layout{min-height:0}
+  .home-refresh:not([class*="-route"]) .hero .hero-copy{max-width:calc(1100 * var(--home-unit));padding:calc(60 * var(--home-unit)) 0 0}
+  .home-refresh:not([class*="-route"]) .hero .hero-copy h1{font-size:calc(72 * var(--home-unit));line-height:1.14;margin:0 0 calc(30 * var(--home-unit))}
+  .home-refresh:not([class*="-route"]) .hero .hero-copy p{font-size:calc(24 * var(--home-unit));line-height:1.5;max-width:calc(1100 * var(--home-unit))}
+  .home-refresh:not([class*="-route"]) .campaign-tickets{width:calc(410 * var(--home-unit));right:10%;bottom:0}
+  .home-refresh .modalities{padding-top:calc(48 * var(--home-unit))}
+  .home-refresh .modalities #modalities-title{font-size:calc(76 * var(--home-unit));line-height:1.15;margin:0}
+  .home-refresh .modalities .section-heading{margin-bottom:calc(55 * var(--home-unit))}
+  .home-refresh .game-cards{width:100%;max-width:calc(1628 * var(--home-unit));grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-rows:auto;gap:calc(36 * var(--home-unit));justify-content:start}
+  .home-refresh .game-cards>.product-card:nth-child(n){grid-column:auto;width:100%;max-width:380px;height:calc(564 * var(--home-unit));min-height:calc(564 * var(--home-unit))}
+  .home-refresh .game-cards>.product-card:nth-child(n) .product-header{height:calc(76 * var(--home-unit));min-height:calc(76 * var(--home-unit));padding-left:23.16cqw}
+  .home-refresh .game-cards>.product-card:nth-child(n) .product-header h3{font-size:6.84cqw}
+  .home-refresh .game-cards>.product-card:nth-child(n) .product-clover{left:12px;width:40px;height:40px}
+  .home-refresh .game-cards>.product-card:nth-child(n) .product-body{padding:20px 10.526cqw 24px}
+  .home-refresh .game-cards>.product-card:nth-child(n) .product-prize>strong{font-size:8.95cqw;line-height:1.16}
+  .home-refresh .game-cards>.product-card:nth-child(n) .product-prize>b{font-size:6.58cqw}
+  .home-refresh .game-cards>.product-virada:nth-child(n) .product-prize>strong span{display:block}
+  .home-refresh .game-cards>.product-card:nth-child(n) .product-contest,
+  .home-refresh .game-cards>.product-card:nth-child(n) .product-draw,
+  .home-refresh .game-cards>.product-card:nth-child(n) .product-draw strong,
+  .home-refresh .game-cards>.product-card:nth-child(n) .product-draw>span{font-size:4.74cqw;line-height:1.3}
+  .home-refresh .game-cards>.product-card:nth-child(n) .product-pool{font-size:6.3cqw;height:calc(72 * var(--home-unit));min-height:calc(72 * var(--home-unit))}
+  .home-refresh .game-cards>.product-card:nth-child(n) .product-play,
+  .home-refresh .game-cards>.product-card:nth-child(n) .product-play>span{font-size:6.3cqw;height:calc(76 * var(--home-unit));min-height:calc(76 * var(--home-unit))}
+}

@@ -31,9 +31,9 @@
         link.rel = 'noopener noreferrer';
         identity.append(link, document.createTextNode(' '));
       }
-    } catch (reason) {
-      const message = reason instanceof Error ? reason.message : 'Não foi possível carregar os dados do operador.';
-      identity.textContent = `${message} Checkout desativado.`;
+    } catch {
+      identity.replaceChildren();
+      identity.hidden = true;
     }
   }
 

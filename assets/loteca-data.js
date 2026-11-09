@@ -1,6 +1,6 @@
 window.lotecaData = {
-  "contest": 1278,
-  "closeDate": "28/10/2026",
+  "contest": 1282,
+  "closeDate": "12/11/2026",
   "closeHour": "13:00",
   "matches": [
     {

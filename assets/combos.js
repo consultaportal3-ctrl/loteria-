@@ -10,14 +10,14 @@
   const tile = (id, name, contest) => ({ id, name, contest });
   const combos = [
     {
-      name: 'Fezinha do Mês', price: '426,00',
+      name: 'Fezinha do Mês', price: '408,00',
       description: 'Quer sorte o mês inteiro? Pacote de apostas teimosinhas de todas as modalidades disponíveis, exceto Timemania e Loteca.',
-      tiles: [tile('mega','Mega-Sena','3081 a 3092'),tile('facil','Lotofácil','3821 a 3844'),tile('quina','Quina','7159 a 7170'),tile('milionaria','+Milionária','404 a 408'),tile('dupla','Dupla Sena','3028 a 3039'),tile('mania','Lotomania','2995 a 3006'),tile('dia','Dia de Sorte','1339 a 1362'),tile('super','Super Sete','918 a 929')]
+      tiles: [tile('mega','Mega-Sena','3084 a 3095'),tile('facil','Lotofácil','3825 a 3848'),tile('quina','Quina','7163 a 7168'),tile('milionaria','+Milionária','406 a 410'),tile('dupla','Dupla Sena','3030 a 3041'),tile('mania','Lotomania','2997 a 3008'),tile('dia','Dia de Sorte','1343 a 1366'),tile('super','Super Sete','920 a 931')]
     },
     {
-      name: 'Loterias Pra Elas', price: '21,00',
-      description: 'Pacote com as modalidades preferidas pelas apostadoras. Várias chances para realizar seus sonhos. Já Pensou?',
-      tiles: [tile('mega','Mega-Sena','3081'),tile('facil','Lotofácil','3821'),tile('milionaria','+Milionária','404'),tile('dupla','Dupla Sena','3028'),tile('dia','Dia de Sorte','1339')]
+      name: 'Sorte de Hoje', price: '21,00',
+      description: 'Não deixe para amanhã a chance de ficar milionário. Aposte nas modalidades do dia!',
+      tiles: [tile('facil','Lotofácil','3825'),tile('quina','Quina','7163'),tile('dupla','Dupla Sena','3030'),tile('mania','Lotomania','2997'),tile('dia','Dia de Sorte','1343'),tile('super','Super Sete','920')]
     },
     {
       name: 'Chance Todo Dia', price: '148,50',
@@ -42,7 +42,7 @@
   ];
   combos.push({name:'Especial',price:'24,00',description:'Aposte no combo exclusivo do concurso especial da Mega da Virada e aumente suas chances! O prêmio é estimado em R$ 1 bilhão e não acumula. Já pensou?',tiles:[tile('virada','Mega da Virada','3100')]});
   colors.virada=['#00a94f','#fff'];
-  const carouselCombos=()=>[combos[6],...combos.slice(0,6)];
+  const carouselCombos=()=>[combos[6],combos[1],combos[0],...combos.slice(2,6)];
   const track = document.getElementById('combo-track');
   const previous = document.getElementById('combo-prev');
   const next = document.getElementById('combo-next');
@@ -56,9 +56,9 @@
   let monthlyTimer;
   let selectedComboIndex=0;
   const activePanel=()=>track.querySelector(`[data-combo-index="${selectedComboIndex}"] .combo-options`);
-  const selectedBetCount=()=>[9,5,10,12,20,4,4][selectedComboIndex];
-  const selectedPrice=()=>[426,21,148.5,50,61,1652,24][selectedComboIndex];
-  const tileGameCount=item=>selectedComboIndex===6?4:selectedComboIndex===4?{facil:8,mania:2,dia:6,super:4}[item.id]:selectedComboIndex===3||item.id==='mania'&&selectedComboIndex!==1?2:1;
+  const selectedBetCount=()=>[9,7,10,12,20,4,4][selectedComboIndex];
+  const selectedPrice=()=>[408,21,148.5,50,61,1652,24][selectedComboIndex];
+  const tileGameCount=item=>selectedComboIndex===6?4:selectedComboIndex===4?{facil:8,mania:2,dia:6,super:4}[item.id]:selectedComboIndex===3||item.id==='mania'?2:1;
   const maxComboQuantity=()=>Math.floor(30/selectedBetCount());
   function stopMonthlyRotation(){clearInterval(monthlyTimer);}
   function advanceMonthlySlide(step){
@@ -76,7 +76,7 @@
   }
   const money=value=>new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(value);
   function monthlyPanel(combo){
-    return `<section class="combo-options" aria-label="Monte ${combo.name}" hidden><button type="button" class="combo-options-close" data-combo-close aria-label="Fechar opções"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m5 5 14 14M19 5 5 19"/></svg></button><div class="combo-options-top"><div class="combo-options-carousel"><button type="button" data-combo-slide="-1" aria-label="Modalidades anteriores">‹</button><div class="combo-options-games"></div><button type="button" data-combo-slide="1" aria-label="Próximas modalidades">›</button></div><p>Os números dos jogos dos combos são escolhidos aleatoriamente pelo sistema. Mas antes de efetuar o pagamento é possível visualizar os números selecionados.</p><label class="combo-preview-choice"><input type="checkbox" data-combo-preview> Quero ver os números escolhidos antes de pagar</label></div><div class="combo-options-bottom"><p>Quantidade de apostas:</p><div class="combo-quantity"><button type="button" data-combo-quantity="-1" aria-label="Diminuir quantidade de apostas">−</button><output aria-live="polite">${[9,5,10,12,20,4,4][combos.indexOf(combo)]}</output><button type="button" data-combo-quantity="1" aria-label="Aumentar quantidade de apostas">+</button></div><strong class="combo-options-total" aria-live="polite">Total: R$ ${combo.price}</strong><div class="combo-options-actions"><button type="button" data-combo-add="pay">Pagar agora</button><button type="button" data-combo-add="cart">Incluir no carrinho</button></div><span class="combo-options-status" role="status"></span></div></section>`;
+    return `<section class="combo-options" aria-label="Monte ${combo.name}" hidden><button type="button" class="combo-options-close" data-combo-close aria-label="Fechar opções"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m5 5 14 14M19 5 5 19"/></svg></button><div class="combo-options-top"><div class="combo-options-carousel"><button type="button" data-combo-slide="-1" aria-label="Modalidades anteriores">‹</button><div class="combo-options-games"></div><button type="button" data-combo-slide="1" aria-label="Próximas modalidades">›</button></div><p>Os números dos jogos dos combos são escolhidos aleatoriamente pelo sistema. Mas antes de efetuar o pagamento é possível visualizar os números selecionados.</p><label class="combo-preview-choice"><input type="checkbox" data-combo-preview> Quero ver os números escolhidos antes de pagar</label></div><div class="combo-options-bottom"><p>Quantidade de apostas:</p><div class="combo-quantity"><button type="button" data-combo-quantity="-1" aria-label="Diminuir quantidade de apostas">−</button><output aria-live="polite">${[9,7,10,12,20,4,4][combos.indexOf(combo)]}</output><button type="button" data-combo-quantity="1" aria-label="Aumentar quantidade de apostas">+</button></div><strong class="combo-options-total" aria-live="polite">Total: R$ ${combo.price}</strong><div class="combo-options-actions"><button type="button" data-combo-add="pay">Pagar agora</button><button type="button" data-combo-add="cart">Incluir no carrinho</button></div><span class="combo-options-status" role="status"></span></div></section>`;
   }
   function updateMonthlyPanel(){
     const panel=activePanel();if(!panel)return;

@@ -81,7 +81,7 @@
       article.append(header,label,line);
       if(item.team||item.trevos){const extra=document.createElement('p');extra.textContent=item.team?`Time do Coração: ${item.team}`:`Trevos: ${item.trevos.join(' · ')}`;article.append(extra);}
       if(item.game==='dia' && Number.isInteger(item.month)){const monthDetails=document.createElement('p');monthDetails.className='recent-dia-month';monthDetails.setAttribute('aria-label',`Mês da Sorte: ${window.portalMonths[item.month]}`);monthDetails.textContent=window.portalMonths[item.month].toLocaleUpperCase('pt-BR');article.append(monthDetails);}
-      const details=document.createElement('p');const first=item.contest||{mega:3075,facil:3821,quina:7152,milionaria:402,mania:2992,timemania:2460,dupla:3025,dia:1332,super:915}[item.game];
+      const details=document.createElement('p');const first=item.contest||{mega:3084,facil:3825,quina:7163,milionaria:406,mania:2997,timemania:2466,dupla:3030,dia:1343,super:920}[item.game];
       if(first){const contest=document.createElement('span');contest.textContent=`Concurso: ${first}${item.repeats>1?' a '+(first+item.repeats-1):''}`;details.append(contest,document.createElement('br'));}
       details.append(`Valor: ${formatMoney(item.referencePrice)}`);article.append(details);preview.prepend(article);
     });
@@ -97,7 +97,7 @@
     document.querySelector('.hero-copy h1').textContent='Loteca';
     document.querySelector('.hero-copy p').textContent='Você pode se tornar um campeão apostando na sua paixão pelo futebol!';
     document.querySelector('.campaign-tickets img').setAttribute('src','assets/loteca-ticket.png');
-    document.title = 'Portal da Sorte | Demonstração';window.scrollTo({top:0,behavior:'instant'});window.dispatchEvent(new Event('scroll'));byId('loteca-title').focus({preventScroll:true});updateCart();
+    document.title = 'Loterias Online Caixa';window.scrollTo({top:0,behavior:'instant'});window.dispatchEvent(new Event('scroll'));byId('loteca-title').focus({preventScroll:true});updateCart();
   }
   window.addEventListener('portal:cart-change',updateCart);window.addEventListener('hashchange',route);
   update();updateCart();route();

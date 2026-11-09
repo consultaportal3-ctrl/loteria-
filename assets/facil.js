@@ -79,7 +79,7 @@
         const contest = document.createElement('span');
         const contestLabel = document.createElement('strong');
         contestLabel.textContent = 'Concurso: ';
-        const first = {mega:3075,facil:3821,quina:7152,milionaria:402,mania:2992,dupla:3025,super:915,dia:1332,timemania:2460}[item.game];
+        const first = item.contest || {mega:3084,facil:3825,quina:7163,milionaria:406,mania:2997,dupla:3030,super:920,dia:1343,timemania:2466}[item.game];
         contest.append(contestLabel, `${first}${item.repeats > 1 ? ' a ' + (first - 1 + item.repeats) : ''}`);
         details.append(contest, document.createElement('br'));
       }
@@ -174,7 +174,7 @@
     document.querySelector('[data-nav-game="quina"]').classList.remove('active');
     document.querySelector('[data-nav-game="facil"]').classList.add('active');
     document.querySelector('.campaign-menu a[href="#inicio"]').classList.toggle('active', !active);
-    document.title = 'Portal da Sorte | Demonstração';
+    document.title = 'Loterias Online Caixa';
     if (active) {
       window.scrollTo({top:0, behavior:'instant'});
       window.dispatchEvent(new Event('scroll'));

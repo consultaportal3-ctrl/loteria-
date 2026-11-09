@@ -85,7 +85,7 @@
         const contest = document.createElement('span');
         const contestLabel = document.createElement('strong');
         contestLabel.textContent = 'Concurso: ';
-        const first = item.contest || {mega:3075,facil:3821,quina:7152,milionaria:402,mania:2992,dupla:3025,super:915,dia:1332,timemania:2460}[item.game];
+        const first = item.contest || {mega:3084,facil:3825,quina:7163,milionaria:406,mania:2997,dupla:3030,super:920,dia:1343,timemania:2466}[item.game];
         contest.append(contestLabel, `${first}${item.repeats > 1 ? ' a ' + (first - 1 + item.repeats) : ''}`);
         details.append(contest, document.createElement('br'));
       }
@@ -185,7 +185,7 @@
     document.querySelector('[data-nav-game="facil"]').classList.remove('active');
     document.querySelector('[data-nav-game="quina"]').classList.remove('active');
     document.querySelector('.campaign-menu a[href="#inicio"]').classList.toggle('active', !active);
-    document.title = 'Portal da Sorte | Demonstração';
+    document.title = 'Loterias Online Caixa';
     contest.querySelector('h2').textContent = virada ? 'Concurso nº 3100' : originalContest.title;
     contest.querySelector('p').innerHTML = virada ? '<strong>Encerramento das Apostas:</strong> 31/12/2026 22h00<br><strong>Data do Sorteio:</strong> 01/01/2027 11h00<br><strong>Estimativa de prêmio:</strong> R$ 1.000.000.000,00' : originalContest.details;
     if (virada) {
@@ -194,7 +194,7 @@
       heroTitle.textContent = 'Mega da Virada';
       heroSubtitle.textContent = 'Chegou a hora de apostar no maior prêmio das Loterias CAIXA. No portal você aposta online na Mega da Virada e concorre ao prêmio estimado de R$ 1 bilhão. É muito dinheiro para qualquer um!';
       heroTicket.setAttribute('src', 'assets/mega-virada-ticket.png');
-      document.title = 'Portal da Sorte | Demonstração';
+      document.title = 'Loterias Online Caixa';
     }
     if (active) {
       window.scrollTo({top:0, behavior:'instant'});

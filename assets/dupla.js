@@ -77,7 +77,7 @@
         const contest = document.createElement('span');
         const contestLabel = document.createElement('strong');
         contestLabel.textContent = 'Concurso: ';
-        const first = {mega:3075,facil:3821,quina:7152,milionaria:402,mania:2992,dupla:3025,super:915,dia:1332,timemania:2460}[item.game];
+        const first = item.contest || {mega:3084,facil:3825,quina:7163,milionaria:406,mania:2997,dupla:3030,super:920,dia:1343,timemania:2466}[item.game];
         contest.append(contestLabel, `${first}${item.repeats > 1 ? ' a ' + (first - 1 + item.repeats) : ''}`);
         details.append(contest, document.createElement('br'));
       }
@@ -167,7 +167,7 @@
     heroTitle.textContent = 'Dupla Sena';
     heroSubtitle.textContent = 'A mesma aposta, duas chances de ganhar.';
     heroTicket.setAttribute('src', 'assets/dupla-sena-ticket.png');
-    document.title = 'Portal da Sorte | Demonstração';
+    document.title = 'Loterias Online Caixa';
     window.scrollTo({top:0,behavior:'instant'});
     window.dispatchEvent(new Event('scroll'));
     byId('dupla-title').focus({preventScroll:true});

@@ -16,7 +16,7 @@
       document.querySelector('.campaign-tickets img').src='assets/campaign-tickets.png';
       document.querySelectorAll('.campaign-menu .active').forEach(link=>link.classList.remove('active'));
       if(!dialog.open)dialog.show();
-      document.title = 'Portal da Sorte | Demonstração';
+      document.title = 'Loterias Online Caixa';
     }else if(dialog.open)dialog.close();
     previousHash=location.hash;
   }
