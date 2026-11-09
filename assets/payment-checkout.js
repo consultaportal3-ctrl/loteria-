@@ -23,7 +23,7 @@
   modal.setAttribute('aria-labelledby', 'payment-title');
   modal.innerHTML = `
     <div class="payment-masthead">
-      <button type="button" class="payment-back payment-close">‹ Voltar ao carrinho</button>
+      <a class="payment-official-link" href="https://www.caixa.gov.br/" target="_blank" rel="noopener noreferrer">Ir para o site da CAIXA.</a>
       <span class="payment-brand">L7 PG</span>
       <span class="payment-demo-label">Demonstração independente</span>
     </div>
@@ -31,7 +31,7 @@
       <details class="payment-navigation">
         <summary><span aria-hidden="true">☰</span><span>Menu</span></summary>
         <nav aria-label="Navegação da compra">
-          <button type="button" class="payment-cart-return">Voltar ao carrinho</button>
+          <button type="button" class="payment-back payment-cart-return">‹ Voltar ao carrinho</button>
           <button type="button" class="payment-go-form">Forma de Pagamento</button>
         </nav>
       </details>
@@ -276,7 +276,7 @@
     modal.querySelector('.payment-cart-count').textContent = `${count} ${count === 1 ? 'item' : 'itens'}`;
     modal.showModal();
     modal.scrollTop = 0;
-    modal.querySelector('.payment-back').focus({preventScroll:true});
+    modal.querySelector('.payment-official-link').focus({preventScroll:true});
     loadCheckoutInfo(session, sessionController.signal);
   }, true);
 

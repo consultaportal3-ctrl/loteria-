@@ -58,11 +58,13 @@
 /* Checkout presented as a full page, while retaining the existing payment flow. */
 body:has(.payment-checkout[open]){overflow:hidden}
 .payment-checkout{width:100%;max-width:none;height:100dvh;max-height:100dvh;inset:0;margin:0;padding:0;border-radius:0;overscroll-behavior:contain;font-family:var(--font-text,Arial,sans-serif)}
-.payment-checkout .payment-masthead{display:flex;align-items:center;justify-content:space-between;gap:24px;min-height:88px;padding:16px max(24px,calc((100% - 1160px)/2));background:#005da8;color:#fff}
-.payment-checkout .payment-back{width:auto;height:auto;flex:0 1 auto;border:0;border-radius:0;padding:10px 0;background:transparent;color:#fff;font:inherit;text-align:left}
+.payment-checkout .payment-masthead{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1fr);align-items:center;gap:24px;min-height:88px;padding:16px max(24px,calc((100% - 1670px)/2));background:#005da8;color:#fff}
+.payment-official-link{justify-self:start;max-width:260px;color:#fff;text-decoration:none;font:400 22px/1.4 var(--font-text,Arial,sans-serif)}
+.payment-official-link:hover{text-decoration:underline}
+.payment-official-link:focus-visible{outline:3px solid #ffce00;outline-offset:4px}
 .payment-back:focus-visible{outline:3px solid #ffce00;outline-offset:4px}
-.payment-brand{font:800 16px/1.1 var(--font-text,Arial,sans-serif);text-align:center;letter-spacing:.06em}
-.payment-demo-label{max-width:180px;font-size:13px;text-align:right}
+.payment-brand{min-width:0;overflow-wrap:anywhere;font:800 16px/1.1 var(--font-text,Arial,sans-serif);text-align:center;letter-spacing:.06em}
+.payment-demo-label{justify-self:end;max-width:180px;font-size:13px;text-align:right}
 .payment-hero{overflow:hidden;background:linear-gradient(134deg,#0067b1 0%,#0067b1 48%,#198aaf 48.1%,#30a8ad 100%);color:#fff}
 .payment-hero-inner{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:40px;align-items:center;width:88%;max-width:1670px;min-height:440px;margin:auto;padding:40px 0 0}
 .payment-hero-copy{min-width:0;padding-bottom:48px}
@@ -93,8 +95,8 @@ body:has(.payment-checkout[open]){overflow:hidden}
 .payment-method-selected{margin-left:auto;color:#08777e;font-size:12px;font-weight:700}
 .payment-checkout .payment-result{width:min(560px,calc(100% - 40px));padding:36px 0 64px}
 @media(max-width:640px){
-  .payment-checkout .payment-masthead{gap:12px;min-height:72px;padding:12px 20px}
-  .payment-checkout .payment-back{max-width:105px;font-size:13px}
+  .payment-checkout .payment-masthead{gap:12px;min-height:68px;padding:10px 16px}
+  .payment-official-link{max-width:95px;font-size:12px;line-height:1.4}
   .payment-brand{font-size:13px}
   .payment-demo-label{max-width:95px;font-size:10px}
   .payment-hero-inner{display:flex;flex-direction:column;gap:0;width:100%;min-height:0;padding:32px 0 0;text-align:center}
