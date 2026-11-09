@@ -90,7 +90,6 @@
       <p class="payment-operator"></p>
       <p class="payment-status" role="status" aria-live="polite">Aguardando resultado simulado…</p>
       <p class="payment-expiry"></p>
-      <p class="payment-legal" hidden></p>
       </div>
     </section>`;
   document.body.append(modal);
@@ -291,8 +290,6 @@
       section.querySelector('.payment-customer-name').textContent = form.elements.name.value.trim();
       section.querySelector('.payment-customer-email').textContent = form.elements.email.value.trim();
       section.querySelector('.payment-result-total').textContent = `Total do pedido: ${money(result.amount / 100)}`;
-      renderBusiness(section.querySelector('.payment-legal'), result);
-      section.querySelector('.payment-legal').hidden = false;
       section.querySelector('.payment-qr').hidden = !result.qrCodeImage;
       if (result.qrCodeImage) section.querySelector('.payment-qr').src = result.qrCodeImage;
       section.querySelector('.payment-code').value = result.qrCode;
