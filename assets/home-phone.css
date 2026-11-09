@@ -57,15 +57,16 @@
 
   .home-refresh.cart-route .site-header .campaign-logo>svg{display:none}
   .home-refresh.cart-route .site-header .campaign-logo>.cart-phone-logo{display:block;width:100%;height:100%;object-fit:contain}
-  .home-refresh.cart-route .hero{position:relative;isolation:isolate;height:149.2vw;min-height:149.2vw;padding:0;background:linear-gradient(90deg,#1781b0,#289dac)}
+  .home-refresh.cart-route .hero{position:relative;isolation:isolate;height:163.3vw;min-height:163.3vw;padding:0;background:linear-gradient(90deg,#1781b0,#289dac)}
   .home-refresh.cart-route .hero::before{content:'';position:absolute;inset:0;z-index:-1;background:#0067b1;clip-path:polygon(0 0,94% 0,0 98vw);pointer-events:none}
   .home-refresh.cart-route .hero>.hero-layout{width:100%;max-width:none;margin:0}
   .home-refresh.cart-route .hero .hero-copy{width:100%;max-width:none;padding:4.3vw 2vw 0;text-align:center}
   .home-refresh.cart-route .hero .hero-copy h1{width:100%;max-width:none;margin:0;font-family:var(--font-display);font-size:13vw;line-height:1.15;font-weight:900;letter-spacing:-.035em;white-space:normal;text-wrap:wrap;text-align:center}
   .home-refresh.cart-route .hero .hero-copy p{width:90%;max-width:none;margin:5.16vw auto 0;font-family:HeaderCaixa,Futura,sans-serif;font-size:3.4vw;line-height:1.1;letter-spacing:0;text-align:center}
-  .home-refresh.cart-route .campaign-art{z-index:0}
-  .home-refresh.cart-route .campaign-tickets{left:0;right:auto;top:89vw;bottom:auto;width:100vw;max-width:none}
+  .home-refresh.cart-route .campaign-art{display:block;z-index:0}
+  .home-refresh.cart-route .campaign-tickets{left:0;right:auto;top:104vw;bottom:auto;width:100vw;max-width:none}
+  .home-refresh.cart-route .campaign-tickets img{display:block;width:100%;height:auto;max-width:none}
   .home-refresh.cart-route .cart-page[open]{padding-top:10vw}
-  .home-refresh.cart-route .hero:has(.campaign-navigation.is-open){height:auto;min-height:149.2vw;padding-bottom:61vw}
+  .home-refresh.cart-route .hero:has(.campaign-navigation.is-open){height:auto;min-height:163.3vw;padding-bottom:61vw}
   .home-refresh.cart-route .hero:has(.campaign-navigation.is-open) .campaign-tickets{top:auto;bottom:0}
 }
