@@ -117,9 +117,10 @@
     modal.querySelector('.payment-demo-label').textContent = 'Operador independente';
     modal.querySelector('.payment-hero-notice').textContent = 'Pagamento ao operador identificado abaixo. O PIX não comprova o registro da aposta.';
     modal.querySelectorAll('.payment-kicker').forEach(node => { node.textContent = 'PAGAMENTO PIX'; });
-    modal.querySelectorAll('.payment-disclaimer').forEach(node => { node.textContent = manualPix
-      ? 'PIX direto. Confira o titular e o valor no aplicativo do banco. O operador precisa conferir o crédito no extrato para confirmar o pagamento. O registro da aposta e a entrega do bilhete são etapas separadas.'
-      : 'Confira os dados do recebedor no aplicativo do banco. Após o pagamento, o registro da aposta e a entrega do bilhete dependem da confirmação do operador.'; });
+    modal.querySelectorAll('.payment-disclaimer').forEach(node => {
+      node.hidden = manualPix;
+      if (!manualPix) node.textContent = 'Confira os dados do recebedor no aplicativo do banco. Após o pagamento, o registro da aposta e a entrega do bilhete dependem da confirmação do operador.';
+    });
     const consent = form.querySelector('.payment-consent');
     consent.lastChild.textContent = manualPix
       ? 'Entendi que este PIX vai para a chave do operador, que o recebimento será conferido manualmente no extrato e que o pagamento não comprova o registro da aposta.'
