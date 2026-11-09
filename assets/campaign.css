@@ -1,7 +1,7 @@
 ﻿@font-face{font-family:CampaignBook;src:url('campaign-book.woff2') format('woff2');font-display:swap}
 @font-face{font-family:CampaignBold;src:url('campaign-bold.woff2') format('woff2');font-weight:900;font-display:swap}
 /* Campaign assets from the public reference; the page remains an independent demo. */
-.site-header{position:relative;background:#ed3580;border:0;color:#fff}
+.site-header{position:relative;background:#0067b1;border:0;color:#fff}
 .site-header .container,.hero>.container,.hero .campaign-navigation{width:88%;max-width:1670px}
 .header-inner{position:relative;min-height:92px;padding:0;display:flex;align-items:center;justify-content:flex-start}
 .header-official{font:22px/1.4 CampaignBook,Futura,sans-serif;text-decoration:none}
