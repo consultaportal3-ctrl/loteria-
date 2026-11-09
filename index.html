@@ -20,31 +20,7 @@
     window.addEventListener('pageshow', () => window.scrollTo(0, 0));
   </script>
   <link rel="stylesheet" href="assets/mobile-viewport.css?v=20261103-1">
-  <style id="welcome-phone-reference">
-    @media(max-width:650px){
-      .welcome-page .topbar{height:17.06vw}
-      .welcome-page .topbar-inner{width:100%;height:100%;max-width:none;padding:0}
-      .welcome-page .portal-symbol{left:50%;right:auto;top:0;transform:translateX(-50%);width:23.36vw;height:17.06vw}
-      .welcome-page .official-link{margin-left:4.67vw;width:18.7vw;max-width:none;font-size:2.8vw;line-height:1.4;text-align:center}
-      .welcome-page .hero{position:relative;isolation:isolate;height:auto;min-height:max(139.02vw,calc(90svh - 17.06vw));background:linear-gradient(90deg,#1781b0,#289dac)}
-      .welcome-page .hero::before{content:'';position:absolute;inset:0;z-index:-1;background:#0067b1;clip-path:polygon(0 0,90% 0,0 93.2vw);pointer-events:none}
-      .welcome-page .hero-inner{display:block;width:100%;max-width:none;height:auto;min-height:inherit;margin:0;padding:0}
-      .welcome-page .title{padding:4.2vw 3vw 0;margin:0;font-size:5.3vw;line-height:1.14;letter-spacing:-.035em;white-space:nowrap;text-wrap:nowrap;text-align:center}
-      .welcome-page .age-panel{position:absolute;left:20.76vw;top:0;width:72.66vw;max-width:none;margin:0;padding:0}
-      .welcome-page .accent{display:block;border-left-width:5.54vw;border-top-width:5.54vw;margin-bottom:8.65vw}
-      .welcome-page .question{margin:0 0 1.55vw;font-size:9vw;line-height:1.25;letter-spacing:-.035em;white-space:normal}
-      .welcome-page .question br{display:block}
-      .welcome-page .choices{width:48.3vw;margin:0 auto;gap:.7vw}
-      .welcome-page .choice{flex:1;width:auto;max-width:none;min-height:32px;height:8.3vw;padding:0;border:1px solid #338d9e;border-radius:2px;font-size:3.2vw;line-height:1.2}
-      .welcome-page .choice.yes{color:#ffc400}
-      .welcome-page .notice{max-width:72vw;margin:10px auto 0;font-size:12px;line-height:1.4;text-align:center;white-space:normal}
-      .welcome-page .art{position:absolute;left:96vw;top:46vw;bottom:auto;width:100vw;max-width:none;margin:0}
-      .welcome-page .hero-art{display:block;width:100%;height:auto;max-height:none}
-      .welcome-page .age-seal{left:50%;right:auto;top:70.9vw;bottom:auto;transform:translateX(-50%);width:20vw;height:23vw}
-      .welcome-page footer{min-height:10svh}
-    }
-  </style>
-  <link rel="stylesheet" href="assets/welcome-reference.css?v=20261109-header-logo">
+  <link rel="stylesheet" href="assets/welcome-reference.css?v=20261109-phone-only">
 </head>
 <body class="welcome-page">
   <header class="topbar">
@@ -154,7 +130,7 @@
         const saved = JSON.parse(localStorage.getItem(storageKey));
         if (saved && saved.necessary === true && typeof saved.analytics === 'boolean' && typeof saved.advertising === 'boolean') consent = saved;
       } catch (_) { /* Keep the notice usable when browser storage is unavailable. */ }
-      notice.hidden = !!consent;
+      notice.hidden = !!consent || window.matchMedia('(max-width:650px)').matches;
       reopen.hidden = false;
       function saveConsent(allowAnalytics, allowAdvertising) {
         consent = { necessary: true, analytics: allowAnalytics, advertising: allowAdvertising, updatedAt: new Date().toISOString() };
