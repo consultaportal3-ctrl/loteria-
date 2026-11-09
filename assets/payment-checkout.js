@@ -227,6 +227,10 @@
     if (modal.open) modal.close();
   }
   modal.querySelectorAll('.payment-close').forEach(button => button.addEventListener('click', close));
+  window.addEventListener('hashchange',()=>{
+    if(modal.open&&location.hash!=='#carrinho')close();
+  });
+  window.addEventListener('pagehide',close);
   modal.addEventListener('cancel', event => { event.preventDefault(); close(); });
   modal.addEventListener('click', event => {
     if (event.target === modal) close();

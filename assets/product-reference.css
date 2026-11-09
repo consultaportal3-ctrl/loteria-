@@ -2,12 +2,12 @@
 @media(min-width:901px){
   .home-refresh{--card-unit:min(1px,.055555556vw)}
   .home-refresh .modalities{width:90.5%;max-width:1670px}
-  .home-refresh .game-cards{max-width:1628px;grid-template-columns:repeat(8,minmax(0,1fr));gap:calc(50 * var(--card-unit)) calc(36 * var(--card-unit));grid-auto-rows:auto}
-  .home-refresh .game-cards>.product-card:nth-child(n){grid-column:auto / span 2;max-width:380px;height:calc(564 * var(--card-unit));min-height:calc(564 * var(--card-unit));border-radius:12px}
+  .home-refresh .game-cards{max-width:1628px;grid-template-columns:repeat(8,minmax(0,1fr));gap:calc(50 * var(--card-unit)) calc(36 * var(--card-unit));grid-auto-rows:1fr}
+  .home-refresh .game-cards>.product-card:nth-child(n){grid-column:auto / span 2;max-width:380px;height:auto;min-height:calc(564 * var(--card-unit));border-radius:12px}
   .home-refresh .game-cards>.product-card:nth-child(9):nth-last-child(3){grid-column:2 / span 2}
   .home-refresh .game-cards>.product-card:nth-child(n) .product-header{height:calc(76 * var(--card-unit));min-height:calc(76 * var(--card-unit));padding:0 12px 0 23.16cqw}
   .home-refresh .game-cards>.product-card:nth-child(n) .product-header h3{font-size:6.84cqw;line-height:1;letter-spacing:-.025em}
-  .home-refresh .game-cards>.product-card:nth-child(n) .product-body{display:flex;flex-direction:column;padding:20px 10.526cqw 24px}
+  .home-refresh .game-cards>.product-card:nth-child(n) .product-body{display:flex;flex-direction:column;padding:20px 10.526cqw}
   .home-refresh .game-cards>.product-card:nth-child(n) .product-prize{margin:0 -6cqw;font-family:var(--font-display)}
   .home-refresh .game-cards>.product-card:nth-child(n) .product-prize>strong{font:900 8.95cqw/1.2 var(--font-display);letter-spacing:-.035em}
   .home-refresh .game-cards>.product-card:nth-child(n) .product-prize>b{font:900 6.58cqw/1.2 var(--font-display);letter-spacing:-.025em}

@@ -26,7 +26,12 @@
   position.setAttribute('role', 'status');
   position.setAttribute('aria-live', 'polite');
   carousel.append(position);
+  let wasVisible=false;
+  let savedScrollLeft=0;
   function sync() {
+    if(!track.getClientRects().length){wasVisible=false;return;}
+    if(!wasVisible){track.scrollLeft=savedScrollLeft;wasVisible=true;}
+    savedScrollLeft=track.scrollLeft;
     if (subtitle) subtitle.textContent = media.matches ? 'Cada combo possui uma variedade de jogos prontos para você testar a sua sorte. Quanto mais você joga, mais chances de ganhar!' : originalSubtitle;
     previous.disabled = track.scrollLeft < 2;
     next.disabled = track.scrollLeft + track.clientWidth >= track.scrollWidth - 2;
@@ -47,6 +52,10 @@
   track.addEventListener('scroll', sync, {passive:true});
   new MutationObserver(sync).observe(track, {childList:true});
   window.addEventListener('resize', sync);
+  const syncAfterNavigation=()=>requestAnimationFrame(sync);
+  window.addEventListener('hashchange',syncAfterNavigation);
+  window.addEventListener('pageshow',syncAfterNavigation);
+  new ResizeObserver(syncAfterNavigation).observe(track);
   media.addEventListener('change', sync);
   sync();
 })();

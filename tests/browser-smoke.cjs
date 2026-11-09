@@ -133,7 +133,7 @@ function check(ok,message){if(!ok)throw new Error(message);}
     await evaluate('window.portalDemo.openCart()');await pause(100);
     check(await evaluate('document.querySelector("[data-cart-payment]").getClientRects().length > 0'),'Hidden mobile payment button');
     await navigate('/carrinho.html');
-    check(await evaluate('window.portalDemo.getGames().length===5'),'Cart lost on reload');
+    check(await evaluate('window.portalDemo.getGames().length===7'),'Cart lost on reload');
   });
   await run('checkout validates and finishes simulation without deleting cart',async()=>{
     await evaluate('document.querySelector("[data-cart-payment]").click()');
@@ -142,7 +142,7 @@ function check(ok,message){if(!ok)throw new Error(message);}
     await evaluate('const f=document.querySelector(".payment-form");f.elements.name.value="Cliente Teste";f.elements.email.value="cliente@example.invalid";f.elements.consent.checked=true;f.requestSubmit()');
     await until('!document.querySelector(".payment-result").hidden');
     await until('document.querySelector(".payment-status").textContent.includes("aprovação fictícia")');
-    check(await evaluate('window.portalDemo.getGames().length===5'),'Simulation deleted the cart');
+    check(await evaluate('window.portalDemo.getGames().length===7'),'Simulation deleted the cart');
     await evaluate('document.querySelector(".payment-back").click()');
   });
   await run('live checkout renders required fields and distinguishes payment from ticket registration',async()=>{
@@ -158,7 +158,7 @@ function check(ok,message){if(!ok)throw new Error(message);}
       check(liveRequest.consent === true && typeof liveRequest.requestId === 'string' && liveRequest.buyer.phone === '11999999999', 'Missing live request fields');
       check(await evaluate('document.querySelector(".payment-status").textContent.includes("dependem do operador")'),'Payment was presented as a registered ticket');
       check(await evaluate('document.querySelector(".payment-numbers-action").hidden'), 'Direct PIX button appeared in gateway checkout');
-      check(await evaluate('window.portalDemo.getGames().length===5'),'Live fixture deleted cart before ticket delivery');
+      check(await evaluate('window.portalDemo.getGames().length===7'),'Live fixture deleted cart before ticket delivery');
       await evaluate('document.querySelector(".payment-back").click()');
     } finally { liveFixture = false; }
   });
@@ -175,7 +175,7 @@ function check(ok,message){if(!ok)throw new Error(message);}
       await evaluate('(()=>{const f=document.querySelector(".payment-form");f.elements.name.value="Cliente Teste";f.elements.email.value="cliente@example.invalid";f.elements.consent.checked=true;f.requestSubmit()})()');
       await until('document.querySelector(".payment-status").textContent.includes("Pagamento aguardando conferência da loja")');
       check(liveRequest.buyer.cpf === undefined && liveRequest.buyer.phone === undefined, 'Direct PIX sent unnecessary document data');
-      check(await evaluate('window.portalDemo.getGames().length===5'), 'Direct PIX removed the cart before bank review');
+      check(await evaluate('window.portalDemo.getGames().length===7'), 'Direct PIX removed the cart before bank review');
       check(await evaluate('!document.querySelector(".payment-legal").textContent.includes("undefined")'), 'Missing CNPJ leaked into merchant identity');
       check(await evaluate('document.querySelector("#payment-selected-numbers").hidden'), 'Selected numbers should start collapsed');
       await evaluate('document.querySelector(".payment-show-numbers").click()');
@@ -190,11 +190,88 @@ function check(ok,message){if(!ok)throw new Error(message);}
       await evaluate('document.querySelector(".payment-back").click()');
     } finally { liveFixture = false; directFixture = false; }
   });
+  await run('back and forward restore all lottery pages without cart history loops',async()=>{
+    const routes=[['mega','mega-sena'],['virada','mega-da-virada'],['facil','lotofacil'],['quina','quina'],['milionaria','mais-milionaria'],['mania','lotomania'],['timemania','timemania'],['dupla','dupla-sena'],['loteca','loteca'],['dia','dia-de-sorte'],['super','super-sete']];
+    for(const width of [390,1366]){
+      await command('Emulation.setDeviceMetricsOverride',{width,height:844,deviceScaleFactor:1,mobile:width<650});
+      for(const [game,hash] of routes){
+        await navigate('/home.html#inicio');
+        await evaluate(game==='virada'?`document.querySelector('.campaign-menu a[href="#mega-da-virada"]').click()`:`document.querySelector('[data-nav-game="${game}"]').click()`);
+        const view=game==='virada'?'mega':game;
+        await until(`location.hash==='#${hash}' && !document.getElementById('${view}-view').hidden`);
+        const heading=await evaluate('document.querySelector(".hero-copy h1").textContent');
+        if(game==='mega')await evaluate('document.querySelector("#mega-numbers button").click();document.getElementById("mega-repeats").value="6";document.getElementById("mega-repeats").dispatchEvent(new Event("change"))');
+        await evaluate('window.portalDemo.openCart()');
+        await until('location.hash==="#carrinho" && document.getElementById("cart-dialog").open');
+        await evaluate('history.back()');
+        await until(`location.hash==='#${hash}' && !document.getElementById('${view}-view').hidden && !document.getElementById('cart-dialog').open`);
+        check(await evaluate(`document.querySelector('.hero-copy h1').textContent===${JSON.stringify(heading)}`),'Wrong heading after browser Back: '+hash);
+        if(game==='mega')check(await evaluate('document.querySelector("#mega-numbers button").getAttribute("aria-pressed")==="true" && document.getElementById("mega-repeats").value==="6"'),'Back lost selected Mega-Sena numbers or repeats');
+        await evaluate('history.forward()');
+        await until('location.hash==="#carrinho" && document.getElementById("cart-dialog").open');
+        await evaluate('document.querySelector("#cart-dialog [data-close=cart-dialog]").click()');
+        await until(`location.hash==='#${hash}' && !document.getElementById('${view}-view').hidden`);
+        await evaluate('history.back()');
+        await until('location.hash==="#inicio" && !document.getElementById("modalidades").hidden');
+        check(await evaluate('!document.getElementById("cart-dialog").open && document.querySelectorAll(".mega-page:not([hidden])").length===0'),'A lottery or cart leaked into home: '+hash);
+        check(await evaluate('document.querySelector(".hero-copy h1").textContent==="Loterias Online da CAIXA"'),'Home heading not restored: '+hash);
+      }
+      await navigate('/carrinho.html');
+      await evaluate('window.portalCartPage.close()');
+      await until('!document.getElementById("cart-dialog").open && !document.getElementById("modalidades").hidden');
+      check(await evaluate('document.querySelector(".hero-copy h1").textContent==="Loterias Online da CAIXA"'),'Direct cart entry restored an outdated home heading');
+    }
+  });
+  await run('back navigation between lottery pages restores the correct form',async()=>{
+    const routes=[['virada','mega-da-virada','Mega da Virada'],['mega','mega-sena','Mega-Sena'],['facil','lotofacil','Lotofácil'],['quina','quina','Quina'],['milionaria','mais-milionaria','+Milionária'],['mania','lotomania','Lotomania'],['timemania','timemania','Timemania'],['dupla','dupla-sena','Dupla Sena'],['loteca','loteca','Loteca'],['dia','dia-de-sorte','Dia de Sorte'],['super','super-sete','Super Sete']];
+    for(const width of [390,1366]){
+      await command('Emulation.setDeviceMetricsOverride',{width,height:844,deviceScaleFactor:1,mobile:width<650});
+      await navigate('/home.html#inicio');
+      for(const [game,hash] of routes){
+        await evaluate(game==='virada'?`document.querySelector('.campaign-menu a[href="#mega-da-virada"]').click()`:`document.querySelector('[data-nav-game="${game}"]').click()`);
+        await until(`location.hash==='#${hash}'`);
+      }
+      for(let i=routes.length-2;i>=0;i--){
+        const [game,hash,title]=routes[i];
+        await evaluate('history.back()');
+        await until(`location.hash==='#${hash}' && !document.getElementById('${game==='virada'?'mega':game}-view').hidden`);
+        check(await evaluate(`document.querySelector('.hero-copy h1').textContent===${JSON.stringify(title)}`),'Wrong lottery heading after Back: '+hash);
+        check(await evaluate('document.querySelectorAll(".mega-page:not([hidden])").length===1'),'Multiple lottery forms visible: '+hash);
+      }
+    }
+  });
+  await run('back navigation closes checkout without changing the cart',async()=>{
+    await navigate('/home.html#mega-sena');
+    await evaluate('if(!window.portalDemo.getGames().length)window.portalDemo.addMegaGame([1,2,3,4,5,6],1)');
+    await evaluate('window.portalDemo.openCart()');
+    const before=await evaluate('JSON.stringify(window.portalDemo.getGames())');
+    await evaluate('document.querySelector("[data-cart-payment]").click()');
+    await until('document.querySelector(".payment-checkout").open');
+    await evaluate('history.back()');
+    await until('location.hash==="#mega-sena" && !document.querySelector(".payment-checkout").open && !document.getElementById("mega-view").hidden');
+    check(await evaluate(`JSON.stringify(window.portalDemo.getGames())===${JSON.stringify(before)}`),'Back from checkout changed the cart');
+  });
+  await run('back navigation preserves the selected phone product',async()=>{
+    await command('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:1,mobile:true});
+    await command('Emulation.setEmulatedMedia',{features:[{name:'prefers-reduced-motion',value:'reduce'}]});
+    await navigate('/home.html#inicio');
+    for(let index=1;index<9;index++){
+      await evaluate('document.querySelector(".phone-product-next").click()');
+      await until(`document.querySelector('.phone-product-position').textContent==='Produto ${index+1} de 11'`);
+    }
+    await evaluate('document.querySelector(".product-loteca .product-play").click()');
+    await until('location.hash==="#loteca"');
+    await evaluate('history.back()');
+    await until('location.hash==="#inicio" && !document.getElementById("modalidades").hidden');
+    await until('document.querySelector(".phone-product-position").textContent==="Produto 9 de 11"');
+    check(await evaluate('!document.querySelector(".product-loteca").inert'),'Restored product cannot be clicked');
+  });
   await run('closing cart restores the home heading',async()=>{
     await evaluate('window.portalCartPage.close()');await pause(150);
     check(await evaluate('document.querySelector(".hero-copy h1").textContent!=="Carrinho de Apostas"'),'Cart heading leaked into home');
   });
   await run('mobile navigation remains usable after resize',async()=>{
+    await command('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:1,mobile:true});
     await evaluate('document.getElementById("phone-menu-toggle").click()');
     check(await evaluate('document.getElementById("phone-menu-toggle").getAttribute("aria-expanded")==="true"'),'Menu did not open');
     await command('Emulation.setDeviceMetricsOverride',{width:1280,height:900,deviceScaleFactor:1,mobile:false});await pause(100);
@@ -282,7 +359,9 @@ function check(ok,message){if(!ok)throw new Error(message);}
       await command('Emulation.setDeviceMetricsOverride',{width,height:1080,deviceScaleFactor:1,mobile:false});await pause(100);
       const cards=await evaluate('Array.from(document.querySelectorAll(".product-card")).map(c=>({name:c.querySelector("h3").textContent,width:c.getBoundingClientRect().width,height:c.getBoundingClientRect().height,content:c.scrollHeight,buttonBottom:c.querySelector(".product-play").getBoundingClientRect().bottom-c.getBoundingClientRect().top}))');
       check(cards.length===11,`Expected 11 cards, got ${cards.length}`);
-      check(cards.every(c=>Math.abs(c.width-294)<=1 && Math.abs(c.height-423)<=1),`Expected 294 x 423 px at ${width}px`);
+      check(cards.every(c=>c.width>180 && c.width<=380.5 && c.height>300 && c.height<=565),`Unexpected card dimensions at ${width}px: ${JSON.stringify(cards)}`);
+      if(width===768)check(cards.every(c=>Math.abs(c.width-294)<=1 && Math.abs(c.height-423)<=1),'Tablet card dimensions changed');
+      if(width===1920)check(cards.every(c=>Math.abs(c.width-380)<=1 && Math.abs(c.height-564)<=1),'Desktop reference card dimensions changed');
       for(const key of ['width','height','buttonBottom'])check(Math.max(...cards.map(d=>d[key]))-Math.min(...cards.map(d=>d[key]))<=2,`Unequal ${key} at ${width}px: ${JSON.stringify(cards)}`);
       check(cards.every(c=>c.content<=c.height+2),`Cards clipped at ${width}px: ${JSON.stringify(cards)}`);
     }

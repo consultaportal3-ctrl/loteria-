@@ -275,7 +275,10 @@
     if (!cart.length) return;
     toast('O checkout não carregou. Atualize a página e tente novamente. Seu carrinho foi mantido.');
   });
-  document.querySelectorAll('[data-close]').forEach(button => button.addEventListener('click', () => byId(button.dataset.close).close()));
+  document.querySelectorAll('[data-close]').forEach(button => button.addEventListener('click', () => {
+    if(button.dataset.close==='cart-dialog'&&window.portalCartPage)window.portalCartPage.close();
+    else byId(button.dataset.close).close();
+  }));
   const navigation = document.querySelector('.campaign-navigation');
   const navigationSlot = document.createElement('div');
   navigationSlot.className = 'campaign-navigation-slot';
