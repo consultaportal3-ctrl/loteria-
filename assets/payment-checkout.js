@@ -28,9 +28,16 @@
       <span class="payment-demo-label">Demonstração independente</span>
     </div>
     <section class="payment-hero" aria-labelledby="payment-hero-title">
+      <details class="payment-navigation">
+        <summary><span aria-hidden="true">☰</span><span>Menu</span></summary>
+        <nav aria-label="Navegação da compra">
+          <button type="button" class="payment-cart-return">Voltar ao carrinho</button>
+          <button type="button" class="payment-go-form">Forma de Pagamento</button>
+        </nav>
+      </details>
       <div class="payment-hero-inner">
         <div class="payment-hero-copy">
-          <span class="payment-hero-cart">Meu carrinho · <span class="payment-cart-count">0</span></span>
+          <div class="payment-hero-cart"><button type="button" class="payment-cart-return" aria-label="Voltar ao carrinho"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 3h3l3 12h11l3-9H6"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg><span class="payment-cart-count">0</span></button><button type="button" class="payment-go-form">Pagamento</button></div>
           <h2 id="payment-hero-title">Compra de<br>Apostas</h2>
           <p>Confira todas as suas apostas e escolha sua forma de pagamento.</p>
           <span class="payment-hero-notice">Ambiente de teste · sem vínculo com a CAIXA · não emite bilhetes oficiais</span>
@@ -226,7 +233,13 @@
     clearInterval(pollTimer);
     if (modal.open) modal.close();
   }
-  modal.querySelectorAll('.payment-close').forEach(button => button.addEventListener('click', close));
+  modal.querySelectorAll('.payment-close,.payment-cart-return').forEach(button => button.addEventListener('click', close));
+  modal.querySelectorAll('.payment-go-form').forEach(button => button.addEventListener('click', () => {
+    modal.querySelector('.payment-navigation').open = false;
+    const heading = modal.querySelector(form.hidden ? '#payment-result-title' : '#payment-title');
+    heading.scrollIntoView({block:'start'});
+    heading.focus({preventScroll:true});
+  }));
   window.addEventListener('hashchange',()=>{
     if(modal.open&&location.hash!=='#carrinho')close();
   });
@@ -257,6 +270,7 @@
     modal.querySelector('.payment-selected-items').replaceChildren();
     modal.setAttribute('aria-labelledby', 'payment-title');
     form.hidden = false;
+    modal.querySelector('.payment-navigation').open = false;
     renderOrderSummary(window.portalDemo.getGames());
     const count = window.portalDemo.getGames().length;
     modal.querySelector('.payment-cart-count').textContent = `${count} ${count === 1 ? 'item' : 'itens'}`;

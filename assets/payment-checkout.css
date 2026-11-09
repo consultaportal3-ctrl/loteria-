@@ -66,7 +66,17 @@ body:has(.payment-checkout[open]){overflow:hidden}
 .payment-hero{overflow:hidden;background:linear-gradient(134deg,#0067b1 0%,#0067b1 48%,#198aaf 48.1%,#30a8ad 100%);color:#fff}
 .payment-hero-inner{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:40px;align-items:center;width:88%;max-width:1670px;min-height:440px;margin:auto;padding:40px 0 0}
 .payment-hero-copy{min-width:0;padding-bottom:48px}
-.payment-hero-cart{display:inline-block;margin-bottom:24px;padding:10px 18px;border:1px solid #b5dce8;border-radius:3px;font-size:16px}
+.payment-navigation{width:88%;max-width:1670px;margin:0 auto;border-bottom:1px solid #ffffff25}
+.payment-navigation summary{position:relative;min-height:54px;padding:12px 36px;list-style:none;text-align:center;font-size:22px;cursor:pointer}
+.payment-navigation summary::-webkit-details-marker{display:none}
+.payment-navigation summary>span:first-child{position:absolute;left:0;top:8px;font:30px/1.2 Arial,sans-serif}
+.payment-navigation nav{display:flex;justify-content:center;flex-wrap:wrap;gap:12px;padding:8px 0 18px}
+.payment-navigation button,.payment-hero-cart button{border:0;background:transparent;color:inherit;font:400 17px/1.4 var(--font-text,Arial,sans-serif);cursor:pointer}
+.payment-navigation button{padding:10px 16px;border:1px solid #b5dce8;border-radius:2px}
+.payment-hero-cart{display:inline-flex;max-width:100%;margin-bottom:28px;border:1px solid #b5dce8;border-radius:2px;color:#fff}
+.payment-hero-cart button{display:flex;align-items:center;justify-content:center;gap:10px;min-height:48px;padding:10px 14px}
+.payment-hero-cart button+button{border-left:1px solid #b5dce8}
+.payment-navigation :is(button,summary):focus-visible,.payment-hero-cart button:focus-visible{outline:3px solid #ffce00;outline-offset:3px}
 .payment-checkout .payment-hero h2{margin:0;color:#fff;font:900 clamp(48px,4.6vw,80px)/1.08 var(--font-display,'Arial Black',sans-serif);letter-spacing:-.035em}
 .payment-checkout .payment-hero p{max-width:600px;margin:28px 0 16px;font-size:clamp(18px,1.5vw,24px);font-weight:400;line-height:1.4}
 .payment-hero-notice{display:block;max-width:480px;font-size:12px;line-height:1.5}
@@ -89,7 +99,8 @@ body:has(.payment-checkout[open]){overflow:hidden}
   .payment-demo-label{max-width:95px;font-size:10px}
   .payment-hero-inner{display:flex;flex-direction:column;gap:0;width:100%;min-height:0;padding:32px 0 0;text-align:center}
   .payment-hero-copy{width:100%;padding:0 24px 24px}
-  .payment-hero-cart{margin-bottom:30px;padding:9px 16px;font-size:15px}
+  .payment-hero-cart{margin-bottom:24px}
+  .payment-hero-cart button{min-height:44px;padding:8px 14px;font-size:16px}
   .payment-checkout .payment-hero h2{font-size:clamp(48px,13.6vw,72px)}
   .payment-checkout .payment-hero p{margin:28px auto 16px;font-size:clamp(17px,4.6vw,22px)}
   .payment-hero-notice{margin:auto;font-size:11px}

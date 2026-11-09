@@ -290,7 +290,11 @@ function check(ok,message){if(!ok)throw new Error(message);}
         const screenshot=await command('Page.captureScreenshot',{format:'png'});
         fs.writeFileSync(path.join(root,width===390?'checkout-phone-preview.png':'checkout-desktop-preview.png'),Buffer.from(screenshot.data,'base64'));
       }
-      await evaluate('document.querySelector(".payment-back").click()');
+      await evaluate('document.querySelector(".payment-navigation summary").click()');
+      check(await evaluate('document.querySelector(".payment-navigation").open'),'Checkout menu did not open at '+width);
+      await evaluate('document.querySelector(".payment-navigation .payment-go-form").click()');
+      check(await evaluate('!document.querySelector(".payment-navigation").open && document.activeElement.id==="payment-title"'),'Payment menu did not reach the form at '+width);
+      await evaluate('document.querySelector(".payment-hero-cart .payment-cart-return").click()');
       await until('!document.querySelector(".payment-checkout").open && document.getElementById("cart-dialog").open');
     }
     await command('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:1,mobile:true});
