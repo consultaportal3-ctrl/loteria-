@@ -192,7 +192,7 @@ function check(ok,message){if(!ok)throw new Error(message);}
   });
   await run('back and forward restore all lottery pages without cart history loops',async()=>{
     const routes=[['mega','mega-sena'],['virada','mega-da-virada'],['facil','lotofacil'],['quina','quina'],['milionaria','mais-milionaria'],['mania','lotomania'],['timemania','timemania'],['dupla','dupla-sena'],['loteca','loteca'],['dia','dia-de-sorte'],['super','super-sete']];
-    for(const width of [390,1366]){
+    for(const width of [390,1024,1366,1920]){
       await command('Emulation.setDeviceMetricsOverride',{width,height:844,deviceScaleFactor:1,mobile:width<650});
       for(const [game,hash] of routes){
         await navigate('/home.html#inicio');
@@ -224,7 +224,7 @@ function check(ok,message){if(!ok)throw new Error(message);}
   });
   await run('back navigation between lottery pages restores the correct form',async()=>{
     const routes=[['virada','mega-da-virada','Mega da Virada'],['mega','mega-sena','Mega-Sena'],['facil','lotofacil','Lotofácil'],['quina','quina','Quina'],['milionaria','mais-milionaria','+Milionária'],['mania','lotomania','Lotomania'],['timemania','timemania','Timemania'],['dupla','dupla-sena','Dupla Sena'],['loteca','loteca','Loteca'],['dia','dia-de-sorte','Dia de Sorte'],['super','super-sete','Super Sete']];
-    for(const width of [390,1366]){
+    for(const width of [390,1024,1366,1920]){
       await command('Emulation.setDeviceMetricsOverride',{width,height:844,deviceScaleFactor:1,mobile:width<650});
       await navigate('/home.html#inicio');
       for(const [game,hash] of routes){
@@ -238,6 +238,31 @@ function check(ok,message){if(!ok)throw new Error(message);}
         check(await evaluate(`document.querySelector('.hero-copy h1').textContent===${JSON.stringify(title)}`),'Wrong lottery heading after Back: '+hash);
         check(await evaluate('document.querySelectorAll(".mega-page:not([hidden])").length===1'),'Multiple lottery forms visible: '+hash);
       }
+    }
+  });
+  await run('desktop fixed navigation remains clickable after returning from cart',async()=>{
+    async function mouseClick(selector){
+      const point=await evaluate(`(()=>{const element=document.querySelector(${JSON.stringify(selector)});const rect=element.getBoundingClientRect();const x=rect.x+rect.width/2,y=rect.y+rect.height/2;return {x,y,reachable:x>=0&&x<innerWidth&&y>=0&&y<innerHeight&&element.contains(document.elementFromPoint(x,y))};})()`);
+      check(point.reachable,'Desktop control is covered or outside viewport: '+selector);
+      await command('Input.dispatchMouseEvent',{type:'mousePressed',x:point.x,y:point.y,button:'left',clickCount:1});
+      await command('Input.dispatchMouseEvent',{type:'mouseReleased',x:point.x,y:point.y,button:'left',clickCount:1});
+    }
+    for(const width of [1024,1366,1920]){
+      await command('Emulation.setDeviceMetricsOverride',{width,height:900,deviceScaleFactor:1,mobile:false});
+      await navigate('/home.html#inicio');
+      await evaluate('window.scrollTo(0,700)');
+      await until('document.querySelector(".campaign-navigation").classList.contains("is-fixed")');
+      await mouseClick('[data-nav-game="quina"]');
+      await until('location.hash==="#quina" && !document.getElementById("quina-view").hidden');
+      await mouseClick('#open-cart');
+      await until('location.hash==="#carrinho" && document.getElementById("cart-dialog").open');
+      await evaluate('history.back()');
+      await until('location.hash==="#quina" && !document.getElementById("cart-dialog").open');
+      await mouseClick('[data-nav-game="facil"]');
+      await until('location.hash==="#lotofacil" && !document.getElementById("facil-view").hidden');
+      await evaluate('history.back()');
+      await until('location.hash==="#quina" && !document.getElementById("quina-view").hidden');
+      check(await evaluate('document.documentElement.scrollWidth<=innerWidth'),'Horizontal overflow after desktop Back at '+width);
     }
   });
   await run('back navigation closes checkout without changing the cart',async()=>{
