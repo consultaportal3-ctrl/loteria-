@@ -188,8 +188,9 @@
       return;
     }
     const displayName = business.publicName === 'L7 PG' ? 'Loteria' : business.publicName;
+    const contactEmail = business.contactEmail === 'suporte@blackcatpagamentos.com.br' ? 'suporte@loteria.com' : business.contactEmail;
     target.replaceChildren(document.createTextNode(
-      `${displayName} · ${business.legalName}${business.taxId ? ` (CNPJ ${business.taxId})` : ''}${business.address ? `, ${business.address}` : ''}.${business.contactEmail ? ` Contato: ${business.contactEmail}.` : ''} `,
+      `${displayName} · ${business.legalName}${business.taxId ? ` (CNPJ ${business.taxId})` : ''}${business.address ? `, ${business.address}` : ''}.${contactEmail ? ` Contato: ${contactEmail}.` : ''} `,
     ));
     for (const [label, url] of [['Privacidade', business.privacyUrl], ['Termos', business.termsUrl]]) {
       try { if (new URL(url).protocol !== 'https:') continue; } catch { continue; }
