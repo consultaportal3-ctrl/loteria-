@@ -22,11 +22,6 @@
   modal.className = 'payment-checkout';
   modal.setAttribute('aria-labelledby', 'payment-title');
   modal.innerHTML = `
-    <div class="payment-masthead">
-      <a class="payment-official-link" href="https://www.caixa.gov.br/" target="_blank" rel="noopener noreferrer">Ir para o site da CAIXA.</a>
-      <span class="payment-brand" aria-hidden="true"></span>
-      <span class="payment-demo-label">Operador independente</span>
-    </div>
     <section class="payment-hero" aria-labelledby="payment-hero-title">
       <details class="payment-navigation">
         <summary><span aria-hidden="true">☰</span><span>Menu</span></summary>
@@ -128,7 +123,6 @@
     form.querySelector('.payment-consent').hidden = false;
     if (!live) { submit.querySelector('.payment-option-caption').textContent = 'Simular PIX'; return; }
     modal.querySelectorAll('.payment-live-field').forEach(label => { label.hidden = manualPix; label.querySelector('input').required = !manualPix; });
-    modal.querySelector('.payment-demo-label').textContent = 'Operador independente';
     modal.querySelector('.payment-hero-notice').textContent = 'Pagamento ao operador identificado abaixo. O PIX não comprova o registro da aposta.';
     modal.querySelectorAll('.payment-kicker').forEach(node => { node.textContent = 'PAGAMENTO PIX'; });
     modal.querySelectorAll('.payment-disclaimer').forEach(node => {
@@ -281,7 +275,7 @@
     modal.querySelector('.payment-cart-count').textContent = `${count} ${count === 1 ? 'item' : 'itens'}`;
     modal.showModal();
     modal.scrollTop = 0;
-    modal.querySelector('.payment-official-link').focus({preventScroll:true});
+    modal.querySelector('.payment-navigation summary').focus({preventScroll:true});
     loadCheckoutInfo(session, sessionController.signal);
   }, true);
 
