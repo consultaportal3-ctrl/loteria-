@@ -24,7 +24,7 @@
   modal.innerHTML = `
     <div class="payment-masthead">
       <a class="payment-official-link" href="https://www.caixa.gov.br/" target="_blank" rel="noopener noreferrer">Ir para o site da CAIXA.</a>
-      <span class="payment-brand">WalkCard</span>
+      <span class="payment-brand" aria-hidden="true"></span>
       <span class="payment-demo-label">Operador independente</span>
     </div>
     <section class="payment-hero" aria-labelledby="payment-hero-title">
@@ -127,7 +127,6 @@
     if (!live && (info.environment !== 'simulation' || info.simulation !== true)) throw new Error('Ambiente de pagamento inválido.');
     form.querySelector('.payment-consent').hidden = false;
     if (!live) { submit.querySelector('.payment-option-caption').textContent = 'Simular PIX'; return; }
-    modal.querySelector('.payment-brand').title = info.publicName || 'L7 PG';
     modal.querySelectorAll('.payment-live-field').forEach(label => { label.hidden = manualPix; label.querySelector('input').required = !manualPix; });
     modal.querySelector('.payment-demo-label').textContent = 'Operador independente';
     modal.querySelector('.payment-hero-notice').textContent = 'Pagamento ao operador identificado abaixo. O PIX não comprova o registro da aposta.';
