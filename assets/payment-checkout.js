@@ -129,7 +129,7 @@
     });
     const consent = form.querySelector('.payment-consent');
     consent.lastChild.textContent = manualPix
-      ? 'Entendi que este PIX vai para a chave do operador, que o recebimento será conferido manualmente no extrato e que o pagamento não comprova o registro da aposta.'
+      ? 'Li e aceito os termos de pagamento e estou ciente de que meu bilhete será confirmado após a validação da compra.'
       : 'Li os termos e a política de privacidade do operador e autorizo o envio dos dados necessários à BlackCat para processar este pagamento.';
     submit.querySelector('.payment-option-caption').textContent = 'Gerar PIX';
     modal.querySelector('.payment-pix-banner .payment-option-caption').textContent = 'Pagamento PIX';
