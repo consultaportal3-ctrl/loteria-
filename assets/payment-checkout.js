@@ -193,7 +193,11 @@
       `${displayName} · ${business.legalName}${business.taxId ? ` (CNPJ ${business.taxId})` : ''}${business.address ? `, ${business.address}` : ''}.${contactEmail ? ` Contato: ${contactEmail}.` : ''} `,
     ));
     for (const [label, url] of [['Privacidade', business.privacyUrl], ['Termos', business.termsUrl]]) {
-      try { if (new URL(url).protocol !== 'https:') continue; } catch { continue; }
+      try {
+        const policyUrl = new URL(url);
+        if (policyUrl.protocol !== 'https:') continue;
+        if (business.provider === 'direct-pix' && policyUrl.hostname === 'blackcatoficial.com' && ['/politicas/politica-de-privacidade-e-cookies', '/politicas/termos-para-compradores'].includes(policyUrl.pathname)) continue;
+      } catch { continue; }
       const link = document.createElement('a');
       link.href = url;
       link.target = '_blank';
