@@ -21,3 +21,5 @@
 #direct-pix-panel p,#direct-pix-panel h3{overflow-wrap:anywhere}
 #direct-pix-panel [hidden]{display:none!important}
 #direct-pix-panel .admin-error{color:#a52332}
+.visitor-status{display:inline-flex;align-items:center;gap:7px;white-space:nowrap}
+.visitor-status.is-online::before{content:"";display:block;width:9px;height:9px;flex-shrink:0;border-radius:50%;background:#16a34a}

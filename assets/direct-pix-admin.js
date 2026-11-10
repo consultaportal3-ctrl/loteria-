@@ -156,7 +156,11 @@
         const body = node('tbody');
         for (const visitor of result.visitors) {
           const row = node('tr');
-          for (const value of ['Visitante ' + visitor.id.slice(0, 8), visitor.online ? 'Online' : 'Offline', visitor.city || 'Não identificada', [visitor.region, visitor.country].filter(Boolean).join(' / ') || 'Não identificado', visitor.page, new Date(visitor.lastSeen).toLocaleString('pt-BR')]) row.append(node('td', value));
+          row.append(node('td', 'Visitante ' + visitor.id.slice(0, 8)));
+          const status = node('td');
+          status.append(node('span', visitor.online ? 'Online' : 'Offline', visitor.online ? 'visitor-status is-online' : 'visitor-status'));
+          row.append(status);
+          for (const value of [visitor.city || 'Não identificada', [visitor.region, visitor.country].filter(Boolean).join(' / ') || 'Não identificado', visitor.page, new Date(visitor.lastSeen).toLocaleString('pt-BR')]) row.append(node('td', value));
           body.append(row);
         }
         table.append(body); scroll.append(table);
