@@ -24,8 +24,8 @@
   modal.innerHTML = `
     <div class="payment-masthead">
       <a class="payment-official-link" href="https://www.caixa.gov.br/" target="_blank" rel="noopener noreferrer">Ir para o site da CAIXA.</a>
-      <span class="payment-brand"><img src="assets/checkout-brand-walkcard.jpg" alt="WalkCard" width="132" height="56"></span>
-      <span class="payment-demo-label">Demonstração independente</span>
+      <span class="payment-brand">WalkCard</span>
+      <span class="payment-demo-label">Operador independente</span>
     </div>
     <section class="payment-hero" aria-labelledby="payment-hero-title">
       <details class="payment-navigation">
