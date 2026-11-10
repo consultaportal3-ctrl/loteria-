@@ -187,8 +187,9 @@
       target.textContent = business.notice;
       return;
     }
+    const displayName = business.publicName === 'L7 PG' ? 'Loteria' : business.publicName;
     target.replaceChildren(document.createTextNode(
-      `${business.publicName} · ${business.legalName}${business.taxId ? ` (CNPJ ${business.taxId})` : ''}${business.address ? `, ${business.address}` : ''}.${business.contactEmail ? ` Contato: ${business.contactEmail}.` : ''} `,
+      `${displayName} · ${business.legalName}${business.taxId ? ` (CNPJ ${business.taxId})` : ''}${business.address ? `, ${business.address}` : ''}.${business.contactEmail ? ` Contato: ${business.contactEmail}.` : ''} `,
     ));
     for (const [label, url] of [['Privacidade', business.privacyUrl], ['Termos', business.termsUrl]]) {
       try { if (new URL(url).protocol !== 'https:') continue; } catch { continue; }
