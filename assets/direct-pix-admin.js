@@ -121,7 +121,7 @@
     const heading = node('div', undefined, 'card-heading');
     const text = node('div');
     const count = node('h2', 'Carregando visitantes online…');
-    text.append(count, node('p', 'Atualização a cada 10 segundos. Online = atividade nos últimos 90 segundos. Cidade aproximada pela conexão de internet.'));
+    text.append(count, node('p', 'Atualização a cada 1 segundo. Online = atividade nos últimos 90 segundos. Cidade aproximada pela conexão de internet.'));
     const refresh = node('button', 'Atualizar agora', 'button secondary');
     refresh.type = 'button';
     heading.append(text, refresh);
@@ -161,7 +161,7 @@
     }
     refresh.addEventListener('click', update);
     update();
-    refreshTimer = setInterval(update, 10000);
+    refreshTimer = setInterval(update, 1000);
   }
   async function authenticated(host, current) {
     const visitorsView = host.dataset.view === 'visitors';

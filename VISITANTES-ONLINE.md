@@ -2,7 +2,7 @@
 
 Abra `painel.html#online` e entre com a mesma senha administrativa usada em PIX direto e Pedidos.
 
-- O painel consulta o servidor a cada 10 segundos.
+- O painel consulta o servidor a cada 1 segundo.
 - As páginas públicas enviam presença a cada 30 segundos enquanto estão visíveis. Um navegador é considerado online quando enviou presença nos últimos 90 segundos.
 - O identificador anônimo é compartilhado entre abas do navegador por um cookie de sessão. Não representa o nome nem a identidade da pessoa.
 - Cidade, estado e país vêm dos cabeçalhos de geolocalização da Vercel. A cidade é aproximada e pode corresponder à operadora ou VPN. Quando indisponível, o painel informa que não foi identificada.
