@@ -13,6 +13,7 @@ let liveFixture = false;
 let directFixture = false;
 let pixPanelFixture = false;
 let pixPanelLoggedIn = false;
+let visitorHistoryCleared = false;
 let savedPixPanelSettings;
 let liveRequest;
 const liveInfo = {simulation:false, environment:'live', publicName:'Operador Teste', legalName:'Operador Teste Ltda', taxId:'12345678000190', address:'Endereco de teste', contactEmail:'teste@example.invalid', privacyUrl:'https://example.invalid/privacy', termsUrl:'https://example.invalid/terms'};
@@ -29,7 +30,7 @@ const server = http.createServer((req,res) => {
       if (url.searchParams.get('action') === 'settings') return reply({settings:savedPixPanelSettings || null});
       if (url.searchParams.get('action') === 'visitors') {
         if (!pixPanelLoggedIn) { res.statusCode = 401; return reply({error:'Entre no painel.'}); }
-        return reply({count:1, updatedAt:Date.now(), visitors:[{id:'12345678abcdef00', city:'São Paulo', region:'SP', country:'BR', page:'/home.html', lastSeen:Date.now()}]});
+        return reply({count:visitorHistoryCleared ? 0 : 1, total:visitorHistoryCleared ? 0 : 2, limit:100, updatedAt:Date.now(), visitors:visitorHistoryCleared ? [] : [{id:'12345678abcdef00', city:'São Paulo', region:'SP', country:'BR', page:'/home.html', lastSeen:Date.now(), online:true}, {id:'abcdef0012345678', city:'Recife', region:'PE', country:'BR', page:'/carrinho.html', lastSeen:Date.now() - 86400000, online:false}]});
       }
       return reply({orders:[]});
     }
@@ -37,6 +38,10 @@ const server = http.createServer((req,res) => {
     return req.on('end', () => {
       const input = JSON.parse(raw);
       if (input.action === 'login') { pixPanelLoggedIn = true; return reply({authenticated:true, csrf:'browser-test-csrf'}); }
+      if (input.action === 'clear-visitors') {
+        if (!pixPanelLoggedIn || input.csrf !== 'browser-test-csrf' || input.confirm !== true) { res.statusCode = 403; return reply({error:'Não autorizado.'}); }
+        visitorHistoryCleared = true; return reply({cleared:true});
+      }
       if (input.action === 'save') { savedPixPanelSettings = input.settings; return reply({settings:savedPixPanelSettings}); }
       if (input.action === 'logout') pixPanelLoggedIn = false;
       return reply({authenticated:pixPanelLoggedIn});
@@ -131,10 +136,16 @@ function check(ok,message){if(!ok)throw new Error(message);}
       await until('document.getElementById("panel-content").textContent.includes("1 visitante online")');
       check(await evaluate('document.getElementById("panel-content").textContent.includes("São Paulo")'), 'Visitor city missing');
       check(await evaluate('document.getElementById("panel-content").textContent.includes("/home.html")'), 'Visitor page missing');
+      check(await evaluate('document.getElementById("panel-content").textContent.includes("Recife") && document.getElementById("panel-content").textContent.includes("Offline")'), 'Offline visitor not retained');
+      await evaluate('window.confirm=()=>false;Array.from(document.querySelectorAll("#panel-content button")).find(button=>button.textContent.includes("Limpar histórico")).click()');
+      check(!visitorHistoryCleared, 'Cancel must preserve visitor history');
+      await evaluate('window.confirm=()=>true;Array.from(document.querySelectorAll("#panel-content button")).find(button=>button.textContent.includes("Limpar histórico")).click()');
+      await until('document.getElementById("panel-content").textContent.includes("0 visitas salvas")');
+      check(visitorHistoryCleared, 'Manual clearing did not reach the server');
       await evaluate('Array.from(document.querySelectorAll("#panel-content button")).find(button=>button.textContent.includes("Sair do acesso")).click()');
       await until('!!document.getElementById("direct-pix-login")');
       check(await evaluate('!document.getElementById("panel-content").textContent.includes("São Paulo")'), 'City visible after logout');
-    } finally { pixPanelFixture = false; pixPanelLoggedIn = false; }
+    } finally { pixPanelFixture = false; pixPanelLoggedIn = false; visitorHistoryCleared = false; }
   });
   await run('welcome privacy notice has its stylesheet class',async()=>{
     await navigate('/');check(await evaluate('document.getElementById("cookie-notice").classList.contains("cookie-notice")'),'Cookie notice class is broken');

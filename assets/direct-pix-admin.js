@@ -8,9 +8,10 @@
     if (className) element.className = className;
     return element;
   };
-  async function request(action, data) {
+  async function request(action, data, params = {}) {
     const url = new URL(api);
     if (!data) url.searchParams.set('action', action);
+    for (const [key, value] of Object.entries(params)) url.searchParams.set(key, value);
     const response = await fetch(url, {method:data ? 'POST' : 'GET', credentials:'same-origin', cache:'no-store',
       headers:data ? {'Content-Type':'application/json'} : {}, body:data ? JSON.stringify({...data, action, csrf}) : undefined});
     let result;
@@ -121,32 +122,41 @@
     const heading = node('div', undefined, 'card-heading');
     const text = node('div');
     const count = node('h2', 'Carregando visitantes online…');
-    text.append(count, node('p', 'Atualização a cada 1 segundo. Online = atividade nos últimos 90 segundos. Cidade aproximada pela conexão de internet.'));
+    text.append(count, node('p', 'Atualização a cada 1 segundo. As visitas ficam salvas até você limpar manualmente. Cidade aproximada pela conexão de internet.'));
     const refresh = node('button', 'Atualizar agora', 'button secondary');
     refresh.type = 'button';
-    heading.append(text, refresh);
+    const clear = node('button', 'Limpar histórico de visitas', 'button secondary');
+    clear.type = 'button';
+    heading.append(text, refresh, clear);
     const message = node('p', '', 'settings-body');
     message.setAttribute('role', 'status');
     const scroll = node('div', undefined, 'table-scroll');
-    card.append(heading, message, scroll);
+    const pagination = node('div', undefined, 'card-heading');
+    const previous = node('button', 'Anterior', 'button secondary');
+    const next = node('button', 'Próxima', 'button secondary');
+    previous.type = next.type = 'button';
+    pagination.append(previous, next);
+    card.append(heading, message, scroll, pagination);
     host.append(card);
-    let loading = false;
+    let loading = false, clearing = false, offset = 0;
     async function update() {
-      if (loading || document.hidden || current !== generation || !host.isConnected) return;
+      if (loading || clearing || document.hidden || current !== generation || !host.isConnected) return;
       loading = true; refresh.disabled = true;
       try {
-        const result = await request('visitors');
-        if (current !== generation || !host.isConnected) return;
+        const result = await request('visitors', undefined, {offset});
+        if (clearing || current !== generation || !host.isConnected) return;
         count.textContent = `${result.count} visitante${result.count === 1 ? '' : 's'} online`;
-        message.textContent = `Atualizado às ${new Date(result.updatedAt).toLocaleTimeString('pt-BR')}. Identificadores anônimos por navegador; até 500 acessos na lista.`;
+        message.textContent = `${result.total} visitas salvas. Exibindo ${result.visitors.length ? offset + 1 : 0}–${offset + result.visitors.length}. Atualizado às ${new Date(result.updatedAt).toLocaleTimeString('pt-BR')}. Online = atividade nos últimos 90 segundos.`;
+        previous.disabled = offset === 0;
+        next.disabled = offset + result.limit >= result.total;
         scroll.replaceChildren();
-        if (!result.visitors.length) { scroll.append(node('p', 'Nenhum visitante online neste momento.', 'settings-body')); return; }
+        if (!result.visitors.length) { scroll.append(node('p', 'Nenhuma visita salva nesta página.', 'settings-body')); return; }
         const table = node('table');
-        table.innerHTML = '<thead><tr><th>VISITANTE</th><th>CIDADE APROXIMADA</th><th>ESTADO / PAÍS</th><th>PÁGINA</th><th>ÚLTIMA ATIVIDADE</th></tr></thead>';
+        table.innerHTML = '<thead><tr><th>VISITANTE</th><th>STATUS</th><th>CIDADE APROXIMADA</th><th>ESTADO / PAÍS</th><th>ÚLTIMA PÁGINA</th><th>ÚLTIMA ATIVIDADE</th></tr></thead>';
         const body = node('tbody');
         for (const visitor of result.visitors) {
           const row = node('tr');
-          for (const value of ['Visitante ' + visitor.id.slice(0, 8), visitor.city || 'Não identificada', [visitor.region, visitor.country].filter(Boolean).join(' / ') || 'Não identificado', visitor.page, new Date(visitor.lastSeen).toLocaleTimeString('pt-BR')]) row.append(node('td', value));
+          for (const value of ['Visitante ' + visitor.id.slice(0, 8), visitor.online ? 'Online' : 'Offline', visitor.city || 'Não identificada', [visitor.region, visitor.country].filter(Boolean).join(' / ') || 'Não identificado', visitor.page, new Date(visitor.lastSeen).toLocaleString('pt-BR')]) row.append(node('td', value));
           body.append(row);
         }
         table.append(body); scroll.append(table);
@@ -160,6 +170,19 @@
       } finally { loading = false; refresh.disabled = false; }
     }
     refresh.addEventListener('click', update);
+    previous.addEventListener('click', () => { if (!loading && !clearing) { offset = Math.max(0, offset - 100); update(); } });
+    next.addEventListener('click', () => { if (!loading && !clearing) { offset += 100; update(); } });
+    clear.addEventListener('click', async () => {
+      if (clearing || loading || !window.confirm('Limpar todas as visitas salvas? Essa ação não pode ser desfeita. Quem continuar no site aparecerá novamente na próxima atualização de presença.')) return;
+      clearing = true; clear.disabled = true;
+      try {
+        await request('clear-visitors', {confirm:true});
+        offset = 0;
+        scroll.replaceChildren();
+      } catch (error) { message.textContent = error.message; return; }
+      finally { clearing = false; clear.disabled = false; }
+      await update();
+    });
     update();
     refreshTimer = setInterval(update, 1000);
   }

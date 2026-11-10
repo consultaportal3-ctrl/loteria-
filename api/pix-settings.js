@@ -30,7 +30,7 @@ module.exports = endpoint(async (req, res) => {
   }
   if (req.method === 'GET') {
     if (!session?.authenticated) throw new ApiError(401, 'Entre no painel para acessar as configurações e os pedidos.');
-    if (action === 'visitors') return json(res, await require('../lib/visitors.js').list());
+    if (action === 'visitors') return json(res, await require('../lib/visitors.js').list(new URL(req.url, 'https://pix.invalid').searchParams.get('offset')));
     if (action === 'settings') return json(res, {settings:await pix.settings()});
     if (action === 'orders') return json(res, {orders:await pix.listOrders()});
     throw new ApiError(404, 'Ação não encontrada.');
@@ -60,6 +60,10 @@ module.exports = endpoint(async (req, res) => {
     return json(res, {authenticated:false});
   }
   if (!session.authenticated) throw new ApiError(401, 'Autenticação necessária.');
+  if (input.action === 'clear-visitors') {
+    if (input.confirm !== true) throw new ApiError(422, 'Confirme a limpeza do histórico de visitas.');
+    return json(res, await require('../lib/visitors.js').clear());
+  }
   if (input.action === 'save') return json(res, {settings:await pix.saveSettings(input.settings)});
   if (input.action === 'confirm') return json(res, await pix.confirmPayment(input));
   throw new ApiError(400, 'Ação inválida.');
