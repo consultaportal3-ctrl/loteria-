@@ -19,7 +19,7 @@
     return result;
   }
   function login(host, current) {
-    host.innerHTML = '<section class="card"><div class="settings-body"><h2>Acesso ao PIX e pedidos</h2><p>Entre com a senha administrativa para cadastrar sua chave e conferir os recebimentos.</p><form id="direct-pix-login"><label>Senha do painel<input name="password" type="password" autocomplete="current-password" required></label><button class="button" type="submit">Entrar</button><p role="alert" class="admin-error" hidden></p></form></div></section>';
+    host.innerHTML = '<section class="card"><div class="settings-body"><h2>Acesso administrativo</h2><p>Entre com a senha do painel para acessar esta seção.</p><form id="direct-pix-login"><label>Senha do painel<input name="password" type="password" autocomplete="current-password" required></label><button class="button" type="submit">Entrar</button><p role="alert" class="admin-error" hidden></p></form></div></section>';
     const form = host.querySelector('form');
     form.addEventListener('submit', async event => {
       event.preventDefault();
@@ -116,17 +116,66 @@
     render(orders); section.append(list); host.append(section);
     refreshTimer = setInterval(refreshOrders, 30000);
   }
+  function visitorList(host, current) {
+    const card = node('section', undefined, 'card');
+    const heading = node('div', undefined, 'card-heading');
+    const text = node('div');
+    const count = node('h2', 'Carregando visitantes online…');
+    text.append(count, node('p', 'Atualização a cada 10 segundos. Online = atividade nos últimos 90 segundos. Cidade aproximada pela conexão de internet.'));
+    const refresh = node('button', 'Atualizar agora', 'button secondary');
+    refresh.type = 'button';
+    heading.append(text, refresh);
+    const message = node('p', '', 'settings-body');
+    message.setAttribute('role', 'status');
+    const scroll = node('div', undefined, 'table-scroll');
+    card.append(heading, message, scroll);
+    host.append(card);
+    let loading = false;
+    async function update() {
+      if (loading || document.hidden || current !== generation || !host.isConnected) return;
+      loading = true; refresh.disabled = true;
+      try {
+        const result = await request('visitors');
+        if (current !== generation || !host.isConnected) return;
+        count.textContent = `${result.count} visitante${result.count === 1 ? '' : 's'} online`;
+        message.textContent = `Atualizado às ${new Date(result.updatedAt).toLocaleTimeString('pt-BR')}. Identificadores anônimos por navegador; até 500 acessos na lista.`;
+        scroll.replaceChildren();
+        if (!result.visitors.length) { scroll.append(node('p', 'Nenhum visitante online neste momento.', 'settings-body')); return; }
+        const table = node('table');
+        table.innerHTML = '<thead><tr><th>VISITANTE</th><th>CIDADE APROXIMADA</th><th>ESTADO / PAÍS</th><th>PÁGINA</th><th>ÚLTIMA ATIVIDADE</th></tr></thead>';
+        const body = node('tbody');
+        for (const visitor of result.visitors) {
+          const row = node('tr');
+          for (const value of ['Visitante ' + visitor.id.slice(0, 8), visitor.city || 'Não identificada', [visitor.region, visitor.country].filter(Boolean).join(' / ') || 'Não identificado', visitor.page, new Date(visitor.lastSeen).toLocaleTimeString('pt-BR')]) row.append(node('td', value));
+          body.append(row);
+        }
+        table.append(body); scroll.append(table);
+      } catch (error) {
+        if (current === generation && host.isConnected) {
+          count.textContent = 'Não foi possível atualizar os visitantes';
+          message.textContent = error.message;
+          scroll.replaceChildren();
+          if (error.status === 401) { clearInterval(refreshTimer); login(host, current); }
+        }
+      } finally { loading = false; refresh.disabled = false; }
+    }
+    refresh.addEventListener('click', update);
+    update();
+    refreshTimer = setInterval(update, 10000);
+  }
   async function authenticated(host, current) {
-    const [settings, orders] = await Promise.all([request('settings'), request('orders')]);
+    const visitorsView = host.dataset.view === 'visitors';
+    const [settings, orders] = visitorsView ? [] : await Promise.all([request('settings'), request('orders')]);
     if (current !== generation || !host.isConnected) return;
     clearInterval(refreshTimer); host.replaceChildren();
-    const toolbar = node('div', undefined, 'section-heading'), title = node('h2', 'Administração do PIX direto');
+    const toolbar = node('div', undefined, 'section-heading'), title = node('h2', visitorsView ? 'Visitantes online' : 'Administração do PIX direto');
     const logout = node('button', 'Sair do acesso administrativo', 'button secondary'); logout.type = 'button';
     logout.addEventListener('click', async () => {
       try { await request('logout', {}); await mount(); }
       catch (error) { host.prepend(node('p', error.message, 'admin-error')); }
     });
     toolbar.append(title, logout); host.append(toolbar);
+    if (visitorsView) { visitorList(host, current); return; }
     if (host.dataset.view === 'settings') configuration(host, settings.settings);
     orderList(host, orders.orders, current);
   }

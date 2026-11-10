@@ -7,7 +7,7 @@
     "node": ">=22.13.0"
   },
   "scripts": {
-    "test": "node --test tests/blackcat-simulation.test.cjs tests/api.test.cjs tests/blackcat-payments.test.cjs tests/direct-pix.test.cjs",
+    "test": "node --test tests/blackcat-simulation.test.cjs tests/api.test.cjs tests/blackcat-payments.test.cjs tests/direct-pix.test.cjs tests/visitors.test.cjs",
     "admin:password": "node lib/admin-password.js"
   },
   "dependencies": {

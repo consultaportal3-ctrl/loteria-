@@ -14,7 +14,7 @@
   const config={label:'Painel do site — demonstração',provider:'sandbox-local',method:'pix',result:'approved'};
   try{const saved=JSON.parse(localStorage.getItem(configKey));if(saved){if(['Painel do site — demonstração','Ambiente de treinamento'].includes(saved.label))config.label=saved.label;if(['sandbox-local','sandbox-exemplo'].includes(saved.provider))config.provider=saved.provider;if(['pix','card','both'].includes(saved.method))config.method=saved.method;if(['approved','pending','declined'].includes(saved.result))config.result=saved.result;}}catch(_){}
   let cart=[],generated=[],section='visao',timer;
-  const names={visao:'Visão geral',vendas:'Apostas no carrinho',pedidos:'Pedidos e clientes',produtos:'Modalidades do site',pix:'PIX direto',gateway:'Gateway de demonstração'};
+  const names={online:'Visitantes online',visao:'Visão geral',vendas:'Apostas no carrinho',pedidos:'Pedidos e clientes',produtos:'Modalidades do site',pix:'PIX direto',gateway:'Gateway de demonstração'};
   const choose=(n,k)=>{let result=1;for(let i=1;i<=k;i++)result=result*(n-i+1)/i;return Math.round(result);};
   const integers=(values,min,max)=>Array.isArray(values)&&values.length<=100&&new Set(values).size===values.length&&values.every(value=>Number.isInteger(value)&&value>=min&&value<=max);
   function readItem(item,index){
@@ -63,7 +63,7 @@
     loadCart();loadGenerated();section=Object.hasOwn(names,location.hash.slice(1))?location.hash.slice(1):'visao';
     $('page-title').textContent=names[section];$('sales-badge').textContent=cart.length;$('products-badge').textContent=catalogue.length;
     document.querySelectorAll('[data-section]').forEach(link=>{const active=link.dataset.section===section;link.classList.toggle('active',active);if(active)link.setAttribute('aria-current','page');else link.removeAttribute('aria-current');});
-    $('panel-content').innerHTML=({visao:overview,vendas:sales,pedidos:()=>'<section id="direct-pix-panel" data-view="orders"><p>Carregando acesso protegido aos pedidos…</p></section>',produtos:products,pix:()=>'<section id="direct-pix-panel" data-view="settings"><p>Carregando configuração protegida do PIX…</p></section>',gateway})[section]();
+    $('panel-content').innerHTML=({online:()=>'<section id="direct-pix-panel" data-view="visitors"><p>Carregando visitantes online...</p></section>',visao:overview,vendas:sales,pedidos:()=>'<section id="direct-pix-panel" data-view="orders"><p>Carregando acesso protegido aos pedidos…</p></section>',produtos:products,pix:()=>'<section id="direct-pix-panel" data-view="settings"><p>Carregando configuração protegida do PIX…</p></section>',gateway})[section]();
     if(section==='gateway'){$('gateway-provider').value=config.provider;$('gateway-method').value=config.method;$('gateway-result-choice').value=config.result;}
     window.dispatchEvent(new Event('pix-panel-render'));
   }

@@ -19,11 +19,18 @@ const liveInfo = {simulation:false, environment:'live', publicName:'Operador Tes
 const mime = {'.html':'text/html','.js':'text/javascript','.css':'text/css','.svg':'image/svg+xml','.png':'image/png','.woff2':'font/woff2','.woff':'font/woff','.webp':'image/webp'};
 const server = http.createServer((req,res) => {
   const url = new URL(req.url,'http://localhost');
+  if (url.pathname === '/api/visitors') {
+    res.setHeader('Content-Type','application/json'); res.end(JSON.stringify({ok:true})); return;
+  }
   if (pixPanelFixture && url.pathname === '/api/pix-settings') {
     const reply = data => { res.setHeader('Content-Type','application/json'); res.end(JSON.stringify(data)); };
     if (req.method === 'GET') {
       if (url.searchParams.get('action') === 'session') return reply({authenticated:pixPanelLoggedIn, authConfigured:true, csrf:'browser-test-csrf'});
       if (url.searchParams.get('action') === 'settings') return reply({settings:savedPixPanelSettings || null});
+      if (url.searchParams.get('action') === 'visitors') {
+        if (!pixPanelLoggedIn) { res.statusCode = 401; return reply({error:'Entre no painel.'}); }
+        return reply({count:1, updatedAt:Date.now(), visitors:[{id:'12345678abcdef00', city:'São Paulo', region:'SP', country:'BR', page:'/home.html', lastSeen:Date.now()}]});
+      }
       return reply({orders:[]});
     }
     let raw = ''; req.on('data', chunk => { raw += chunk; });
@@ -115,6 +122,20 @@ function check(ok,message){if(!ok)throw new Error(message);}
   await command('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:1,mobile:true});
   const checks = [];
   async function run(name,fn){if(process.env.BROWSER_CHECK_FILTER && !name.includes(process.env.BROWSER_CHECK_FILTER))return;try{await fn();checks.push({name,pass:true});console.log('PASS '+name);}catch(error){checks.push({name,pass:false,error:error.message});console.log('FAIL '+name+': '+error.message);}}
+  await run('visitors panel requires login and shows online city and page', async () => {
+    pixPanelFixture = true; pixPanelLoggedIn = false;
+    try {
+      await navigate('/painel.html#online');
+      await until('!!document.getElementById("direct-pix-login")');
+      await evaluate('(()=>{const form=document.getElementById("direct-pix-login");form.elements.password.value="fixture-password";form.requestSubmit()})()');
+      await until('document.getElementById("panel-content").textContent.includes("1 visitante online")');
+      check(await evaluate('document.getElementById("panel-content").textContent.includes("São Paulo")'), 'Visitor city missing');
+      check(await evaluate('document.getElementById("panel-content").textContent.includes("/home.html")'), 'Visitor page missing');
+      await evaluate('Array.from(document.querySelectorAll("#panel-content button")).find(button=>button.textContent.includes("Sair do acesso")).click()');
+      await until('!!document.getElementById("direct-pix-login")');
+      check(await evaluate('!document.getElementById("panel-content").textContent.includes("São Paulo")'), 'City visible after logout');
+    } finally { pixPanelFixture = false; pixPanelLoggedIn = false; }
+  });
   await run('welcome privacy notice has its stylesheet class',async()=>{
     await navigate('/');check(await evaluate('document.getElementById("cookie-notice").classList.contains("cookie-notice")'),'Cookie notice class is broken');
   });

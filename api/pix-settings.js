@@ -30,6 +30,7 @@ module.exports = endpoint(async (req, res) => {
   }
   if (req.method === 'GET') {
     if (!session?.authenticated) throw new ApiError(401, 'Entre no painel para acessar as configurações e os pedidos.');
+    if (action === 'visitors') return json(res, await require('../lib/visitors.js').list());
     if (action === 'settings') return json(res, {settings:await pix.settings()});
     if (action === 'orders') return json(res, {orders:await pix.listOrders()});
     throw new ApiError(404, 'Ação não encontrada.');
