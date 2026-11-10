@@ -35,7 +35,6 @@
           <div class="payment-hero-cart"><button type="button" class="payment-cart-return" aria-label="Voltar ao carrinho"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 3h3l3 12h11l3-9H6"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg><span class="payment-cart-count">0</span></button><button type="button" class="payment-go-form">Pagamento</button></div>
           <h2 id="payment-hero-title">Compra de<br>Apostas</h2>
           <p>Confira todas as suas apostas e escolha sua forma de pagamento.</p>
-          <span class="payment-hero-notice">Ambiente de teste · sem vínculo com a CAIXA · não emite bilhetes oficiais</span>
         </div>
         <img class="payment-hero-art" src="assets/campaign-tickets.png" width="796" height="483" alt="" aria-hidden="true">
       </div>
@@ -123,7 +122,6 @@
     form.querySelector('.payment-consent').hidden = false;
     if (!live) { submit.querySelector('.payment-option-caption').textContent = 'Simular PIX'; return; }
     modal.querySelectorAll('.payment-live-field').forEach(label => { label.hidden = manualPix; label.querySelector('input').required = !manualPix; });
-    modal.querySelector('.payment-hero-notice').textContent = 'Pagamento ao operador identificado abaixo. O PIX não comprova o registro da aposta.';
     modal.querySelectorAll('.payment-kicker').forEach(node => { node.textContent = 'PAGAMENTO PIX'; });
     modal.querySelectorAll('.payment-disclaimer').forEach(node => {
       node.hidden = manualPix;

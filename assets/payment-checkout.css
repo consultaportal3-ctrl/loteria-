@@ -75,7 +75,6 @@ body:has(.payment-checkout[open]){overflow:hidden}
 .payment-navigation :is(button,summary):focus-visible,.payment-hero-cart button:focus-visible{outline:3px solid #ffce00;outline-offset:3px}
 .payment-checkout .payment-hero h2{margin:0;color:#fff;font:900 clamp(48px,4.6vw,80px)/1.08 var(--font-display,'Arial Black',sans-serif);letter-spacing:-.035em}
 .payment-checkout .payment-hero p{max-width:600px;margin:28px 0 16px;font-size:clamp(18px,1.5vw,24px);font-weight:400;line-height:1.4}
-.payment-hero-notice{display:block;max-width:480px;font-size:12px;line-height:1.5}
 .payment-hero-art{display:block;align-self:end;width:100%;max-width:none;height:auto;margin:0}
 .payment-checkout .payment-form{width:min(1160px,calc(100% - 48px));margin:0 auto;padding:48px 0 64px}
 .payment-checkout .payment-form[hidden]{display:none}
@@ -95,7 +94,6 @@ body:has(.payment-checkout[open]){overflow:hidden}
   .payment-hero-cart button{min-height:44px;padding:8px 14px;font-size:16px}
   .payment-checkout .payment-hero h2{font-size:clamp(48px,13.6vw,72px)}
   .payment-checkout .payment-hero p{margin:28px auto 16px;font-size:clamp(17px,4.6vw,22px)}
-  .payment-hero-notice{margin:auto;font-size:11px}
   .payment-hero-art{align-self:center;width:100%;max-width:none;margin:12px 0 0}
   .payment-checkout .payment-form{width:calc(100% - 40px);padding:34px 0 48px}
   .payment-checkout .payment-form h2{margin-right:0;font-size:clamp(28px,7vw,40px)}
