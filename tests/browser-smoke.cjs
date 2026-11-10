@@ -14,6 +14,7 @@ let directFixture = false;
 let pixPanelFixture = false;
 let pixPanelLoggedIn = false;
 let visitorHistoryCleared = false;
+const presenceEvents = [];
 let savedPixPanelSettings;
 let liveRequest;
 const liveInfo = {simulation:false, environment:'live', publicName:'Operador Teste', legalName:'Operador Teste Ltda', taxId:'12345678000190', address:'Endereco de teste', contactEmail:'teste@example.invalid', privacyUrl:'https://example.invalid/privacy', termsUrl:'https://example.invalid/terms'};
@@ -21,7 +22,13 @@ const mime = {'.html':'text/html','.js':'text/javascript','.css':'text/css','.sv
 const server = http.createServer((req,res) => {
   const url = new URL(req.url,'http://localhost');
   if (url.pathname === '/api/visitors') {
-    res.setHeader('Content-Type','application/json'); res.end(JSON.stringify({ok:true})); return;
+    let raw = '';
+    req.on('data', chunk => { raw += chunk; });
+    req.on('end', () => {
+      presenceEvents.push(JSON.parse(raw));
+      res.setHeader('Content-Type','application/json'); res.end(JSON.stringify({ok:true}));
+    });
+    return;
   }
   if (pixPanelFixture && url.pathname === '/api/pix-settings') {
     const reply = data => { res.setHeader('Content-Type','application/json'); res.end(JSON.stringify(data)); };
@@ -127,6 +134,16 @@ function check(ok,message){if(!ok)throw new Error(message);}
   await command('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:1,mobile:true});
   const checks = [];
   async function run(name,fn){if(process.env.BROWSER_CHECK_FILTER && !name.includes(process.env.BROWSER_CHECK_FILTER))return;try{await fn();checks.push({name,pass:true});console.log('PASS '+name);}catch(error){checks.push({name,pass:false,error:error.message});console.log('FAIL '+name+': '+error.message);}}
+  await run('visitors presence sends an immediate leave beacon on navigation', async () => {
+    presenceEvents.length = 0;
+    await navigate('/home.html');
+    for (let i = 0; i < 50 && !presenceEvents.some(event => event.page === '/home.html'); i++) await pause(100);
+    const entry = presenceEvents.find(event => event.page === '/home.html');
+    check(entry && /^[a-f0-9]{32}$/.test(entry.tabId), 'Heartbeat must identify the current tab');
+    await navigate('/painel.html');
+    for (let i = 0; i < 50 && !presenceEvents.some(event => event.action === 'leave' && event.tabId === entry.tabId); i++) await pause(100);
+    check(presenceEvents.some(event => event.action === 'leave' && event.tabId === entry.tabId), 'No immediate exit beacon received');
+  });
   await run('visitors panel requires login and shows online city and page', async () => {
     pixPanelFixture = true; pixPanelLoggedIn = false;
     try {

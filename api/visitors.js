@@ -4,6 +4,8 @@ const visitors = require('../lib/visitors.js');
 module.exports = endpoint(async (req, res) => {
   requireMethod(req, res, 'POST');
   requireSameOrigin(req);
-  await visitors.heartbeat(req, res, await readJson(req));
+  const input = await readJson(req);
+  if (input.action === 'leave') await visitors.leave(req, input);
+  else await visitors.heartbeat(req, res, input);
   return json(res, {ok:true});
 });

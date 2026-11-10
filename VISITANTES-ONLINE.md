@@ -4,6 +4,8 @@ Abra `painel.html#online` e entre com a mesma senha administrativa usada em PIX 
 
 - O painel consulta o servidor a cada 1 segundo.
 - As páginas públicas enviam presença a cada 30 segundos enquanto estão visíveis. Um navegador é considerado online quando enviou presença nos últimos 90 segundos.
+- Ao sair ou fechar a página, o navegador envia um aviso de saída. Quando a última aba ativa sai, o status muda para Offline na próxima consulta do painel (a cada 1 segundo), preservando a visita. Cada aba tem um identificador próprio; avisos atrasados de presença de uma aba encerrada são ignorados.
+- Se o navegador for encerrado à força ou perder a conexão antes de enviar o aviso, permanece o prazo de 90 segundos como alternativa. A saída não pode ser garantida instantaneamente nessas situações.
 - O identificador anônimo é compartilhado entre abas do navegador por um cookie de sessão. Não representa o nome nem a identidade da pessoa.
 - Cidade, estado e país vêm dos cabeçalhos de geolocalização da Vercel. A cidade é aproximada e pode corresponder à operadora ou VPN. Quando indisponível, o painel informa que não foi identificada.
 - Não são armazenados IP, coordenadas, nome, e-mail ou parâmetros de URL. Cada atualização substitui a última página do visitante. A visita permanece salva mesmo após ficar offline, sem exclusão automática.

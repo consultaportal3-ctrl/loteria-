@@ -16,19 +16,33 @@ async function request(handler, options = {}) {
 }
 test('visitor history persists offline, paginates and can only be cleared by an authenticated admin with CSRF', async () => {
   const originalCommand = store.command, originalGet = store.get, originalNow = Date.now, originalVercel = process.env.VERCEL;
-  const records = new Map(), index = new Map(), rate = new Map(), history = new Map(), saved = new Map();
+  const records = new Map(), index = new Map(), rate = new Map(), history = new Map(), saved = new Map(), tabs = new Map(), closed = new Map();
   let now = 1800000000000;
   Date.now = () => now;
   process.env.VERCEL = '1';
   store.get = async key => records.get(key) || null;
   store.command = async (command, ...args) => {
     if (command === 'EVAL') {
-      const [, indexKey, recordKey, rateKey, hashKey, historyKey, cutoff, seen, data, id] = args.slice(1);
+      if (args[0].includes('visitor-leave')) {
+        const [, indexKey, tabsKey, closedKey, tab, cutoff, recordKey] = args.slice(1);
+        closed.set(closedKey, now + 180000);
+        const active = tabs.get(tabsKey) || new Map();
+        active.delete(tab);
+        for (const [key, score] of active) if (score <= cutoff) active.delete(key);
+        if (!active.size) index.delete(recordKey);
+        else if (index.has(recordKey)) index.set(recordKey, Math.max(...active.values()));
+        return 1;
+      }
+      const [, indexKey, recordKey, rateKey, hashKey, historyKey, tabsKey, closedKey, cutoff, seen, data, id, tab] = args.slice(1);
+      if ((closed.get(closedKey) || 0) > now) return 0;
       assert.equal(indexKey, 'visitors:online');
       assert.equal(hashKey, 'visitors:records');
       assert.equal(historyKey, 'visitors:history');
       for (const [key, score] of index) if (score <= cutoff) index.delete(key);
       if (!rate.has(rateKey) || rate.get(rateKey) <= now) {
+        const active = tabs.get(tabsKey) || new Map();
+        for (const [key, score] of active) if (score <= cutoff) active.delete(key);
+        active.set(tab, Number(seen)); tabs.set(tabsKey, active);
         rate.set(rateKey, now + 20000); records.set(recordKey, JSON.parse(data)); index.set(recordKey, Number(seen));
         saved.set(id, data); history.set(id, Number(seen));
       }
@@ -37,6 +51,7 @@ test('visitor history persists offline, paginates and can only be cleared by an 
     if (command === 'ZREMRANGEBYSCORE') { for (const [key, score] of index) if (score <= Number(args[2])) index.delete(key); return 1; }
     if (command === 'ZREVRANGE') return [...history].sort((a,b) => b[1] - a[1]).slice(Number(args[1]), Number(args[2]) + 1).map(([key]) => key);
     if (command === 'HMGET') return args.slice(1).map(key => saved.get(key));
+    if (command === 'ZMSCORE') return args.slice(1).map(key => index.has(key) ? String(index.get(key)) : null);
     if (command === 'ZCARD') return args[0] === 'visitors:online' ? index.size : history.size;
     if (command === 'DEL') { assert.deepEqual(args, ['visitors:history', 'visitors:records', 'visitors:online']); saved.clear(); history.clear(); index.clear(); return 3; }
     throw Error('Unexpected command ' + command);
@@ -91,6 +106,22 @@ test('visitor history persists offline, paginates and can only be cleared by an 
     assert.equal((await visitors.list()).total, 0);
     await request(track, {headers:{cookie}});
     assert.equal((await visitors.list()).total, 1, 'active visitor reappears after manual clearing');
+    const tabA = 'a'.repeat(32), tabB = 'b'.repeat(32);
+    now += 90001;
+    await request(track, {headers:{cookie}, body:{page:'/home.html', tabId:tabA}});
+    await request(track, {headers:{cookie}, body:{page:'/carrinho.html', tabId:tabB}});
+    assert.equal((await visitors.list()).count, 1);
+    await request(track, {headers:{cookie}, body:{action:'leave', tabId:tabA}});
+    assert.equal((await visitors.list()).count, 1, 'another tab keeps the visitor online');
+    await request(track, {headers:{cookie}, body:{action:'leave', tabId:tabB}});
+    result = await visitors.list();
+    assert.equal(result.count, 0, 'closing last tab immediately removes online status');
+    assert.equal(result.visitors[0].online, false);
+    assert.equal(result.total, 1, 'leaving preserves visit history');
+    await request(track, {headers:{cookie}, body:{page:'/home.html', tabId:tabB}});
+    assert.equal((await visitors.list()).count, 0, 'late heartbeat cannot resurrect a closed tab');
+    await request(track, {headers:{cookie}, body:{page:'/home.html', tabId:'c'.repeat(32)}});
+    assert.equal((await visitors.list()).count, 1, 'returning to the site goes online');
     delete process.env.VERCEL;
     assert.equal(visitors.location({headers:{'x-vercel-ip-city':'Forged'}}).city, '');
     process.env.VERCEL = '1';
