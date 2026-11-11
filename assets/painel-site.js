@@ -12,7 +12,7 @@
   const config={label:'Painel do site — demonstração',provider:'sandbox-local',method:'pix',result:'approved'};
   try{const saved=JSON.parse(localStorage.getItem(configKey));if(saved){if(['Painel do site — demonstração','Ambiente de treinamento'].includes(saved.label))config.label=saved.label;if(['sandbox-local','sandbox-exemplo'].includes(saved.provider))config.provider=saved.provider;if(['pix','card','both'].includes(saved.method))config.method=saved.method;if(['approved','pending','declined'].includes(saved.result))config.result=saved.result;}}catch(_){}
   let section='visao',timer;
-  const names={seguranca:'Segurança e IPs',online:'Visitantes online',visao:'Visão geral',vendas:'Apostas e PIX gerados',pedidos:'Pedidos e clientes',produtos:'Modalidades do site',pix:'PIX direto',gateway:'Gateway de demonstração'};
+  const names={online:'Visitantes online',visao:'Visão geral',vendas:'Apostas e PIX gerados',pedidos:'Pedidos e clientes',produtos:'Modalidades do site',pix:'PIX direto',gateway:'Gateway de demonstração'};
   function toast(message){$('panel-toast').textContent=message;$('panel-toast').hidden=false;clearTimeout(timer);timer=setTimeout(()=>{$('panel-toast').hidden=true;},4000);}
   function saveConfig(){try{localStorage.setItem(configKey,JSON.stringify(config));toast('Opções de demonstração salvas neste navegador.');}catch(_){toast('Armazenamento indisponível; opções mantidas nesta sessão.');}}
   const heading=(title,description,action='')=>`<div class="section-heading"><div><h2>${title}</h2><p>${description}</p></div>${action}</div>`;
@@ -26,7 +26,7 @@
     section=Object.hasOwn(names,location.hash.slice(1))?location.hash.slice(1):'visao';
     $('page-title').textContent=names[section];$('sales-badge').textContent='—';$('products-badge').textContent=catalogue.length;
     document.querySelectorAll('[data-section]').forEach(link=>{const active=link.dataset.section===section;link.classList.toggle('active',active);if(active)link.setAttribute('aria-current','page');else link.removeAttribute('aria-current');});
-    $('panel-content').innerHTML=({seguranca:()=>'<section id="direct-pix-panel" data-view="security"><p>Carregando segurança da loja...</p></section>',online:()=>'<section id="direct-pix-panel" data-view="visitors"><p>Carregando visitantes online...</p></section>',visao:overview,vendas:sales,pedidos:()=>'<section id="direct-pix-panel" data-view="orders"><p>Carregando acesso protegido aos pedidos…</p></section>',produtos:products,pix:()=>'<section id="direct-pix-panel" data-view="settings"><p>Carregando configuração protegida do PIX…</p></section>',gateway})[section]();
+    $('panel-content').innerHTML=({online:()=>'<section id="direct-pix-panel" data-view="visitors"><p>Carregando visitantes online...</p></section>',visao:overview,vendas:sales,pedidos:()=>'<section id="direct-pix-panel" data-view="orders"><p>Carregando acesso protegido aos pedidos…</p></section>',produtos:products,pix:()=>'<section id="direct-pix-panel" data-view="settings"><p>Carregando configuração protegida do PIX…</p></section>',gateway})[section]();
     if(section==='gateway'){$('gateway-provider').value=config.provider;$('gateway-method').value=config.method;$('gateway-result-choice').value=config.result;}
     window.dispatchEvent(new Event('pix-panel-render'));
   }

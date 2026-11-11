@@ -18,8 +18,6 @@ Abra `painel.html#online` e entre com a mesma senha administrativa usada em PIX 
 
 O recurso usa o Redis já configurado para o PIX direto (`KV_REST_API_URL` e `KV_REST_API_TOKEN`, ou os equivalentes `UPSTASH_REDIS_REST_*`). Não exige outro serviço de localização. A geolocalização é habilitada apenas quando `VERCEL=1`.
 
-Os registros de segurança de IPs ficam separados deste histórico. Consulte [Segurança e IPs](SEGURANCA-IPS.md) para bloqueios, contagem de acessos e retenção desses endereços.
-
 ## Resumo de toda a loja
 
 `painel.html#visao` mostra os totais e as seis gerações mais recentes de todos os visitantes. `painel.html#vendas` exibe o histórico completo, em páginas de 50 registros. Ambas as telas exigem a mesma senha administrativa e atualizam a cada 5 segundos. Os números não dependem mais do armazenamento do navegador do administrador.

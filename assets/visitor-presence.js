@@ -16,10 +16,6 @@
         try {
           const response = await fetch(api, {method:'POST', credentials:'same-origin', cache:'no-store',
             headers:{'Content-Type':'application/json'}, body:JSON.stringify(entry.body), signal:AbortSignal.timeout(8000)});
-          if ([403,429].includes(response.status)) {
-            const result = await response.json().catch(() => ({}));
-            if (result.accessBlocked) { departed = true; pending.length = 0; location.reload(); return; }
-          }
           if (!response.ok && response.status >= 500) throw new Error('Tracking unavailable');
           pending.shift();
         } catch (_) {

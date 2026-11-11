@@ -15,7 +15,6 @@ let pixPanelFixture = false;
 let pixPanelLoggedIn = false;
 let visitorHistoryCleared = false;
 const presenceEvents = [];
-let blockedIpFixture = [], securityFixtureSettings = {automatic:false,maxRequests:60,durationMinutes:15};
 let savedPixPanelSettings;
 let liveRequest;
 const liveInfo = {simulation:false, environment:'live', publicName:'Operador Teste', legalName:'Operador Teste Ltda', taxId:'12345678000190', address:'Endereco de teste', contactEmail:'teste@example.invalid', privacyUrl:'https://example.invalid/privacy', termsUrl:'https://example.invalid/terms'};
@@ -36,11 +35,6 @@ const server = http.createServer((req,res) => {
     if (req.method === 'GET') {
       if (url.searchParams.get('action') === 'session') return reply({authenticated:pixPanelLoggedIn, authConfigured:true, csrf:'browser-test-csrf'});
       if (url.searchParams.get('action') === 'settings') return reply({settings:savedPixPanelSettings || null});
-      if (url.searchParams.get('action') === 'security') {
-        if(!pixPanelLoggedIn){res.statusCode=401;return reply({error:'Entre no painel.'});}
-        return reply({settings:securityFixtureSettings,currentIp:'203.0.113.1',configured:true,blocks:blockedIpFixture,
-          traffic:[{ip:'198.51.100.9',minuteCount:12,total:120,denied:1,page:'/home.html',lastSeen:1800000000000},{ip:'203.0.113.1',minuteCount:1,total:1,denied:0,page:'/home.html',lastSeen:1800000000000}],updatedAt:Date.now()});
-      }
       if (url.searchParams.get('action') === 'generations') {
         if (!pixPanelLoggedIn) { res.statusCode=401; return reply({error:'Entre no painel.'}); }
         const offset=Number(url.searchParams.get('offset')||0);
@@ -57,13 +51,6 @@ const server = http.createServer((req,res) => {
     return req.on('end', () => {
       const input = JSON.parse(raw);
       if (input.action === 'login') { pixPanelLoggedIn = true; return reply({authenticated:true, csrf:'browser-test-csrf'}); }
-      if (['block-ip','unblock-ip','save-security'].includes(input.action)) {
-        if(!pixPanelLoggedIn){res.statusCode=401;return reply({error:'Entre no painel.'});}
-        if(input.action==='block-ip')blockedIpFixture.push({ip:input.ip,createdAt:Date.now(),expiresAt:Date.now()+input.durationMinutes*60000,automatic:false,reason:input.reason});
-        if(input.action==='unblock-ip')blockedIpFixture=blockedIpFixture.filter(row=>row.ip!==input.ip);
-        if(input.action==='save-security')securityFixtureSettings=input.settings;
-        return reply({ok:true});
-      }
       if (input.action === 'clear-visitors') {
         if (!pixPanelLoggedIn || input.csrf !== 'browser-test-csrf' || input.confirm !== true) { res.statusCode = 403; return reply({error:'Não autorizado.'}); }
         visitorHistoryCleared = true; return reply({cleared:true});
@@ -187,25 +174,6 @@ function check(ok,message){if(!ok)throw new Error(message);}
       await until('!!document.getElementById("direct-pix-login")');
       check(await evaluate('!document.getElementById("panel-content").textContent.includes("São Paulo")'), 'City visible after logout');
     } finally { pixPanelFixture = false; pixPanelLoggedIn = false; visitorHistoryCleared = false; }
-  });
-  await run('IP security panel blocks, unblocks and saves automatic limits after login',async()=>{
-    pixPanelFixture=true;pixPanelLoggedIn=false;blockedIpFixture=[];securityFixtureSettings={automatic:false,maxRequests:60,durationMinutes:15};
-    try{
-      await navigate('/painel.html#seguranca');await until('!!document.getElementById("direct-pix-login")');
-      await evaluate('(()=>{const form=document.getElementById("direct-pix-login");form.elements.password.value="fixture-password";form.requestSubmit()})()');
-      await until('document.getElementById("panel-content").textContent.includes("198.51.100.9")');
-      check(await evaluate('!document.querySelector("#ip-limit-form [name=automatic]").checked'),'Automatic blocks must start disabled');
-      check(await evaluate('Array.from(document.querySelectorAll("#panel-content button")).find(button=>button.textContent==="Seu IP").disabled'),'Own IP must not have an active block shortcut');
-      await evaluate('(()=>{const form=document.getElementById("block-ip-form");form.elements.ip.value="198.51.100.9";form.elements.duration.value="60";form.requestSubmit()})()');
-      await until('Array.from(document.querySelectorAll("#panel-content button")).some(button=>button.textContent==="Desbloquear")');
-      check(blockedIpFixture.length===1,'Block was not saved');
-      await evaluate('Array.from(document.querySelectorAll("#panel-content button")).find(button=>button.textContent==="Desbloquear").click()');
-      await until('document.getElementById("panel-content").textContent.includes("Nenhum IP bloqueado.")');
-      check(blockedIpFixture.length===0,'Unblock was not saved');
-      await evaluate('(()=>{const form=document.getElementById("ip-limit-form");form.elements.automatic.checked=true;form.elements.maxRequests.value="30";form.requestSubmit()})()');
-      await until('document.querySelector("#ip-limit-form [role=status]").textContent==="Limite salvo."');
-      check(securityFixtureSettings.automatic&&securityFixtureSettings.maxRequests===30,'Automatic limit not saved');
-    }finally{pixPanelFixture=false;pixPanelLoggedIn=false;blockedIpFixture=[];}
   });
   await run('store summary shows shared generations and paginates after login', async () => {
     pixPanelFixture=true;pixPanelLoggedIn=false;
