@@ -14,4 +14,4 @@ Em produção, o endereço vem dos cabeçalhos de IP fornecidos pela Vercel. For
 
 Os IPs são armazenados separadamente do histórico de visitantes e ficam visíveis somente após login administrativo. Parâmetros de URL não são registrados nessa lista. A coleta começa nesta versão, sem recuperação de IPs de acessos antigos.
 
-Implementação baseada na documentação oficial de [Routing Middleware](https://vercel.com/docs/routing-middleware/getting-started) e dos [cabeçalhos de requisição da Vercel](https://vercel.com/docs/headers/request-headers). O projeto usa `proxy.mjs`, declarado em `vercel.json`, e o Redis já utilizado pela loja.
+Implementação baseada na documentação oficial de [Routing Middleware](https://vercel.com/docs/routing-middleware/getting-started) e dos [cabeçalhos de requisição da Vercel](https://vercel.com/docs/headers/request-headers). O projeto usa a entrada convencional `middleware.ts`, que carrega `proxy.mjs`, e o Redis já utilizado pela loja.
