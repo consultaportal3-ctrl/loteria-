@@ -32,6 +32,7 @@ module.exports = endpoint(async (req, res) => {
     if (!session?.authenticated) throw new ApiError(401, 'Entre no painel para acessar as configurações e os pedidos.');
     if (action === 'visitors') return json(res, await require('../lib/visitors.js').list(new URL(req.url, 'https://pix.invalid').searchParams.get('offset')));
     if (action === 'generations') return json(res, await require('../lib/visitors.js').generations(new URL(req.url, 'https://pix.invalid').searchParams.get('offset')));
+    if (action === 'security') return json(res, await require('../lib/ip-access.js').list(req));
     if (action === 'settings') return json(res, {settings:await pix.settings()});
     if (action === 'orders') return json(res, {orders:await pix.listOrders()});
     throw new ApiError(404, 'Ação não encontrada.');
@@ -61,6 +62,9 @@ module.exports = endpoint(async (req, res) => {
     return json(res, {authenticated:false});
   }
   if (!session.authenticated) throw new ApiError(401, 'Autenticação necessária.');
+  if (input.action === 'block-ip') return json(res, await require('../lib/ip-access.js').block(req,input));
+  if (input.action === 'unblock-ip') return json(res, await require('../lib/ip-access.js').unblock(input));
+  if (input.action === 'save-security') return json(res, await require('../lib/ip-access.js').saveSettings(input.settings));
   if (input.action === 'clear-visitors') {
     if (input.confirm !== true) throw new ApiError(422, 'Confirme a limpeza do histórico de visitas.');
     return json(res, await require('../lib/visitors.js').clear());

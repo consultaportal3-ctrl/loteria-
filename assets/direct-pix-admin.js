@@ -311,10 +311,59 @@
     next.addEventListener('click', () => { if (!loading) { offset += 50; update(); } });
     update(); refreshTimer = setInterval(update, 5000);
   }
+  function securityView(host, current) {
+    const heading = node('div', undefined, 'section-heading'), title = node('div');
+    title.append(node('h2', 'Segurança e IPs'), node('p', 'Veja acessos repetidos e bloqueie IPs. O bloqueio vale para todos que usam o mesmo IP.'));
+    const refresh = node('button', 'Atualizar', 'button secondary'); refresh.type = 'button'; heading.append(title, refresh); host.append(heading);
+    const status = node('p', 'Carregando…', 'muted'); status.setAttribute('role','status'); host.append(status);
+    const forms = node('div', undefined, 'settings-grid'), manualCard = node('section', undefined, 'card'), autoCard = node('section', undefined, 'card');
+    manualCard.innerHTML = '<div class="card-heading"><h2>Bloquear um IP</h2></div><form id="block-ip-form" class="settings-body"><label>IP a bloquear<input name="ip" placeholder="Ex.: 203.0.113.10" maxlength="45" required autocomplete="off"></label><label>Duração<select name="duration"><option value="15">15 minutos</option><option value="60">1 hora</option><option value="1440" selected>24 horas</option><option value="10080">7 dias</option><option value="0">Até desbloquear</option></select></label><label>Motivo (opcional)<input name="reason" maxlength="160" placeholder="Ex.: acessos repetidos"></label><button class="button" type="submit">Bloquear IP</button><p role="status" hidden></p></form>';
+    autoCard.innerHTML = '<div class="card-heading"><h2>Limite automático de acessos</h2></div><form id="ip-limit-form" class="settings-body"><label><input type="checkbox" name="automatic"> Ativar bloqueio automático</label><label>Acessos a páginas por IP, em cada minuto<input type="number" name="maxRequests" min="10" max="1000" value="60" required></label><label>Tempo do bloqueio<select name="duration"><option value="5">5 minutos</option><option value="15" selected>15 minutos</option><option value="60">1 hora</option><option value="1440">24 horas</option></select></label><p class="muted">Arquivos de imagens, estilos e atualizações do painel não entram nessa contagem. O painel continua acessível para desbloquear IPs.</p><button class="button" type="submit">Salvar limite</button><p role="status" hidden></p></form>';
+    forms.append(manualCard,autoCard); host.append(forms);
+    const blockedCard = node('section', undefined, 'card'), trafficCard = node('section', undefined, 'card');
+    blockedCard.append(node('div', 'IPs bloqueados', 'card-heading')); trafficCard.append(node('div', 'Acessos recentes por IP · últimos 100', 'card-heading'));
+    const blockedRows = node('div', undefined, 'table-scroll'), trafficRows = node('div', undefined, 'table-scroll');
+    blockedCard.append(blockedRows); trafficCard.append(trafficRows); host.append(blockedCard,trafficCard);
+    const manual = manualCard.querySelector('form'), automatic = autoCard.querySelector('form');
+    let loading = false, saving = false, initialized = false, lastData = '';
+    function button(text, action) { const value = node('button',text,'button secondary'); value.type='button'; value.addEventListener('click',action); return value; }
+    async function mutate(action, data, form) {
+      if (saving) return;
+      saving=true;
+      const controls = host.querySelectorAll('button'); controls.forEach(control=>{control.disabled=true;});
+      const message = form?.querySelector('[role=status]') || status;
+      message.hidden=false; message.textContent='Salvando…';
+      try { await request(action,data); message.textContent=action==='unblock-ip'?'IP desbloqueado.':action==='block-ip'?'IP bloqueado.':'Limite salvo.'; lastData=''; }
+      catch(error) { message.textContent=error.message; }
+      finally {saving=false;controls.forEach(control=>{control.disabled=false;});await update();}
+    }
+    manual.addEventListener('submit',event=>{event.preventDefault();mutate('block-ip',{ip:manual.elements.ip.value.trim(),durationMinutes:Number(manual.elements.duration.value),reason:manual.elements.reason.value},manual);});
+    automatic.addEventListener('submit',event=>{event.preventDefault();mutate('save-security',{settings:{automatic:automatic.elements.automatic.checked,maxRequests:Number(automatic.elements.maxRequests.value),durationMinutes:Number(automatic.elements.duration.value)}},automatic);});
+    async function update() {
+      if (loading || saving || document.hidden || current!==generation || !host.isConnected) return;
+      loading=true;
+      try {
+        const result=await request('security'); if(current!==generation || !host.isConnected)return;
+        status.textContent=`Seu IP: ${result.currentIp||'não identificado'}. Atualizado às ${new Date(result.updatedAt).toLocaleTimeString('pt-BR')}.`;
+        if(!initialized){automatic.elements.automatic.checked=result.settings.automatic;automatic.elements.maxRequests.value=result.settings.maxRequests;automatic.elements.duration.value=result.settings.durationMinutes;initialized=true;}
+        const signature=JSON.stringify([result.blocks,result.traffic,result.currentIp]);if(signature===lastData)return;lastData=signature;
+        blockedRows.replaceChildren();trafficRows.replaceChildren();
+        const blockTable=node('table');blockTable.innerHTML='<thead><tr><th>IP</th><th>ORIGEM / MOTIVO</th><th>BLOQUEADO ATÉ</th><th>AÇÃO</th></tr></thead>';const blocks=node('tbody');
+        for(const record of result.blocks){const row=node('tr');row.append(node('td',record.ip),node('td',(record.automatic?'Automático':'Manual')+(record.reason?' · '+record.reason:'')),node('td',record.expiresAt?new Date(record.expiresAt).toLocaleString('pt-BR'):'Até desbloquear'));const action=node('td');action.append(button('Desbloquear',()=>mutate('unblock-ip',{ip:record.ip})));row.append(action);blocks.append(row);}
+        blockTable.append(blocks);blockedRows.append(result.blocks.length?blockTable:node('p','Nenhum IP bloqueado.','settings-body'));
+        const trafficTable=node('table');trafficTable.innerHTML='<thead><tr><th>IP</th><th>ACESSOS NESTE MINUTO</th><th>TOTAL DE PÁGINAS</th><th>TENTATIVAS BLOQUEADAS</th><th>ÚLTIMO CAMINHO</th><th>ÚLTIMO ACESSO</th><th>AÇÃO</th></tr></thead>';const traffic=node('tbody');
+        for(const record of result.traffic){const row=node('tr');for(const value of [record.ip,record.minuteCount,record.total,record.denied,record.page,new Date(record.lastSeen).toLocaleString('pt-BR')])row.append(node('td',value));const action=node('td');const isBlocked=result.blocks.some(block=>block.ip===record.ip),self=record.ip===result.currentIp;const control=button(self?'Seu IP':isBlocked?'Desbloquear':'Bloquear por 24 horas',()=>isBlocked?mutate('unblock-ip',{ip:record.ip}):mutate('block-ip',{ip:record.ip,durationMinutes:1440,reason:'Acessos repetidos'}));control.disabled=self;action.append(control);row.append(action);traffic.append(row);}
+        trafficTable.append(traffic);trafficRows.append(result.traffic.length?trafficTable:node('p','Os próximos acessos às páginas da loja aparecerão aqui.','settings-body'));
+      } catch(error){status.textContent=error.message;if(error.status===401){clearInterval(refreshTimer);login(host,current);}}
+      finally{loading=false;}
+    }
+    refresh.addEventListener('click',update);update();refreshTimer=setInterval(update,5000);
+  }
   async function authenticated(host, current) {
     const visitorsView = host.dataset.view === 'visitors';
     const summaryView = ['overview','generations'].includes(host.dataset.view);
-    const [settings, orders] = visitorsView || summaryView ? [] : await Promise.all([request('settings'), request('orders')]);
+    const security = host.dataset.view === 'security';
+    const [settings, orders] = visitorsView || summaryView || security ? [] : await Promise.all([request('settings'), request('orders')]);
     if (current !== generation || !host.isConnected) return;
     clearInterval(refreshTimer); host.replaceChildren();
     const toolbar = node('div', undefined, 'section-heading'), title = node('h2', visitorsView ? 'Visitantes online' : summaryView ? 'Administração da loja' : 'Administração do PIX direto');
@@ -326,6 +375,7 @@
     toolbar.append(title, logout); host.append(toolbar);
     if (visitorsView) { visitorList(host, current); return; }
     if (summaryView) { storeSummary(host, current); return; }
+    if (security) { securityView(host, current); return; }
     if (host.dataset.view === 'settings') configuration(host, settings.settings);
     orderList(host, orders.orders, current);
   }
