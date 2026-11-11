@@ -77,7 +77,7 @@
         const contest = document.createElement('span');
         const contestLabel = document.createElement('strong');
         contestLabel.textContent = 'Concurso: ';
-        const first = item.contest || {mega:3084,facil:3825,quina:7163,mania:2997,dupla:3030,super:920,dia:1343,timemania:2466,milionaria:406}[item.game];
+        const first = item.contest || {mega:3085,facil:3827,quina:7165,mania:2998,dupla:3031,super:921,dia:1345,timemania:2467,milionaria:406}[item.game];
         contest.append(contestLabel, `${first}${item.repeats > 1 ? ' a ' + (first - 1 + item.repeats) : ''}`);
         details.append(contest, document.createElement('br'));
       }

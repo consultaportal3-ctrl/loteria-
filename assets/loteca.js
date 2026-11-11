@@ -81,7 +81,7 @@
       article.append(header,label,line);
       if(item.team||item.trevos){const extra=document.createElement('p');extra.textContent=item.team?`Time do Coração: ${item.team}`:`Trevos: ${item.trevos.join(' · ')}`;article.append(extra);}
       if(item.game==='dia' && Number.isInteger(item.month)){const monthDetails=document.createElement('p');monthDetails.className='recent-dia-month';monthDetails.setAttribute('aria-label',`Mês da Sorte: ${window.portalMonths[item.month]}`);monthDetails.textContent=window.portalMonths[item.month].toLocaleUpperCase('pt-BR');article.append(monthDetails);}
-      const details=document.createElement('p');const first=item.contest||{mega:3084,facil:3825,quina:7163,milionaria:406,mania:2997,timemania:2466,dupla:3030,dia:1343,super:920}[item.game];
+      const details=document.createElement('p');const first=item.contest||{mega:3085,facil:3827,quina:7165,milionaria:406,mania:2998,timemania:2467,dupla:3031,dia:1345,super:921}[item.game];
       if(first){const contest=document.createElement('span');contest.textContent=`Concurso: ${first}${item.repeats>1?' a '+(first+item.repeats-1):''}`;details.append(contest,document.createElement('br'));}
       details.append(`Valor: ${formatMoney(item.referencePrice)}`);article.append(details);preview.prepend(article);
     });

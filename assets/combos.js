@@ -12,32 +12,32 @@
     {
       name: 'Fezinha do Mês', price: '408,00',
       description: 'Quer sorte o mês inteiro? Pacote de apostas teimosinhas de todas as modalidades disponíveis, exceto Timemania e Loteca.',
-      tiles: [tile('mega','Mega-Sena','3084 a 3095'),tile('facil','Lotofácil','3825 a 3848'),tile('quina','Quina','7163 a 7168'),tile('milionaria','+Milionária','406 a 410'),tile('dupla','Dupla Sena','3030 a 3041'),tile('mania','Lotomania','2997 a 3008'),tile('dia','Dia de Sorte','1343 a 1366'),tile('super','Super Sete','920 a 931')]
+      tiles: [tile('mega','Mega-Sena','3085 a 3096'),tile('facil','Lotofácil','3827 a 3850'),tile('quina','Quina','7165 a 7170'),tile('milionaria','+Milionária','406 a 410'),tile('dupla','Dupla Sena','3031 a 3042'),tile('mania','Lotomania','2998 a 3009'),tile('dia','Dia de Sorte','1345 a 1368'),tile('super','Super Sete','921 a 932')]
     },
     {
       name: 'Sorte de Hoje', price: '21,00',
       description: 'Não deixe para amanhã a chance de ficar milionário. Aposte nas modalidades do dia!',
-      tiles: [tile('facil','Lotofácil','3825'),tile('quina','Quina','7163'),tile('dupla','Dupla Sena','3030'),tile('mania','Lotomania','2997'),tile('dia','Dia de Sorte','1343'),tile('super','Super Sete','920')]
+      tiles: [tile('facil','Lotofácil','3827'),tile('quina','Quina','7165'),tile('dupla','Dupla Sena','3031'),tile('mania','Lotomania','2998'),tile('dia','Dia de Sorte','1345'),tile('super','Super Sete','921')]
     },
     {
       name: 'Chance Todo Dia', price: '148,50',
       description: 'Com este pacote você garante suas apostas para todas as modalidades, incluindo teimosinhas para a semana inteira. Já Pensou?',
-      tiles: [tile('mega','Mega-Sena','3075 a 3080'),tile('facil','Lotofácil','3814 a 3819'),tile('quina','Quina','7152 a 7157'),tile('milionaria','+Milionária','402 a 403'),tile('dupla','Dupla Sena','3025 a 3027'),tile('mania','Lotomania','2992 a 2994'),tile('timemania','Timemania','2460 a 2462'),tile('dia','Dia de Sorte','1332 a 1337'),tile('super','Super Sete','915 a 917')]
+      tiles: [tile('mega','Mega-Sena','3085 a 3090'),tile('facil','Lotofácil','3827 a 3832'),tile('quina','Quina','7165 a 7170'),tile('milionaria','+Milionária','406 a 407'),tile('dupla','Dupla Sena','3031 a 3033'),tile('mania','Lotomania','2998 a 3000'),tile('timemania','Timemania','2467 a 2469'),tile('dia','Dia de Sorte','1345 a 1350'),tile('super','Super Sete','921 a 923')]
     },
     {
       name: 'Milionário', price: '50,00',
       description: 'Para quem quer ficar mais que milionário: pacote para concursos com prêmios acima de R$ 1,5 milhão, incluindo o concurso especial vigente.',
-      tiles: [tile('mega','Mega-Sena','3075'),tile('facil','Lotofácil','3814'),tile('milionaria','+Milionária','402'),tile('dupla','Dupla Sena','3025'),tile('timemania','Timemania','2460'),tile('super','Super Sete','915')]
+      tiles: [tile('mega','Mega-Sena','3085'),tile('facil','Lotofácil','3827'),tile('milionaria','+Milionária','406'),tile('dupla','Dupla Sena','3031'),tile('timemania','Timemania','2467'),tile('super','Super Sete','921')]
     },
     {
       name: 'Sorte Fácil', price: '61,00',
       description: 'Com este pacote você aposta nas modalidades com maior chance de acerto: Lotofácil, Dia de Sorte, Super Sete e Lotomania.',
-      tiles: [tile('facil','Lotofácil','3814'),tile('mania','Lotomania','2992'),tile('dia','Dia de Sorte','1332'),tile('super','Super Sete','915')]
+      tiles: [tile('facil','Lotofácil','3827'),tile('mania','Lotomania','2998'),tile('dia','Dia de Sorte','1345'),tile('super','Super Sete','921')]
     },
     {
       name: 'Combo Vip', price: '1.652,00',
       description: 'Aumente suas chances com este pacote exclusivo de apostas múltiplas e concorra aos prêmios das modalidades mais amadas do Brasil!',
-      tiles: [tile('mega','Mega-Sena','3075'),tile('facil','Lotofácil','3814'),tile('quina','Quina','7152'),tile('milionaria','+Milionária','402')]
+      tiles: [tile('mega','Mega-Sena','3085'),tile('facil','Lotofácil','3827'),tile('quina','Quina','7165'),tile('milionaria','+Milionária','406')]
     }
   ];
   combos.push({name:'Especial',price:'24,00',description:'Aposte no combo exclusivo do concurso especial da Mega da Virada e aumente suas chances! O prêmio é estimado em R$ 1 bilhão e não acumula. Já pensou?',tiles:[tile('virada','Mega da Virada','3100')]});
