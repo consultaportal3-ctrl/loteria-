@@ -35,6 +35,12 @@ const server = http.createServer((req,res) => {
     if (req.method === 'GET') {
       if (url.searchParams.get('action') === 'session') return reply({authenticated:pixPanelLoggedIn, authConfigured:true, csrf:'browser-test-csrf'});
       if (url.searchParams.get('action') === 'settings') return reply({settings:savedPixPanelSettings || null});
+      if (url.searchParams.get('action') === 'generations') {
+        if (!pixPanelLoggedIn) { res.statusCode=401; return reply({error:'Entre no painel.'}); }
+        const offset=Number(url.searchParams.get('offset')||0);
+        const events=Array.from({length:51},(_,i)=>i===0?{type:'pix_generated',visitorId:'outra-pessoa',city:'Fortaleza',at:1800000000000-i,amount:600,orderId:'PIX-LOJA-INTEIRA',items:[{game:'mega',numbers:[1,2,3,4,5,6]}]}:{type:'generated_game',visitorId:'cliente-'+i,city:'Recife',at:1800000000000-i,item:{game:'mega',contest:3085,numbers:[1,2,3,4,5,6]}});
+        return reply({events:events.slice(offset,offset+50),generatedCount:50,pixCount:1,pixAmount:600,simulationCount:0,total:51,offset,limit:50,importing:false,updatedAt:Date.now()});
+      }
       if (url.searchParams.get('action') === 'visitors') {
         if (!pixPanelLoggedIn) { res.statusCode = 401; return reply({error:'Entre no painel.'}); }
         return reply({count:visitorHistoryCleared ? 0 : 1, total:visitorHistoryCleared ? 0 : 2, limit:100, updatedAt:Date.now(), visitors:visitorHistoryCleared ? [] : [{id:'12345678abcdef00', city:'São Paulo', region:'SP', country:'BR', page:'/home.html#checkout', lastSeen:1800000000000, online:true, generatedCount:1, pixCount:1, events:[{type:'page',page:'/home.html#mega-sena',at:1800000000000},{type:'generated_game',at:1800000000001,item:{game:'mega',contest:3085,numbers:[1,2,3,4,5,6]}},{type:'pix_generated',at:1800000000002,orderId:'FIXTURE-PIX',amount:600,items:[{game:'mega',numbers:[1,2,3,4,5,6]}]}]}, {id:'abcdef0012345678', city:'Recife', region:'PE', country:'BR', page:'/carrinho.html', lastSeen:Date.now() - 86400000, online:false}]});
@@ -168,6 +174,26 @@ function check(ok,message){if(!ok)throw new Error(message);}
       await until('!!document.getElementById("direct-pix-login")');
       check(await evaluate('!document.getElementById("panel-content").textContent.includes("São Paulo")'), 'City visible after logout');
     } finally { pixPanelFixture = false; pixPanelLoggedIn = false; visitorHistoryCleared = false; }
+  });
+  await run('store summary shows shared generations and paginates after login', async () => {
+    pixPanelFixture=true;pixPanelLoggedIn=false;
+    try {
+      await navigate('/painel.html#visao');
+      await until('!!document.getElementById("direct-pix-login")');
+      check(await evaluate('!document.getElementById("panel-content").textContent.includes("PIX-LOJA-INTEIRA")'),'Shared events visible before login');
+      await evaluate('(()=>{const form=document.getElementById("direct-pix-login");form.elements.password.value="fixture-password";form.requestSubmit()})()');
+      await until('document.getElementById("panel-content").textContent.includes("PIX-LOJA-INTEIRA")');
+      check(await evaluate('document.querySelectorAll(".metrics .metric strong")[1].textContent==="50"'),'Summary still uses local-browser generation count');
+      check(await evaluate('document.querySelector("tbody").rows.length===6'),'Recent summary should show six events');
+      check(await evaluate('document.getElementById("panel-content").textContent.includes("Fortaleza")'),'Another visitor missing from summary');
+      await evaluate('location.hash="vendas"');
+      await until('document.querySelector("tbody")?.rows.length===50');
+      await evaluate('Array.from(document.querySelectorAll("#panel-content button")).find(button=>button.textContent==="Próxima").click()');
+      await until('document.querySelector("tbody")?.rows.length===1');
+      await evaluate('Array.from(document.querySelectorAll("#panel-content button")).find(button=>button.textContent.includes("Sair do acesso")).click()');
+      await until('!!document.getElementById("direct-pix-login")');
+      check(await evaluate('!document.getElementById("panel-content").textContent.includes("Fortaleza")'),'Shared events remain visible after logout');
+    } finally {pixPanelFixture=false;pixPanelLoggedIn=false;}
   });
   await run('visitors activity tracks route changes and generated selections', async () => {
     presenceEvents.length = 0;

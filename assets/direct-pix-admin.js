@@ -242,12 +242,82 @@
     update();
     refreshTimer = setInterval(update, 1000);
   }
+  function storeSummary(host, current) {
+    const fullHistory = host.dataset.view === 'generations';
+    const heading = node('div', undefined, 'section-heading'), title = node('div');
+    title.append(node('h2', fullHistory ? 'Tudo o que foi gerado na loja' : 'Resumo do seu site'),
+      node('p', 'Apostas e PIX de todos os visitantes, salvos no servidor. Atualização automática a cada 5 segundos.'));
+    const refresh = node('button', 'Atualizar painel', 'button secondary'); refresh.type = 'button';
+    heading.append(title, refresh); host.append(heading);
+    const metrics = node('div', undefined, 'metrics');
+    const money = amount => new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(amount / 100);
+    const values = [];
+    for (const [label, detail] of [['Valor dos PIX gerados','PIX reais gerados; pagamento deve ser conferido em Pedidos.'],['Combinações geradas','Apostas geradas pelos visitantes de toda a loja.'],['PIX gerados','Pedidos com PIX criado, incluindo simulações identificadas.'],['Modalidades no site','Catálogo disponível na loja.']]) {
+      const metric = node('article', undefined, 'metric');
+      const value = node('strong', '…'); values.push(value);
+      metric.append(node('div', label, 'metric-top'), value, node('p', detail)); metrics.append(metric);
+    }
+    host.append(metrics);
+    const card = node('section', undefined, 'card'), cardHeading = node('div', undefined, 'card-heading');
+    const description = node('div'); description.append(node('h2', fullHistory ? 'Histórico de apostas e PIX gerados' : 'Gerações recentes de toda a loja'));
+    const link = node('a', fullHistory ? 'Voltar ao resumo' : 'Ver histórico completo →', 'button secondary');
+    link.href = fullHistory ? '#visao' : '#vendas'; cardHeading.append(description, link);
+    const message = node('p', 'Carregando registros…', 'settings-body'); message.setAttribute('role','status');
+    const scroll = node('div', undefined, 'table-scroll');
+    const pagination = node('div', undefined, 'card-heading');
+    const previous = node('button', 'Anterior', 'button secondary'), next = node('button', 'Próxima', 'button secondary');
+    previous.type = next.type = 'button'; pagination.append(previous, next); pagination.hidden = !fullHistory;
+    card.append(cardHeading, message, scroll, pagination); host.append(card);
+    let loading = false, offset = 0, rendered = '';
+    async function update() {
+      if (loading || document.hidden || current !== generation || !host.isConnected) return;
+      loading = true; refresh.disabled = true;
+      try {
+        const result = await request('generations', undefined, {offset});
+        if (current !== generation || !host.isConnected) return;
+        values[0].textContent = money(result.pixAmount); values[1].textContent = result.generatedCount;
+        values[2].textContent = result.pixCount; values[3].textContent = Object.keys(window.homeProductReference.draws).length;
+        const badge = document.getElementById('sales-badge'); if (badge) badge.textContent = result.generatedCount;
+        const rows = fullHistory ? result.events : result.events.slice(0, 6);
+        message.textContent = `${result.total} registros de toda a loja. ${rows.length ? `Exibindo ${offset+1}–${offset+rows.length}. ` : ''}Atualizado às ${new Date(result.updatedAt).toLocaleTimeString('pt-BR')}.${result.importing ? ' Importando o histórico já existente…' : ''}`;
+        previous.disabled = offset === 0; next.disabled = offset + result.limit >= result.total;
+        const signature = JSON.stringify({offset, rows}); if (signature === rendered) return; rendered = signature;
+        scroll.replaceChildren();
+        if (!rows.length) { scroll.append(node('p', 'As próximas apostas e os PIX gerados na loja aparecerão aqui automaticamente.', 'settings-body')); return; }
+        const table = node('table');
+        table.innerHTML = '<thead><tr><th>HORÁRIO</th><th>VISITANTE</th><th>O QUE GEROU</th><th>MODALIDADES / NÚMEROS / SELEÇÕES</th><th>VALOR / PEDIDO</th></tr></thead>';
+        const body = node('tbody');
+        for (const event of rows) {
+          const row = node('tr'); row.append(node('td', new Date(event.at).toLocaleString('pt-BR')));
+          const visitor = node('td'); visitor.append(node('strong', event.visitorId === 'anonymous' ? 'Visitante sem identificação' : 'Visitante ' + (event.visitorId || '').slice(0,8)), node('small', event.city || 'Cidade não identificada')); row.append(visitor);
+          const isPix = event.type === 'pix_generated';
+          row.append(node('td', isPix ? event.simulation ? 'PIX de simulação' : 'PIX gerado' : 'Aposta gerada'));
+          const selections = node('td');
+          for (const item of isPix ? event.items || [] : [event.item || {}]) selections.append(node('p', selectionText(item), 'bet-selection'));
+          row.append(selections);
+          const value = node('td'); value.append(node('strong', isPix ? money(event.amount) : '—'));
+          if (isPix) value.append(node('small', 'Pedido ' + event.orderId), node('small', 'Gerado; consulte o pagamento em Pedidos.'));
+          row.append(value); body.append(row);
+        }
+        table.append(body); scroll.append(table);
+      } catch (error) {
+        if (current !== generation || !host.isConnected) return;
+        message.textContent = error.message;
+        if (error.status === 401) { clearInterval(refreshTimer); login(host, current); }
+      } finally { loading = false; refresh.disabled = false; }
+    }
+    refresh.addEventListener('click', update);
+    previous.addEventListener('click', () => { if (!loading) { offset = Math.max(0,offset-50); update(); } });
+    next.addEventListener('click', () => { if (!loading) { offset += 50; update(); } });
+    update(); refreshTimer = setInterval(update, 5000);
+  }
   async function authenticated(host, current) {
     const visitorsView = host.dataset.view === 'visitors';
-    const [settings, orders] = visitorsView ? [] : await Promise.all([request('settings'), request('orders')]);
+    const summaryView = ['overview','generations'].includes(host.dataset.view);
+    const [settings, orders] = visitorsView || summaryView ? [] : await Promise.all([request('settings'), request('orders')]);
     if (current !== generation || !host.isConnected) return;
     clearInterval(refreshTimer); host.replaceChildren();
-    const toolbar = node('div', undefined, 'section-heading'), title = node('h2', visitorsView ? 'Visitantes online' : 'Administração do PIX direto');
+    const toolbar = node('div', undefined, 'section-heading'), title = node('h2', visitorsView ? 'Visitantes online' : summaryView ? 'Administração da loja' : 'Administração do PIX direto');
     const logout = node('button', 'Sair do acesso administrativo', 'button secondary'); logout.type = 'button';
     logout.addEventListener('click', async () => {
       try { await request('logout', {}); await mount(); }
@@ -255,6 +325,7 @@
     });
     toolbar.append(title, logout); host.append(toolbar);
     if (visitorsView) { visitorList(host, current); return; }
+    if (summaryView) { storeSummary(host, current); return; }
     if (host.dataset.view === 'settings') configuration(host, settings.settings);
     orderList(host, orders.orders, current);
   }

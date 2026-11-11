@@ -18,4 +18,12 @@ Abra `painel.html#online` e entre com a mesma senha administrativa usada em PIX 
 
 O recurso usa o Redis já configurado para o PIX direto (`KV_REST_API_URL` e `KV_REST_API_TOKEN`, ou os equivalentes `UPSTASH_REDIS_REST_*`). Não exige outro serviço de localização. A geolocalização é habilitada apenas quando `VERCEL=1`.
 
+## Resumo de toda a loja
+
+`painel.html#visao` mostra os totais e as seis gerações mais recentes de todos os visitantes. `painel.html#vendas` exibe o histórico completo, em páginas de 50 registros. Ambas as telas exigem a mesma senha administrativa e atualizam a cada 5 segundos. Os números não dependem mais do armazenamento do navegador do administrador.
+
+As apostas e os PIX gerados ficam em um histórico compartilhado no Redis. O registro identifica visitante, horário, modalidade, seleções e, no caso do PIX, valor e referência do pedido. O total em reais inclui somente PIX reais gerados; simulações ficam identificadas na lista. Gerar PIX não confirma recebimento.
+
+Ao abrir o resumo, o servidor importa em lotes as gerações que ainda constam no histórico dos visitantes da versão anterior. Eventos antigos que já tinham saído do limite de 100 por visitante não podem ser recuperados. A partir desta versão, o histórico compartilhado de gerações é independente desse limite e da limpeza do histórico de visitas. Um PIX criado com sucesso também aparece no resumo se o cookie de acompanhamento estiver indisponível.
+
 Testes: `npm.cmd test`. Verificação no navegador Windows: definir `BROWSER_CHECK_FILTER` como `visitors panel` e executar `node tests/browser-smoke.cjs`.
