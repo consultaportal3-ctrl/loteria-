@@ -314,7 +314,7 @@
         if(!Array.isArray(saved))throw new Error('Invalid generated combinations data');
         saved.push({...item,generatedAt:new Date().toISOString()});
         localStorage.setItem(generatedStorageKey,JSON.stringify(saved));
-        window.dispatchEvent(new CustomEvent('portal:generated-game'));
+        window.dispatchEvent(new CustomEvent('portal:generated-game', {detail:{...item}}));
         return true;
       } catch {
         toast('Não foi possível salvar a combinação gerada neste navegador.');

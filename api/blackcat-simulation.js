@@ -38,7 +38,9 @@ module.exports = async function handler(req, res) {
     }
     if (body === null || typeof body !== 'object' || Array.isArray(body)) return reply(400,{error:'JSON inválido.'});
     if (Buffer.byteLength(JSON.stringify(body)) > 65536) return reply(413,{error:'Requisição muito grande.'});
-    return reply(201,simulation.createSimulation(body));
+    const result = simulation.createSimulation(body);
+    try { await require('../lib/visitors.js').recordPix(req, result, body.items); } catch (_) {}
+    return reply(201,result);
   } catch (error) {
     return reply(error instanceof simulation.SimulationError ? error.status : 500,
       {error:error instanceof simulation.SimulationError ? error.message : 'O simulador está indisponível.'});

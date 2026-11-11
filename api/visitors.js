@@ -6,6 +6,7 @@ module.exports = endpoint(async (req, res) => {
   requireSameOrigin(req);
   const input = await readJson(req);
   if (input.action === 'leave') await visitors.leave(req, input);
+  else if (input.action === 'activity') await visitors.activity(req, input);
   else await visitors.heartbeat(req, res, input);
   return json(res, {ok:true});
 });

@@ -229,6 +229,7 @@
     checkingStatus = false;
     clearInterval(pollTimer);
     if (modal.open) modal.close();
+    window.dispatchEvent(new CustomEvent('portal:visitor-section', {detail:'carrinho'}));
   }
   modal.querySelectorAll('.payment-close,.payment-cart-return').forEach(button => button.addEventListener('click', close));
   modal.querySelectorAll('.payment-go-form').forEach(button => button.addEventListener('click', () => {
@@ -272,6 +273,7 @@
     const count = window.portalDemo.getGames().length;
     modal.querySelector('.payment-cart-count').textContent = `${count} ${count === 1 ? 'item' : 'itens'}`;
     modal.showModal();
+    window.dispatchEvent(new CustomEvent('portal:visitor-section', {detail:'checkout'}));
     modal.scrollTop = 0;
     modal.querySelector('.payment-navigation summary').focus({preventScroll:true});
     loadCheckoutInfo(session, sessionController.signal);

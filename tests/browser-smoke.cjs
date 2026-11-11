@@ -37,7 +37,7 @@ const server = http.createServer((req,res) => {
       if (url.searchParams.get('action') === 'settings') return reply({settings:savedPixPanelSettings || null});
       if (url.searchParams.get('action') === 'visitors') {
         if (!pixPanelLoggedIn) { res.statusCode = 401; return reply({error:'Entre no painel.'}); }
-        return reply({count:visitorHistoryCleared ? 0 : 1, total:visitorHistoryCleared ? 0 : 2, limit:100, updatedAt:Date.now(), visitors:visitorHistoryCleared ? [] : [{id:'12345678abcdef00', city:'São Paulo', region:'SP', country:'BR', page:'/home.html', lastSeen:Date.now(), online:true}, {id:'abcdef0012345678', city:'Recife', region:'PE', country:'BR', page:'/carrinho.html', lastSeen:Date.now() - 86400000, online:false}]});
+        return reply({count:visitorHistoryCleared ? 0 : 1, total:visitorHistoryCleared ? 0 : 2, limit:100, updatedAt:Date.now(), visitors:visitorHistoryCleared ? [] : [{id:'12345678abcdef00', city:'São Paulo', region:'SP', country:'BR', page:'/home.html#checkout', lastSeen:1800000000000, online:true, generatedCount:1, pixCount:1, events:[{type:'page',page:'/home.html#mega-sena',at:1800000000000},{type:'generated_game',at:1800000000001,item:{game:'mega',contest:3085,numbers:[1,2,3,4,5,6]}},{type:'pix_generated',at:1800000000002,orderId:'FIXTURE-PIX',amount:600,items:[{game:'mega',numbers:[1,2,3,4,5,6]}]}]}, {id:'abcdef0012345678', city:'Recife', region:'PE', country:'BR', page:'/carrinho.html', lastSeen:Date.now() - 86400000, online:false}]});
       }
       return reply({orders:[]});
     }
@@ -154,6 +154,11 @@ function check(ok,message){if(!ok)throw new Error(message);}
       check(await evaluate('document.getElementById("panel-content").textContent.includes("São Paulo")'), 'Visitor city missing');
       check(await evaluate('document.getElementById("panel-content").textContent.includes("/home.html")'), 'Visitor page missing');
       check(await evaluate('document.getElementById("panel-content").textContent.includes("Recife") && document.getElementById("panel-content").textContent.includes("Offline")'), 'Offline visitor not retained');
+      check(await evaluate('document.getElementById("panel-content").textContent.includes("Dados para gerar PIX") && document.getElementById("panel-content").textContent.includes("1 PIX gerado(s)")'), 'Current section or generation badges missing');
+      await evaluate('document.querySelector(".visitor-history").open=true');
+      check(await evaluate('document.querySelector(".visitor-history").textContent.includes("01, 02, 03, 04, 05, 06") && document.querySelector(".visitor-history").textContent.includes("FIXTURE-PIX")'), 'Generated selections or PIX reference missing');
+      await pause(1200);
+      check(await evaluate('document.querySelector(".visitor-history").open'), 'Polling closed the activity history');
       await evaluate('window.confirm=()=>false;Array.from(document.querySelectorAll("#panel-content button")).find(button=>button.textContent.includes("Limpar histórico")).click()');
       check(!visitorHistoryCleared, 'Cancel must preserve visitor history');
       await evaluate('window.confirm=()=>true;Array.from(document.querySelectorAll("#panel-content button")).find(button=>button.textContent.includes("Limpar histórico")).click()');
@@ -163,6 +168,20 @@ function check(ok,message){if(!ok)throw new Error(message);}
       await until('!!document.getElementById("direct-pix-login")');
       check(await evaluate('!document.getElementById("panel-content").textContent.includes("São Paulo")'), 'City visible after logout');
     } finally { pixPanelFixture = false; pixPanelLoggedIn = false; visitorHistoryCleared = false; }
+  });
+  await run('visitors activity tracks route changes and generated selections', async () => {
+    presenceEvents.length = 0;
+    await navigate('/home.html#mega-sena');
+    await evaluate('document.getElementById("mega-random").click()');
+    for(let i=0;i<50 && !presenceEvents.some(event => event.type === 'generated_game');i++)await pause(100);
+    const generated = presenceEvents.find(event => event.type === 'generated_game');
+    check(generated && generated.item.game==='mega' && generated.item.numbers.length===6 && generated.item.contest===3085, 'Missing generated game details');
+    await evaluate('location.hash="lotofacil"');
+    for(let i=0;i<50 && !presenceEvents.some(event => event.page === '/home.html#lotofacil');i++)await pause(100);
+    check(presenceEvents.some(event => event.page === '/home.html#lotofacil'), 'Route update was delayed by heartbeat throttle');
+    await evaluate('window.dispatchEvent(new CustomEvent("portal:visitor-section",{detail:"checkout"}))');
+    for(let i=0;i<50 && !presenceEvents.some(event => event.page === '/home.html#checkout');i++)await pause(100);
+    check(presenceEvents.some(event => event.page === '/home.html#checkout'), 'Checkout section not recorded');
   });
   await run('welcome privacy notice has its stylesheet class',async()=>{
     await navigate('/');check(await evaluate('document.getElementById("cookie-notice").classList.contains("cookie-notice")'),'Cookie notice class is broken');

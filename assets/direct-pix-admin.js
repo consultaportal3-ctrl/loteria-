@@ -117,12 +117,31 @@
     render(orders); section.append(list); host.append(section);
     refreshTimer = setInterval(refreshOrders, 30000);
   }
+  const gameNames = {mega:'Mega-Sena',facil:'Lotofácil',quina:'Quina',milionaria:'+Milionária',mania:'Lotomania',timemania:'Timemania',dupla:'Dupla Sena',dia:'Dia de Sorte',loteca:'Loteca',super:'Super Sete'};
+  function pageLabel(page) {
+    const [path, hash] = String(page || '').split('#');
+    const sections = {inicio:'Início',modalidades:'Todos os produtos',combos:'Combos','baixar-aplicativo':'Baixar aplicativo',checkout:'Dados para gerar PIX',carrinho:'Carrinho','mega-sena':'Mega-Sena','mega-da-virada':'Mega da Virada',lotofacil:'Lotofácil',quina:'Quina','mais-milionaria':'+Milionária',lotomania:'Lotomania',timemania:'Timemania','dupla-sena':'Dupla Sena',loteca:'Loteca','dia-de-sorte':'Dia de Sorte','super-sete':'Super Sete'};
+    return sections[hash] || ({'/':'Entrada do site','/index.html':'Entrada do site','/home.html':'Página inicial','/carrinho.html':'Carrinho','/compra-bolao/index.html':'Compra de bolão','/demonstracao.html':'Demonstração'})[path] || page;
+  }
+  function selectionText(item) {
+    const details = [item.special === 'virada' ? 'Mega da Virada' : gameNames[item.game] || item.game];
+    if (item.contest) details.push('Concurso ' + item.contest);
+    if (Array.isArray(item.numbers) && item.numbers.length) details.push('Números: ' + item.numbers.map(n => String(n).padStart(2,'0')).join(', '));
+    if (Array.isArray(item.trevos)) details.push('Trevos: ' + item.trevos.join(', '));
+    if (Array.isArray(item.columns)) details.push(item.columns.map((column,i) => `Coluna ${i+1}: ${column.join('/')}`).join(' · '));
+    if (Array.isArray(item.picks)) details.push(item.picks.map((mask,i) => `Jogo ${i+1}: ${[1,2,4].flatMap((bit,j) => mask & bit ? [['1','X','2'][j]] : []).join('/')}`).join(' · '));
+    if (item.team) details.push('Time: ' + item.team);
+    if (Number.isInteger(item.month)) details.push('Mês da sorte: ' + (item.month + 1));
+    if (item.repeats > 1) details.push(item.repeats + ' concursos');
+    return details.join(' · ');
+  }
   function visitorList(host, current) {
+    const expanded = new Set();
     const card = node('section', undefined, 'card');
     const heading = node('div', undefined, 'card-heading');
     const text = node('div');
     const count = node('h2', 'Carregando visitantes online…');
-    text.append(count, node('p', 'Atualização a cada 1 segundo. As visitas ficam salvas até você limpar manualmente. Cidade aproximada pela conexão de internet.'));
+    text.append(count, node('p', 'Acompanhe onde o visitante está, o caminho que percorreu e as apostas e PIX que gerou. Atualização a cada 1 segundo. Cidade aproximada.'));
     const refresh = node('button', 'Atualizar agora', 'button secondary');
     refresh.type = 'button';
     const clear = node('button', 'Limpar histórico de visitas', 'button secondary');
@@ -138,7 +157,7 @@
     pagination.append(previous, next);
     card.append(heading, message, scroll, pagination);
     host.append(card);
-    let loading = false, clearing = false, offset = 0;
+    let loading = false, clearing = false, offset = 0, rendered = '';
     async function update() {
       if (loading || clearing || document.hidden || current !== generation || !host.isConnected) return;
       loading = true; refresh.disabled = true;
@@ -149,10 +168,14 @@
         message.textContent = `${result.total} visitas salvas. Exibindo ${result.visitors.length ? offset + 1 : 0}–${offset + result.visitors.length}. Atualizado às ${new Date(result.updatedAt).toLocaleTimeString('pt-BR')}. Online = atividade nos últimos 90 segundos.`;
         previous.disabled = offset === 0;
         next.disabled = offset + result.limit >= result.total;
+        const signature = JSON.stringify({offset, visitors:result.visitors});
+        if (signature === rendered) return;
+        rendered = signature;
         scroll.replaceChildren();
         if (!result.visitors.length) { scroll.append(node('p', 'Nenhuma visita salva nesta página.', 'settings-body')); return; }
         const table = node('table');
-        table.innerHTML = '<thead><tr><th>VISITANTE</th><th>STATUS</th><th>CIDADE APROXIMADA</th><th>ESTADO / PAÍS</th><th>ÚLTIMA PÁGINA</th><th>ÚLTIMA ATIVIDADE</th></tr></thead>';
+        table.className = 'visitor-activity-table';
+        table.innerHTML = '<thead><tr><th>VISITANTE</th><th>STATUS</th><th>CIDADE APROXIMADA</th><th>ESTADO / PAÍS</th><th>ONDE ESTÁ / ÚLTIMO ACESSO</th><th>O QUE GEROU</th><th>HISTÓRICO DO VISITANTE</th><th>ÚLTIMA ATIVIDADE</th></tr></thead>';
         const body = node('tbody');
         for (const visitor of result.visitors) {
           const row = node('tr');
@@ -160,7 +183,36 @@
           const status = node('td');
           status.append(node('span', visitor.online ? 'Online' : 'Offline', visitor.online ? 'visitor-status is-online' : 'visitor-status'));
           row.append(status);
-          for (const value of [visitor.city || 'Não identificada', [visitor.region, visitor.country].filter(Boolean).join(' / ') || 'Não identificado', visitor.page, new Date(visitor.lastSeen).toLocaleString('pt-BR')]) row.append(node('td', value));
+          for (const value of [visitor.city || 'Não identificada', [visitor.region, visitor.country].filter(Boolean).join(' / ') || 'Não identificado']) row.append(node('td', value));
+          const currentPage = node('td');
+          currentPage.append(node('strong', pageLabel(visitor.page)), node('small', visitor.page));
+          row.append(currentPage);
+          const generated = node('td');
+          generated.append(node('span', `${visitor.generatedCount || 0} aposta(s) gerada(s)`, visitor.generatedCount ? 'visitor-generation has-generated' : 'visitor-generation'),
+            node('span', `${visitor.pixCount || 0} PIX gerado(s)`, visitor.pixCount ? 'visitor-generation has-pix' : 'visitor-generation'));
+          row.append(generated);
+          const historyCell = node('td'), details = node('details', undefined, 'visitor-history');
+          details.open = expanded.has(visitor.id);
+          const events = Array.isArray(visitor.events) ? visitor.events : [];
+          details.append(node('summary', `Ver caminho e gerações (${events.length})`));
+          details.addEventListener('toggle', () => { if (!details.isConnected) return; if (details.open) expanded.add(visitor.id); else expanded.delete(visitor.id); });
+          const timeline = node('ol', undefined, 'visitor-timeline');
+          for (const event of [...events].reverse()) {
+            const entry = node('li', undefined, 'visitor-event ' + (event.type === 'page' ? '' : 'visitor-event-generated'));
+            entry.append(node('small', new Date(event.at).toLocaleString('pt-BR')));
+            if (event.type === 'generated_game') {
+              entry.append(node('strong', 'Gerou uma aposta'), node('p', selectionText(event.item || {})));
+            } else if (event.type === 'pix_generated') {
+              entry.append(node('strong', event.simulation ? 'Gerou um PIX de simulação' : 'Gerou um PIX'),
+                node('p', `${new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(event.amount / 100)} · Pedido ${event.orderId}`),
+                node('p', 'PIX gerado; a confirmação do pagamento fica em Pedidos.'));
+              for (const item of event.items || []) entry.append(node('p', selectionText(item)));
+            } else entry.append(node('strong', 'Acessou ' + pageLabel(event.page)));
+            entry.append(node('small', event.page || ''));
+            timeline.append(entry);
+          }
+          if (!events.length) timeline.append(node('li', 'Os próximos acessos e gerações aparecerão aqui.'));
+          details.append(timeline); historyCell.append(details); row.append(historyCell, node('td', new Date(visitor.lastSeen).toLocaleString('pt-BR')));
           body.append(row);
         }
         table.append(body); scroll.append(table);
@@ -181,7 +233,7 @@
       clearing = true; clear.disabled = true;
       try {
         await request('clear-visitors', {confirm:true});
-        offset = 0;
+        offset = 0; rendered = ''; expanded.clear();
         scroll.replaceChildren();
       } catch (error) { message.textContent = error.message; return; }
       finally { clearing = false; clear.disabled = false; }
