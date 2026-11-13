@@ -108,7 +108,7 @@
         const contest = document.createElement('span');
         const contestLabel = document.createElement('strong');
         contestLabel.textContent = 'Concurso: ';
-        const first = item.contest || {mega:3085,facil:3827,quina:7165,milionaria:406,mania:2998,dupla:3031,super:921,dia:1345,timemania:2467}[item.game];
+        const first = item.contest || {mega:3086,facil:3829,quina:7167,milionaria:407,mania:2999,dupla:3032,super:922,dia:1347,timemania:2468}[item.game];
         contest.append(contestLabel, `${first}${item.repeats > 1 ? ' a ' + (first - 1 + item.repeats) : ''}`);
         details.append(contest, document.createElement('br'));
       }

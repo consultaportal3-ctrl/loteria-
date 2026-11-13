@@ -19,16 +19,16 @@
   const storageKey = 'portal-demo-games-v1';
   const generatedStorageKey = 'portal-demo-generated-games-v1';
   const exampleDraws = {
-    mega: {"color":"#00a94f","header":"#00a94f","amount":"20.000.000,00","short":"20 Milhões","contest":"3085","day":"Quinta-Feira","date":"12/11/2026","price":"6,00"},
-    facil: {"color":"#92278f","amount":"2.000.000,00","short":"2 Milhões","contest":"3827","day":"Quarta-Feira","date":"11/11/2026","time":"21h00","price":"3,50"},
-    quina: {"color":"#32318e","amount":"9.000.000,00","short":"9 Milhões","contest":"7165","day":"Quarta-Feira","date":"11/11/2026","price":"3,00"},
-    milionaria: {"color":"#2b327d","amount":"113.000.000,00","short":"113 Milhões","contest":"406","day":"Quarta-Feira","date":"11/11/2026","price":"6,00"},
-    mania: {"color":"#ed7900","amount":"4.800.000,00","short":"4,8 Milhões","contest":"2998","day":"Quarta-Feira","date":"11/11/2026","price":"3,00","pool":false},
-    timemania: {"color":"#00863d","header":"#fff200","button":"#fff200","amount":"27.000.000,00","short":"27 Milhões","contest":"2467","day":"Quinta-Feira","date":"12/11/2026","price":"3,50"},
-    dupla: {"color":"#af2942","amount":"12.200.000,00","short":"12,2 Milhões","contest":"3031","day":"Quarta-Feira","date":"11/11/2026","price":"3,00"},
-    loteca: {"color":"#fa1829","amount":"500.000,00","short":"500 Mil","contest":"1282","day":"Quinta-Feira","date":"12/11/2026","time":"13h00","label":"Apuração","price":"4,00"},
-    dia: {"color":"#ad9718","header":"#e8c41e","amount":"100.000,00","short":"100 Mil","contest":"1345","day":"Quarta-Feira","date":"11/11/2026","price":"2,50"},
-    super: {"color":"#00863d","header":"#bddb29","button":"#85a332","amount":"300.000,00","short":"300 Mil","contest":"921","day":"Quarta-Feira","date":"11/11/2026","price":"3,00"}
+    mega: {"color":"#00a94f","header":"#00a94f","amount":"27.000.000,00","short":"27 Milhões","contest":"3086","day":"Domingo","date":"15/11/2026","price":"6,00","time":"11h00"},
+    facil: {"color":"#92278f","amount":"2.000.000,00","short":"2 Milhões","contest":"3829","day":"Sexta-Feira","date":"13/11/2026","time":"21h00","price":"3,50"},
+    quina: {"color":"#32318e","amount":"11.000.000,00","short":"11 Milhões","contest":"7167","day":"Sexta-Feira","date":"13/11/2026","price":"3,00","time":"21h00"},
+    milionaria: {"color":"#2b327d","amount":"115.000.000,00","short":"115 Milhões","contest":"407","day":"Sexta-Feira","date":"13/11/2026","price":"6,00","time":"21h00"},
+    mania: {"color":"#ed7900","amount":"5.700.000,00","short":"5,7 Milhões","contest":"2999","day":"Sexta-Feira","date":"13/11/2026","price":"3,00","pool":false,"time":"21h00"},
+    timemania: {"color":"#00863d","header":"#fff200","button":"#fff200","amount":"27.500.000,00","short":"27,5 Milhões","contest":"2468","day":"Domingo","date":"15/11/2026","price":"3,50","time":"11h00"},
+    dupla: {"color":"#af2942","amount":"13.000.000,00","short":"13 Milhões","contest":"3032","day":"Sexta-Feira","date":"13/11/2026","price":"3,00","time":"21h00"},
+    loteca: {"color":"#fa1829","amount":null,"short":null,"contest":"1283","day":"Segunda-Feira","date":"16/11/2026","time":"15h45","label":"Apuração","price":"4,00","pool":false},
+    dia: {"color":"#ad9718","header":"#e8c41e","amount":"450.000,00","short":"450 Mil","contest":"1347","day":"Sexta-Feira","date":"13/11/2026","price":"2,50","time":"21h00"},
+    super: {"color":"#00863d","header":"#bddb29","button":"#85a332","amount":"350.000,00","short":"350 Mil","contest":"922","day":"Sexta-Feira","date":"13/11/2026","price":"3,00","time":"21h00"}
   };
   const products = [
     ...(window.homeProductReference ? [{id:'virada',name:'Mega da Virada',route:'virada'}] : []),
@@ -84,7 +84,10 @@
       const color = draw?.color || game.color;
       const prizeAmount = game.id === 'virada' ? `<span>R$</span>${draw.amount}` : `R$ ${draw.amount}`;
       const countdown = draw.close ? `<span data-product-close="${draw.close}">${window.homeProductReference.countdown(draw.close)}</span>` : '<span>Calendário da imagem de referência</span>';
-      const prize = `<div class="product-prize"><strong>${prizeAmount}</strong><b>(R$${draw.short})</b></div><p class="product-contest">${draw.close ? 'Prêmio estimado' : 'Exemplo de prêmio'} do concurso ${draw.contest}</p><p class="product-draw">${draw.label || 'Sorteio'} <strong>${draw.day}<br>${draw.date} às ${draw.time || '21h00'}</strong>${countdown}</p>`;
+      const prizeSummary = draw.amount
+        ? `<div class="product-prize"><strong>${prizeAmount}</strong><b>(R$${draw.short})</b></div><p class="product-contest">${draw.close ? 'Prêmio estimado' : 'Exemplo de prêmio'} do concurso ${draw.contest}</p>`
+        : `<p class="product-contest">Próximo Concurso ${draw.contest}</p><p class="product-contest">Aguardando estimativa de prêmio</p>`;
+      const prize = `${prizeSummary}<p class="product-draw">${draw.label || 'Sorteio'} <strong>${draw.day}<br>${draw.date} às ${draw.time || '21h00'}</strong>${countdown}</p>`;
       const action = game.external ? `<a class="product-play" href="#informacoes" data-local-info>Ver modalidade<span>Referência: R$ ${draw.price}</span></a>` : `<button type="button" class="product-play" data-game="${gameRoute}">Aposte<span>por R$ ${draw.price}</span></button>`;
       const pool = draw.pool === false ? '' : `<button type="button" class="product-pool" data-game="${gameRoute}" aria-label="Compre seu bolão de ${game.name}: abrir aposta">Compre seu bolão</button><span class="product-or">ou</span>`;
       return `<article class="game-card product-card product-${game.id}${draw.pool === false ? ' product-no-pool' : ''}" style="--game-color:${color};--product-header:${draw.header || color};--product-button:${draw.button || color}"><header class="product-header"><span class="product-clover" aria-hidden="true"><i></i><i></i><i></i><i></i></span><h3>${game.name.toLowerCase()}</h3></header><div class="product-body">${prize}${pool}${action}</div></article>`;
@@ -350,16 +353,16 @@
           vip:[['mega',60,10,1],['facil',25,16,1],['quina',80,8,1],['milionaria',50,8,1]]
         }[kind];
         for(const [game,total,count,repeats] of specifications){
-          additions.push({game,...(['monthly','elas'].includes(kind)?{contest:{mega:3085,facil:3827,quina:7165,milionaria:406,dupla:3031,mania:2998,dia:1345,super:921}[game]}:{}),...(kind==='virada'?{special:'virada',contest:3100}:{}),numbers:randomNumbers(total,count),repeats,month:game==='dia'?Math.floor(Math.random()*12):null,...(game==='milionaria'?{trevos:randomNumbers(6,2)}:{}),...(game==='timemania'?{team:window.timemaniaTeams[Math.floor(Math.random()*window.timemaniaTeams.length)]}:{})});
+          additions.push({game,...(['monthly','elas'].includes(kind)?{contest:{mega:3086,facil:3829,quina:7167,milionaria:407,dupla:3032,mania:2999,dia:1347,super:922}[game]}:{}),...(kind==='virada'?{special:'virada',contest:3100}:{}),numbers:randomNumbers(total,count),repeats,month:game==='dia'?Math.floor(Math.random()*12):null,...(game==='milionaria'?{trevos:randomNumbers(6,2)}:{}),...(game==='timemania'?{team:window.timemaniaTeams[Math.floor(Math.random()*window.timemaniaTeams.length)]}:{})});
         }
         if(kind==='milionario'){
-          for(let game=0;game<2;game++)additions.push({game:'super',...(kind==='monthly'?{contest:921}:{}),numbers:[],columns:Array.from({length:7},()=>[Math.floor(Math.random()*10)]),month:null,repeats:1});
+          for(let game=0;game<2;game++)additions.push({game:'super',...(kind==='monthly'?{contest:922}:{}),numbers:[],columns:Array.from({length:7},()=>[Math.floor(Math.random()*10)]),month:null,repeats:1});
         }
         if(kind==='monthly'||kind==='chance'||kind==='sorte'||kind==='elas'){
         const repeats=kind==='sorte'||kind==='elas'?1:kind==='chance'?3:12;
         const numbers=randomNumbers(100,50,0), selected=new Set(numbers);
-        additions.push({game:'mania',...(kind==='monthly'?{contest:2998}:{}),numbers,month:null,repeats},{game:'mania',...(kind==='monthly'?{contest:2998}:{}),numbers:Array.from({length:100},(_,i)=>i).filter(n=>!selected.has(n)),month:null,repeats});
-        for(let game=0;game<(kind==='sorte'?4:1);game++)additions.push({game:'super',...(kind==='monthly'?{contest:921}:{}),numbers:[],columns:Array.from({length:7},()=>[Math.floor(Math.random()*10)]),month:null,repeats});
+        additions.push({game:'mania',...(kind==='monthly'?{contest:2999}:{}),numbers,month:null,repeats},{game:'mania',...(kind==='monthly'?{contest:2999}:{}),numbers:Array.from({length:100},(_,i)=>i).filter(n=>!selected.has(n)),month:null,repeats});
+        for(let game=0;game<(kind==='sorte'?4:1);game++)additions.push({game:'super',...(kind==='monthly'?{contest:922}:{}),numbers:[],columns:Array.from({length:7},()=>[Math.floor(Math.random()*10)]),month:null,repeats});
         }
       }
       cart.push(...additions);persist();
@@ -374,16 +377,16 @@
     addMilionariaGame: (numbers,trevos,repeats) => {
       if (!validMilionaria(numbers,trevos,repeats)) return {ok:false,message:'Confira os números, trevos e concursos.'};
       if (cart.length>=30) return {ok:false,message:'O carrinho já tem 30 combinações.'};
-      cart.push({game:'milionaria',contest:406,numbers:[...numbers].sort((a,b)=>a-b),trevos:[...trevos].sort((a,b)=>a-b),month:null,repeats});
+      cart.push({game:'milionaria',contest:407,numbers:[...numbers].sort((a,b)=>a-b),trevos:[...trevos].sort((a,b)=>a-b),month:null,repeats});
       persist();return {ok:true};
     },
     addManiaGame: (numbers, repeats, mirror = false) => {
       if (!validMania(numbers, repeats) || typeof mirror !== 'boolean') return {ok:false,message:'Escolha 50 números de 00 a 99 e confira os concursos.'};
       if (cart.length + (mirror ? 2 : 1) > 30) return {ok:false,message:'Não há espaço no carrinho para esta combinação. Remova um jogo antes de continuar.'};
-      cart.push({game:'mania',contest:2998,numbers:[...numbers].sort((a,b)=>a-b),month:null,repeats});
+      cart.push({game:'mania',contest:2999,numbers:[...numbers].sort((a,b)=>a-b),month:null,repeats});
       if (mirror) {
         const original = new Set(numbers);
-        cart.push({game:'mania',contest:2998,numbers:Array.from({length:100},(_,i)=>i).filter(n=>!original.has(n)),month:null,repeats});
+        cart.push({game:'mania',contest:2999,numbers:Array.from({length:100},(_,i)=>i).filter(n=>!original.has(n)),month:null,repeats});
       }
       persist();
       return {ok:true};
@@ -391,28 +394,28 @@
     addTimemaniaGame: (numbers, repeats, team) => {
       if (!validTimemania(numbers, repeats, team)) return {ok:false,message:'Escolha 10 números, um Time do Coração e confira os concursos.'};
       if (cart.length >= 30) return {ok:false,message:'O carrinho já tem 30 combinações. Remova um jogo antes de continuar.'};
-      cart.push({game:'timemania',contest:2467,numbers:[...numbers].sort((a,b)=>a-b),month:null,repeats,team});
+      cart.push({game:'timemania',contest:2468,numbers:[...numbers].sort((a,b)=>a-b),month:null,repeats,team});
       persist();
       return {ok:true};
     },
     addQuinaGame: (numbers, repeats) => {
       if (!validQuina(numbers, repeats)) return { ok: false, message: 'Confira os números e a quantidade de concursos.' };
       if (cart.length >= 30) return { ok: false, message: 'O carrinho já tem 30 combinações.' };
-      cart.push({ game: 'quina', contest:7165, numbers: [...numbers].sort((a,b) => a-b), month: null, repeats });
+      cart.push({ game: 'quina', contest:7167, numbers: [...numbers].sort((a,b) => a-b), month: null, repeats });
       persist();
       return { ok: true };
     },
     addDuplaGame: (numbers, repeats) => {
       if (!validDupla(numbers, repeats)) return {ok:false,message:'Escolha de 6 a 15 números e confira os concursos.'};
       if (cart.length >= 30) return {ok:false,message:'O carrinho já tem 30 combinações. Remova um jogo antes de continuar.'};
-      cart.push({game:'dupla',contest:3031,numbers:[...numbers].sort((a,b)=>a-b),month:null,repeats});
+      cart.push({game:'dupla',contest:3032,numbers:[...numbers].sort((a,b)=>a-b),month:null,repeats});
       persist();
       return {ok:true};
     },
     addDiaGame: (numbers, repeats, month) => {
       if (!validDia(numbers, repeats, month)) return {ok:false,message:'Escolha de 7 a 15 números, um Mês da Sorte e confira os concursos.'};
       if (cart.length >= 30) return {ok:false,message:'O carrinho já tem 30 combinações. Remova um jogo antes de continuar.'};
-      cart.push({game:'dia',contest:1345,numbers:[...numbers].sort((a,b)=>a-b),month,repeats});
+      cart.push({game:'dia',contest:1347,numbers:[...numbers].sort((a,b)=>a-b),month,repeats});
       persist();
       return {ok:true};
     },
@@ -426,13 +429,13 @@
     addSuperGame: (columns,repeats=1) => {
       if(!window.superSeteRules.valid(columns,repeats))return {ok:false,message:'Confira as sete colunas, a distribuição dos números e os concursos.'};
       if(cart.length>=30)return {ok:false,message:'O carrinho já tem 30 combinações. Remova um jogo antes de continuar.'};
-      cart.push({game:'super',contest:921,numbers:[],columns:columns.map(column=>[...column].sort((a,b)=>a-b)),month:null,repeats});
+      cart.push({game:'super',contest:922,numbers:[],columns:columns.map(column=>[...column].sort((a,b)=>a-b)),month:null,repeats});
       persist();return {ok:true};
     },
     addFacilGame: (numbers, repeats) => {
       if (!validFacil(numbers, repeats)) return { ok: false, message: 'Confira os números e a quantidade de concursos.' };
       if (cart.length >= 30) return { ok: false, message: 'O carrinho já tem 30 combinações.' };
-      cart.push({ game: 'facil', contest:3827, numbers: [...numbers].sort((a,b) => a-b), month: null, repeats });
+      cart.push({ game: 'facil', contest:3829, numbers: [...numbers].sort((a,b) => a-b), month: null, repeats });
       persist();
       return { ok: true };
     },
@@ -440,7 +443,7 @@
       if (virada) repeats = 1;
       if (!validMega(numbers, repeats)) return { ok: false, message: 'Confira os números e a quantidade de concursos.' };
       if (cart.length >= 30) return { ok: false, message: 'O carrinho já tem 30 combinações. Remova um jogo antes de adicionar outro.' };
-      cart.push({ game: 'mega', ...(virada ? {special:'virada',contest:3100} : {contest:3085}), numbers: [...numbers].sort((a, b) => a - b), month: null, repeats });
+      cart.push({ game: 'mega', ...(virada ? {special:'virada',contest:3100} : {contest:3086}), numbers: [...numbers].sort((a, b) => a - b), month: null, repeats });
       persist();
       return { ok: true };
     }

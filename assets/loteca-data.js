@@ -1,7 +1,7 @@
 window.lotecaData = {
-  "contest": 1282,
-  "closeDate": "12/11/2026",
-  "closeHour": "13:00",
+  "contest": 1283,
+  "closeDate": "16/11/2026",
+  "closeHour": "15:45",
   "matches": [
     {
       "home": "SANTOS/SP",

@@ -201,13 +201,25 @@ function check(ok,message){if(!ok)throw new Error(message);}
     await evaluate('document.getElementById("mega-random").click()');
     for(let i=0;i<50 && !presenceEvents.some(event => event.type === 'generated_game');i++)await pause(100);
     const generated = presenceEvents.find(event => event.type === 'generated_game');
-    check(generated && generated.item.game==='mega' && generated.item.numbers.length===6 && generated.item.contest===3085, 'Missing generated game details');
+    check(generated && generated.item.game==='mega' && generated.item.numbers.length===6 && generated.item.contest===Number(await evaluate('window.homeProductReference.draws.mega.contest')), 'Missing generated game details');
     await evaluate('location.hash="lotofacil"');
     for(let i=0;i<50 && !presenceEvents.some(event => event.page === '/home.html#lotofacil');i++)await pause(100);
     check(presenceEvents.some(event => event.page === '/home.html#lotofacil'), 'Route update was delayed by heartbeat throttle');
     await evaluate('window.dispatchEvent(new CustomEvent("portal:visitor-section",{detail:"checkout"}))');
     for(let i=0;i<50 && !presenceEvents.some(event => event.page === '/home.html#checkout');i++)await pause(100);
     check(presenceEvents.some(event => event.page === '/home.html#checkout'), 'Checkout section not recorded');
+  });
+  await run('November 13 reference prizes dates and pending Loteca match every product',async()=>{
+    await navigate('/home.html');
+    const expected={mega:['3086','27.000.000,00','15/11/2026','11h00'],facil:['3829','2.000.000,00','13/11/2026','21h00'],quina:['7167','11.000.000,00','13/11/2026','21h00'],milionaria:['407','115.000.000,00','13/11/2026','21h00'],mania:['2999','5.700.000,00','13/11/2026','21h00'],timemania:['2468','27.500.000,00','15/11/2026','11h00'],dupla:['3032','13.000.000,00','13/11/2026','21h00'],loteca:['1283','Aguardando estimativa de prêmio','16/11/2026','15h45'],dia:['1347','450.000,00','13/11/2026','21h00'],super:['922','350.000,00','13/11/2026','21h00'],virada:['3100','1.000.000.000,00','01/01/2027','11h00']};
+    for(const [id,values] of Object.entries(expected)){
+      const text=await evaluate(`document.querySelector('.product-${id}').textContent`);
+      check(values.every(value=>text.includes(value)),`Reference mismatch for ${id}: ${text}`);
+    }
+    check(await evaluate('!document.querySelector(".product-loteca .product-pool") && !document.querySelector(".product-loteca .product-or")'),'Pending Loteca should not show a pool purchase');
+    check(await evaluate('!document.querySelector(".product-loteca").textContent.includes("null")'),'Pending prize rendered as null');
+    await navigate('/painel.html#produtos');
+    check(await evaluate('document.getElementById("panel-content").textContent.includes("Aguardando estimativa de prêmio") && !document.getElementById("panel-content").textContent.includes("R$ null")'),'Panel catalogue mishandled the pending prize');
   });
   await run('welcome privacy notice has its stylesheet class',async()=>{
     await navigate('/');check(await evaluate('document.getElementById("cookie-notice").classList.contains("cookie-notice")'),'Cookie notice class is broken');
