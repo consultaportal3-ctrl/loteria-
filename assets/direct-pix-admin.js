@@ -316,6 +316,37 @@
     card.innerHTML = `<div class="settings-body"><h2>Cadastrar bolão</h2><p>Cadastre as informações reais. A compra de cotas ainda não está habilitada.</p><form id="pool-form"><label>Modalidade<select name="game" required><option value="virada">Mega da Virada</option><option value="mega">Mega-Sena</option><option value="facil">Lotofácil</option><option value="quina">Quina</option><option value="milionaria">+Milionária</option><option value="dupla">Dupla Sena</option><option value="timemania">Timemania</option><option value="dia">Dia de Sorte</option><option value="super">Super Sete</option></select></label><label>Data do sorteio<input type="date" name="date" required></label><label>Números (separados por vírgula)<input name="numbers" placeholder="01, 05, 10, 20, 30, 40" required></label><label>Total de cotas<input name="total" type="number" min="1" max="10000" required></label><label>Cotas disponíveis<input name="available" type="number" min="0" max="10000" required></label><label>Valor da cota em reais<input name="price" type="number" min="0.01" max="1000000" step="0.01" required></label><button class="button" type="submit">Salvar bolão</button><p role="status"></p></form><h2>Bolões cadastrados</h2><div id="pool-list"></div></div>`;
     host.append(card);
     const form = card.querySelector('form'), list = card.querySelector('#pool-list'), message = card.querySelector('[role="status"]');
+    const numberField = form.elements.numbers;
+    const generator = node('div');
+    generator.innerHTML = '<label>Quantidade de números<input name="numberCount" type="number" min="6" max="20" value="6"></label><button class="button secondary" type="button">Gerar números automaticamente</button><p class="muted">Confira os números antes de salvar. Gerar números não registra uma aposta.</p>';
+    numberField.parentElement.after(generator);
+    const countField = generator.querySelector('input'), generateButton = generator.querySelector('button');
+    const rules = {virada:[6,20,60], mega:[6,20,60], facil:[15,20,25], quina:[5,15,80], dupla:[6,15,50]};
+    function updateGenerator() {
+      const rule = rules[form.elements.game.value];
+      generateButton.disabled = !rule; countField.disabled = !rule;
+      if (rule) { countField.min = rule[0]; countField.max = rule[1]; countField.value = rule[0]; }
+      message.textContent = rule ? '' : 'Geração automática ainda não disponível para esta modalidade; preencha os números manualmente.';
+    }
+    form.elements.game.addEventListener('change', updateGenerator);
+    generateButton.addEventListener('click', () => {
+      const rule = rules[form.elements.game.value], count = Number(countField.value);
+      if (!rule || !Number.isInteger(count) || count < rule[0] || count > rule[1]) { message.textContent = 'Confira a quantidade de números escolhida.'; return; }
+      const numbers = new Set();
+      while (numbers.size < count) {
+        const buffer = new Uint32Array(1); crypto.getRandomValues(buffer);
+        const limit = Math.floor(0x100000000 / rule[2]) * rule[2];
+        if (buffer[0] < limit) numbers.add(buffer[0] % rule[2] + 1);
+      }
+      numberField.value = [...numbers].sort((a,b)=>a-b).map(n=>String(n).padStart(2,'0')).join(', ');
+      message.textContent = 'Números gerados. Confira antes de salvar.';
+    });
+    let suggestedTotal = '';
+    form.elements.total.addEventListener('input', () => {
+      if (!form.elements.available.value || form.elements.available.value === suggestedTotal) form.elements.available.value = form.elements.total.value;
+      suggestedTotal = form.elements.total.value;
+    });
+    updateGenerator();
     async function refresh() {
       const result = await request('pools'); list.replaceChildren();
       if (!result.pools.length) list.append(node('p', 'Nenhum bolão cadastrado.'));
@@ -332,7 +363,7 @@
       try {
         const fields = form.elements;
         await request('save-pool', {pool:{game:fields.game.value, date:fields.date.value, numbers:fields.numbers.value, total:Number(fields.total.value), available:Number(fields.available.value), price:Math.round(Number(fields.price.value)*100)}});
-        form.reset(); message.textContent = 'Bolão salvo. A venda de cotas continua desativada.'; await refresh();
+        numberField.value = ''; message.textContent = 'Bolão salvo. Gere novos números para cadastrar outro. A venda de cotas continua desativada.'; await refresh();
       } catch (error) { message.textContent = error.message; } finally { button.disabled = false; }
     });
     try { await refresh(); } catch (error) { message.textContent = error.message; }
