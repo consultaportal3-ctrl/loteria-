@@ -31,6 +31,11 @@
       const selected = button.dataset.poolGame === select.value;
       button.classList.toggle('is-active', selected);
       button.setAttribute('aria-pressed', String(selected));
+      const footer = button.querySelector('.modality-count');
+      if (footer) {
+        const count = pools.filter(pool => pool.game === button.dataset.poolGame).length;
+        footer.textContent = `${count} ${count === 1 ? 'bolão' : 'bolões'}`;
+      }
     });
     const visible = pools.filter(pool => !select.value || pool.game === select.value);
     featured.replaceChildren();
@@ -90,6 +95,13 @@
     if (!filters.hidden) select.focus();
   });
   select.addEventListener('change', update);
+  document.querySelectorAll('[data-pool-game]').forEach(button => {
+    if (!button.dataset.poolGame) return;
+    const footer = document.createElement('small'); footer.className = 'modality-count'; footer.textContent = '0 bolões'; button.append(footer);
+  });
+  document.querySelectorAll('.modality-arrow').forEach(button => button.addEventListener('click', () => {
+    document.querySelector('.modality-scroll').scrollBy({left:Number(button.dataset.direction) * 320, behavior:'smooth'});
+  }));
   document.querySelectorAll('[data-pool-game]').forEach(button => button.addEventListener('click', () => {
     select.value = button.dataset.poolGame;
     update();
