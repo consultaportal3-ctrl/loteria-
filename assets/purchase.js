@@ -9,6 +9,10 @@
   const list = document.querySelector('.all-pools p');
   let pools = [];
   let loadError = false;
+  try {
+    const cart = JSON.parse(localStorage.getItem('portal-demo-games-v1') || '[]');
+    document.getElementById('pool-cart-count').textContent = Array.isArray(cart) ? String(cart.length) : '0';
+  } catch { document.getElementById('pool-cart-count').textContent = '0'; }
   const routes = {virada:'mega-virada', mega:'mega-sena', facil:'lotofacil', quina:'quina', milionaria:'mais-milionaria', dupla:'dupla-sena', timemania:'timemania', dia:'dia-de-sorte', super:'super-sete'};
   const requested = new URLSearchParams(location.search).get('modalidade');
   select.value = Object.hasOwn(routes, requested) ? requested : '';
