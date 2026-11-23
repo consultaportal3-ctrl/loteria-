@@ -166,8 +166,8 @@
     ['modalidades','combos','baixar-aplicativo'].forEach(id => { byId(id).hidden = active; });
     document.querySelector('.hero-copy').hidden = false;
     document.querySelector('.campaign-art').hidden = false;
-    heroTitle.textContent = active ? 'Quina' : originalHero.title;
-    heroSubtitle.textContent = active ? 'Seis sorteios na semana e muitas chances de ganhar!' : originalHero.subtitle;
+    heroTitle.textContent = active ? 'Quina Friday' : originalHero.title;
+    heroSubtitle.textContent = active ? 'Quina Especial: uma chance especial de ganhar!' : originalHero.subtitle;
     heroTicket.setAttribute('src','assets/reference-quina.png');
     document.querySelector('[data-nav-game="milionaria"]').classList.remove('active');
     document.querySelector('[data-nav-game="mega"]').classList.remove('active');
