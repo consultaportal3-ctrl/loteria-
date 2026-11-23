@@ -91,7 +91,7 @@
         : `<p class="product-contest">Próximo Concurso ${draw.contest}</p><p class="product-contest">Aguardando estimativa de prêmio</p>`;
       const prize = `${prizeSummary}<p class="product-draw">${draw.label || 'Sorteio'} <strong>${draw.day}<br>${draw.date} às ${draw.time || '21h00'}</strong>${countdown}</p>`;
       const action = game.external ? `<a class="product-play" href="#informacoes" data-local-info>Ver modalidade<span>Referência: R$ ${draw.price}</span></a>` : `<button type="button" class="product-play" data-game="${gameRoute}">Aposte<span>por R$ ${draw.price}</span></button>`;
-      const pool = game.id === 'loteca' ? '<button type="button" class="product-pool" disabled>Compre seu bolão</button><span class="product-or">ou</span>' : draw.pool === false ? '' : `<a class="product-pool" href="compra-bolao/index.html?modalidade=${gameRoute}" aria-label="Ver bolões de ${game.name}">Compre seu bolão</a><span class="product-or">ou</span>`;
+      const pool = draw.pool === false && game.id !== 'loteca' ? '' : `<a class="product-pool" href="compra-bolao/index.html?modalidade=${gameRoute}" aria-label="Ver bolões de ${game.name}">Compre seu bolão</a><span class="product-or">ou</span>`;
       return `<article class="game-card product-card product-${game.id}${draw.pool === false && game.id !== 'loteca' ? ' product-no-pool' : ''}" style="--game-color:${color};--product-header:${draw.header || color};--product-button:${draw.button || color}"><header class="product-header"><span class="product-clover" aria-hidden="true"><i></i><i></i><i></i><i></i></span><h3>${game.name.toLowerCase()}</h3></header><div class="product-body">${prize}${pool}${action}</div></article>`;
     }).join('');
     byId('no-results').hidden = visible.length > 0;
