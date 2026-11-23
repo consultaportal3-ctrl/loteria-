@@ -9,7 +9,7 @@ window.homeProductReference = {
     mania: {"color":"#ed7900","amount":"5.700.000,00","short":"5,7 Milhões","contest":"2999","day":"Sexta-Feira","date":"13/11/2026","close":"2026-11-13T20:00:00-03:00","price":"3,00","pool":false,"time":"21h00"},
     timemania: {"color":"#00863d","header":"#fff200","button":"#fff200","amount":"27.500.000,00","short":"27,5 Milhões","contest":"2468","day":"Domingo","date":"15/11/2026","close":"2026-11-15T10:00:00-03:00","price":"3,50","time":"11h00"},
     dupla: {"color":"#af2942","amount":"13.000.000,00","short":"13 Milhões","contest":"3032","day":"Sexta-Feira","date":"13/11/2026","close":"2026-11-13T20:00:00-03:00","price":"3,00","time":"21h00"},
-    loteca: {"color":"#fa1829","amount":null,"short":null,"contest":"1283","day":"Segunda-Feira","date":"16/11/2026","time":"15h45","label":"Apuração","close":"2026-11-16T15:45:00-03:00","price":"4,00","pool":false},
+    loteca: {"color":"#f1162b","amount":"1.000.000,00","short":"1 Milhão","contest":"1285","day":"Segunda-Feira","date":"30/11/2026","time":"07h30","label":"Apuração","close":"2026-11-28T16:00:00-03:00","price":"4,00","pool":false},
     dia: {"color":"#ad9718","header":"#e8c41e","amount":"450.000,00","short":"450 Mil","contest":"1347","day":"Sexta-Feira","date":"13/11/2026","close":"2026-11-13T20:00:00-03:00","price":"2,50","time":"21h00"},
     super: {"color":"#00863d","header":"#bddb29","button":"#85a332","amount":"350.000,00","short":"350 Mil","contest":"922","day":"Sexta-Feira","date":"13/11/2026","close":"2026-11-13T20:00:00-03:00","price":"3,00","time":"21h00"}
   },

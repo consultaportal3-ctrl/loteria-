@@ -9,7 +9,7 @@
     { id: 'dia', name: 'Dia de Sorte', color: '#937015', total: 31, count: 7, start: 1, description: 'Combine sete números e escolha também seu mês da sorte.' },
     { id: 'milionaria', name: '+Milionária', color: '#2b327d', total: 50, count: 6, start: 1, description: 'Escolha seus números e trevos.' },
     { id: 'timemania', name: 'Timemania', color: '#00863d', total: 80, count: 10, start: 1, description: 'Escolha dez números e seu Time do Coração.' },
-    { id: 'loteca', name: 'Loteca', color: '#fa1829', description: 'Marque seus palpites para as 14 partidas.' },
+    { id: 'loteca', name: 'Loteca Especial', color: '#fa1829', description: 'Marque seus palpites para as 14 partidas.' },
     { id: 'super', name: 'Super Sete', color: '#00863d', description: 'Escolha números de 0 a 9 em cada uma das sete colunas.' }
   ];
   const months = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
@@ -90,7 +90,7 @@
         ? `<div class="product-prize"><strong>${prizeAmount}</strong><b>(R$${draw.short})</b></div><p class="product-contest">${draw.close || game.id === 'quina' ? 'Prêmio estimado' : 'Exemplo de prêmio'} do concurso ${draw.contest}</p>`
         : `<p class="product-contest">Próximo Concurso ${draw.contest}</p><p class="product-contest">Aguardando estimativa de prêmio</p>`;
       const prize = `${prizeSummary}<p class="product-draw">${draw.label || 'Sorteio'} <strong>${draw.day}<br>${draw.date} às ${draw.time || '21h00'}</strong>${countdown}</p>`;
-      const action = game.external ? `<a class="product-play" href="#informacoes" data-local-info>Ver modalidade<span>Referência: R$ ${draw.price}</span></a>` : `<button type="button" class="product-play" data-game="${gameRoute}">Aposte<span>por R$ ${draw.price}</span></button>`;
+      const action = game.id === 'loteca' ? `<button type="button" class="product-play" disabled>Em atualização<span>grade de jogos</span></button>` : game.external ? `<a class="product-play" href="#informacoes" data-local-info>Ver modalidade<span>Referência: R$ ${draw.price}</span></a>` : `<button type="button" class="product-play" data-game="${gameRoute}">Aposte<span>por R$ ${draw.price}</span></button>`;
       const pool = draw.pool === false ? '' : `<a class="product-pool" href="compra-bolao/index.html?modalidade=${gameRoute}" aria-label="Ver bolões de ${game.name}">Compre seu bolão</a><span class="product-or">ou</span>`;
       return `<article class="game-card product-card product-${game.id}${draw.pool === false ? ' product-no-pool' : ''}" style="--game-color:${color};--product-header:${draw.header || color};--product-button:${draw.button || color}"><header class="product-header"><span class="product-clover" aria-hidden="true"><i></i><i></i><i></i><i></i></span><h3>${game.name.toLowerCase()}</h3></header><div class="product-body">${prize}${pool}${action}</div></article>`;
     }).join('');
