@@ -1,3 +1,50 @@
 <!doctype html>
-<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#006ca7"><title>Bolões disponíveis | Portal da Sorte</title><link rel="icon" href="../assets/favicon-caixa.svg" type="image/svg+xml"><link rel="stylesheet" href="../assets/purchase.css?v=2"><script src="../assets/purchase.js?v=2" defer></script><script src="../assets/visitor-presence.js?v=20261111-visitor-activity" defer></script></head>
-<body><main class="purchase-page"><a class="purchase-back" id="purchase-back" href="../home.html">← Voltar às modalidades</a><h1>Bolões disponíveis</h1><p class="purchase-intro">Escolha uma modalidade para consultar os bolões.</p><label for="purchase-game">Modalidade</label><select id="purchase-game"><option value="">Todas as modalidades</option><option value="virada">Mega da Virada</option><option value="mega">Mega-Sena</option><option value="facil">Lotofácil</option><option value="quina">Quina</option><option value="milionaria">+Milionária</option><option value="dupla">Dupla Sena</option><option value="timemania">Timemania</option><option value="dia">Dia de Sorte</option><option value="super">Super Sete</option></select><section class="pool-list" aria-live="polite"><article class="pool-card"><header id="purchase-choice">Bolões</header><div class="pool-content"><h2>Bolões em preparação</h2><p>Ainda não há cotas disponíveis para esta seleção.</p><div class="pool-details"><p>Sorteio: <strong>A definir</strong></p><p>Dezenas: <strong>A definir</strong></p><p>Valor da cota: <strong>A definir</strong></p></div><button disabled type="button">INDISPONÍVEL</button></div></article></section><p class="purchase-note">O Portal da Sorte é independente e não possui vínculo com a CAIXA. A compra oficial de bolões pode ser consultada no portal da CAIXA.</p><a class="official-link" href="https://www.loteriasonline.caixa.gov.br/silce-web/">Consultar bolões na CAIXA ↗</a></main></body></html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0861a5">
+  <title>Bolões | Portal da Sorte</title>
+  <link rel="icon" href="../assets/favicon-caixa.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../assets/purchase.css?v=3">
+  <script src="../assets/purchase.js?v=3" defer></script>
+  <script src="../assets/visitor-presence.js?v=20261111-visitor-activity" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a id="purchase-back" href="../home.html">‹ <span>Voltar às modalidades</span></a>
+    <button id="filter-toggle" type="button" aria-expanded="false" aria-controls="filters">☰ <span>Filtros</span></button>
+  </header>
+  <main class="purchase-page">
+    <h1>Bolões em destaque</h1>
+    <p class="intro">Veja aqui os bolões em destaque. Você também pode personalizar sua busca no campo filtros.</p>
+    <div id="filters" class="filters" hidden>
+      <label for="purchase-game">Modalidade</label>
+      <select id="purchase-game">
+        <option value="">Todas as modalidades</option><option value="virada">Mega da Virada</option>
+        <option value="mega">Mega-Sena</option><option value="facil">Lotofácil</option>
+        <option value="quina">Quina</option><option value="milionaria">+Milionária</option>
+        <option value="dupla">Dupla Sena</option><option value="timemania">Timemania</option>
+        <option value="dia">Dia de Sorte</option><option value="super">Super Sete</option>
+      </select>
+    </div>
+    <section class="featured" aria-live="polite">
+      <article class="pool-card">
+        <header><span aria-hidden="true" class="pool-icon">✦</span><strong id="purchase-choice">Bolões</strong></header>
+        <div class="pool-content">
+          <p class="card-label">BOLÕES EM DESTAQUE</p>
+          <h2>Bolões em preparação</h2>
+          <p>Não há cotas disponíveis para esta modalidade no momento.</p>
+          <div class="pool-details"><p>Sorteio <strong>A definir</strong></p><p>Composição <strong>A definir</strong></p><p>Valor da cota <strong>A definir</strong></p></div>
+          <p class="quantity-label">Quantidade de cotas</p>
+          <div class="quantity" aria-label="Quantidade indisponível"><button type="button" disabled aria-label="Diminuir quantidade">−</button><span>—</span><button type="button" disabled aria-label="Aumentar quantidade">+</button></div>
+        </div>
+      </article>
+      <button class="add-button" disabled type="button"><strong>Adicionar</strong><span>ao carrinho de compras</span></button>
+    </section>
+    <section class="all-pools"><h2>Todos os bolões</h2><p>Ainda não há bolões cadastrados nesta seleção.</p></section>
+    <p class="purchase-note">Portal da Sorte é independente e não possui vínculo com a CAIXA. Consulte a compra oficial de bolões no <a href="https://www.loteriasonline.caixa.gov.br/silce-web/">portal da CAIXA</a>.</p>
+  </main>
+  <footer class="cart-bar"><a href="../carrinho.html"><strong>Meu carrinho</strong><span>Ver jogos adicionados</span><span aria-hidden="true">🛒</span></a></footer>
+</body>
+</html>
