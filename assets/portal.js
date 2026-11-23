@@ -32,12 +32,14 @@
   };
   const products = [
     ...(window.homeProductReference ? [{id:'virada',name:'Mega da Virada',route:'virada'}] : []),
-    ...games.slice(0, 3),
+    games.find(game => game.id === 'quina'),
+    games.find(game => game.id === 'loteca'),
+    games.find(game => game.id === 'mega'),
+    games.find(game => game.id === 'facil'),
     games.find(game => game.id === 'milionaria'),
     games.find(game => game.id === 'mania'),
     games.find(game => game.id === 'timemania'),
     games.find(game => game.id === 'dupla'),
-    games.find(game => game.id === 'loteca'),
     games.find(game => game.id === 'dia'),
     games.find(game => game.id === 'super')
   ];
