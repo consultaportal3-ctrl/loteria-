@@ -19,7 +19,7 @@
   const storageKey = 'portal-demo-games-v1';
   const generatedStorageKey = 'portal-demo-generated-games-v1';
   const exampleDraws = {
-    mega: {"color":"#00a94f","header":"#00a94f","amount":"27.000.000,00","short":"27 Milhões","contest":"3086","day":"Domingo","date":"15/11/2026","price":"6,00","time":"11h00"},
+    mega: {"color":"#00a94f","header":"#00a94f","amount":"65.000.000,00","short":"65 Milhões","contest":"3090","day":"Terça-Feira","date":"24/11/2026","price":"6,00","time":"21h00"},
     facil: {"color":"#92278f","amount":"2.000.000,00","short":"2 Milhões","contest":"3829","day":"Sexta-Feira","date":"13/11/2026","time":"21h00","price":"3,50"},
     quina: {"color":"#32318e","amount":"11.000.000,00","short":"11 Milhões","contest":"7167","day":"Sexta-Feira","date":"13/11/2026","price":"3,00","time":"21h00"},
     milionaria: {"color":"#2b327d","amount":"115.000.000,00","short":"115 Milhões","contest":"407","day":"Sexta-Feira","date":"13/11/2026","price":"6,00","time":"21h00"},
@@ -443,7 +443,7 @@
       if (virada) repeats = 1;
       if (!validMega(numbers, repeats)) return { ok: false, message: 'Confira os números e a quantidade de concursos.' };
       if (cart.length >= 30) return { ok: false, message: 'O carrinho já tem 30 combinações. Remova um jogo antes de adicionar outro.' };
-      cart.push({ game: 'mega', ...(virada ? {special:'virada',contest:3100} : {contest:3086}), numbers: [...numbers].sort((a, b) => a - b), month: null, repeats });
+      cart.push({ game: 'mega', ...(virada ? {special:'virada',contest:3100} : {contest:3090}), numbers: [...numbers].sort((a, b) => a - b), month: null, repeats });
       persist();
       return { ok: true };
     }
