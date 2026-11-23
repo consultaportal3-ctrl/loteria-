@@ -42,17 +42,18 @@
         for (let i = 1; i <= 6; i++) combinations = combinations * (pool.numbers.length - i + 1) / i;
         comparison.textContent = `Esta combinação equivale a ${new Intl.NumberFormat('pt-BR').format(Math.round(combinations))} ${combinations === 1 ? 'aposta simples' : 'apostas simples'} para acertar as 6 dezenas.`;
       }
-      const shares = document.createElement('p'); shares.textContent = `${pool.available} cotas disponíveis de ${pool.total}`;
+      const shares = document.createElement('p'); shares.textContent = pool.unlimited ? 'Sem limite de cotas cadastrado' : `${pool.available} cotas disponíveis de ${pool.total}`;
       const price = document.createElement('p'); price.textContent = 'Valor da cota: ' + new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(pool.price / 100);
       const controls = document.createElement('div'); controls.className = 'pool-purchase';
       const row = document.createElement('div'); row.className = 'pool-quantity';
       const minus = document.createElement('button'); minus.type = 'button'; minus.textContent = '−'; minus.setAttribute('aria-label','Diminuir quantidade de cotas');
-      const quantity = document.createElement('input'); quantity.type = 'number'; quantity.min = '1'; quantity.max = String(pool.available); quantity.value = pool.available > 0 ? '1' : '0'; quantity.setAttribute('aria-label','Quantidade de cotas'); quantity.disabled = pool.available < 1;
+      const maxQuantity = pool.unlimited ? 10000 : pool.available;
+      const quantity = document.createElement('input'); quantity.type = 'number'; quantity.min = '1'; quantity.max = String(maxQuantity); quantity.value = maxQuantity > 0 ? '1' : '0'; quantity.setAttribute('aria-label','Quantidade de cotas'); quantity.disabled = maxQuantity < 1;
       const plus = document.createElement('button'); plus.type = 'button'; plus.textContent = '+'; plus.setAttribute('aria-label','Aumentar quantidade de cotas');
       const total = document.createElement('p'); total.className = 'pool-total';
       function updateQuantity(value) {
-        const n = pool.available > 0 ? Math.min(pool.available, Math.max(1, Math.floor(Number(value) || 1))) : 0;
-        quantity.value = n; minus.disabled = n <= 1; plus.disabled = n >= pool.available;
+        const n = maxQuantity > 0 ? Math.min(maxQuantity, Math.max(1, Math.floor(Number(value) || 1))) : 0;
+        quantity.value = n; minus.disabled = n <= 1; plus.disabled = n >= maxQuantity;
         total.textContent = 'Total: ' + new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(pool.price * n / 100);
       }
       minus.addEventListener('click', () => updateQuantity(Number(quantity.value)-1));

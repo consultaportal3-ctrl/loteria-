@@ -22,6 +22,9 @@ test('catalogue stores and removes pools and rejects invalid shares and numbers'
     assert.equal(updated.id, saved.id);
     assert.equal(updated.createdAt, saved.createdAt);
     assert.equal((await pools.list())[0].price, 4990);
+    const unlimited = await pools.save({...input, unlimited:true}, saved.id);
+    assert.equal(unlimited.unlimited, true);
+    assert.equal(unlimited.available, null);
     await assert.rejects(pools.save({...input, available:11}), {status:422});
     await assert.rejects(pools.save({...input, numbers:'1,1'}), {status:422});
     await pools.remove(saved.id);
