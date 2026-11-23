@@ -5,6 +5,15 @@
   const back = document.getElementById('purchase-back');
   const toggle = document.getElementById('filter-toggle');
   const filters = document.getElementById('filters');
+  const tutorial = document.getElementById('pool-tutorial');
+  const hideTutorial = document.getElementById('tutorial-hide');
+  function closeTutorial() {
+    if (hideTutorial.checked) { try { localStorage.setItem('pool-tutorial-hidden', '1'); } catch (_) {} }
+    tutorial.close();
+  }
+  tutorial.querySelector('.tutorial-start').addEventListener('click', closeTutorial);
+  tutorial.querySelector('.tutorial-skip').addEventListener('click', closeTutorial);
+  try { if (localStorage.getItem('pool-tutorial-hidden') !== '1') tutorial.showModal(); } catch (_) { tutorial.showModal(); }
   const featured = document.querySelector('.featured');
   const list = document.querySelector('.all-pools p');
   let pools = [];
