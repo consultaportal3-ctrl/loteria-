@@ -32,11 +32,19 @@
       const heading = document.createElement('h2'); heading.textContent = 'Números do bolão';
       const numbers = document.createElement('div'); numbers.className = 'pool-numbers';
       for (const number of pool.numbers) { const ball = document.createElement('span'); ball.textContent = String(number).padStart(2, '0'); numbers.append(ball); }
+      const comparison = document.createElement('p'); comparison.className = 'pool-chance';
+      if (['mega','virada'].includes(pool.game) && pool.numbers.length >= 6 && pool.numbers.length <= 20 && pool.numbers.every(n => Number.isInteger(n) && n >= 1 && n <= 60) && new Set(pool.numbers).size === pool.numbers.length) {
+        let combinations = 1;
+        for (let i = 1; i <= 6; i++) combinations = combinations * (pool.numbers.length - i + 1) / i;
+        comparison.textContent = `Esta combinação equivale a ${new Intl.NumberFormat('pt-BR').format(Math.round(combinations))} ${combinations === 1 ? 'aposta simples' : 'apostas simples'} para acertar as 6 dezenas.`;
+      }
       const shares = document.createElement('p'); shares.textContent = `${pool.available} cotas disponíveis de ${pool.total}`;
       const price = document.createElement('p'); price.textContent = 'Valor da cota: ' + new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(pool.price / 100);
       const notice = document.createElement('p'); notice.textContent = 'Compra online de cotas ainda indisponível.';
       const button = document.createElement('button'); button.type = 'button'; button.disabled = true; button.className = 'add-button'; button.textContent = 'Compra indisponível';
-      body.append(date, heading, numbers, shares, price, notice, button); card.append(body); featured.append(card);
+      body.append(date, heading, numbers);
+      if (comparison.textContent) body.append(comparison);
+      body.append(shares, price, notice, button); card.append(body); featured.append(card);
     }
     list.textContent = loadError ? 'Não foi possível carregar os bolões.' : `${visible.length} ${visible.length === 1 ? 'bolão cadastrado' : 'bolões cadastrados'}.`;
     back.href = '../home.html#' + (routes[select.value] || 'modalidades');
