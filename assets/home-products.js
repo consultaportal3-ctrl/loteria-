@@ -4,7 +4,7 @@ window.homeProductReference = {
     virada: {"color":"#00a94f","header":"#00a94f","amount":"1.000.000.000,00","short":"1 Bilhão","contest":"3100","day":"Sexta-Feira","date":"01/01/2027","time":"11h00","close":"2026-12-31T20:00:00-03:00","price":"6,00"},
     mega: {"color":"#00a94f","header":"#00a94f","amount":"65.000.000,00","short":"65 Milhões","contest":"3090","day":"Terça-Feira","date":"24/11/2026","close":"2026-11-24T20:00:00-03:00","price":"6,00","time":"21h00"},
     facil: {"color":"#92278f","amount":"2.000.000,00","short":"2 Milhões","contest":"3829","day":"Sexta-Feira","date":"13/11/2026","time":"21h00","close":"2026-11-13T20:00:00-03:00","price":"3,50"},
-    quina: {"color":"#32318e","amount":"11.000.000,00","short":"11 Milhões","contest":"7167","day":"Sexta-Feira","date":"13/11/2026","close":"2026-11-13T20:00:00-03:00","price":"3,00","time":"21h00"},
+    quina: {"color":"#1d216d","amount":"50.000.000,00","short":"50 Milhões","contest":"7173","day":"Domingo","date":"29/11/2026","price":"2,50","time":"11h00"},
     milionaria: {"color":"#2b327d","amount":"115.000.000,00","short":"115 Milhões","contest":"407","day":"Sexta-Feira","date":"13/11/2026","close":"2026-11-13T20:00:00-03:00","price":"6,00","time":"21h00"},
     mania: {"color":"#ed7900","amount":"5.700.000,00","short":"5,7 Milhões","contest":"2999","day":"Sexta-Feira","date":"13/11/2026","close":"2026-11-13T20:00:00-03:00","price":"3,00","pool":false,"time":"21h00"},
     timemania: {"color":"#00863d","header":"#fff200","button":"#fff200","amount":"27.500.000,00","short":"27,5 Milhões","contest":"2468","day":"Domingo","date":"15/11/2026","close":"2026-11-15T10:00:00-03:00","price":"3,50","time":"11h00"},

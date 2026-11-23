@@ -3,7 +3,7 @@
   const games = [
     { id: 'mega', name: 'Mega-Sena', color: '#188558', total: 60, count: 6, start: 1, description: 'Uma combinação de seis números para experimentar suas escolhas.' },
     { id: 'facil', name: 'Lotofácil', color: '#963c92', total: 25, count: 15, start: 1, description: 'Monte sua combinação escolhendo quinze números no volante.' },
-    { id: 'quina', name: 'Quina', color: '#3253a1', total: 80, count: 5, start: 1, description: 'Cinco números e muitas combinações para você explorar.' },
+    { id: 'quina', name: 'Quina Friday', color: '#3253a1', total: 80, count: 5, start: 1, description: 'Cinco números e muitas combinações para você explorar.' },
     { id: 'mania', name: 'Lotomania', color: '#c56619', total: 100, count: 50, start: 0, description: 'Explore um volante de cem números e escolha seus cinquenta.' },
     { id: 'dupla', name: 'Dupla Sena', color: '#b33c50', total: 50, count: 6, start: 1, description: 'Escolha seis números e organize uma nova combinação.' },
     { id: 'dia', name: 'Dia de Sorte', color: '#937015', total: 31, count: 7, start: 1, description: 'Combine sete números e escolha também seu mês da sorte.' },
@@ -83,12 +83,12 @@
       const gameRoute = game.route || game.id;
       const color = draw?.color || game.color;
       const prizeAmount = game.id === 'virada' ? `<span>R$</span>${draw.amount}` : `R$ ${draw.amount}`;
-      const countdown = draw.close ? `<span data-product-close="${draw.close}">${window.homeProductReference.countdown(draw.close)}</span>` : '<span>Calendário da imagem de referência</span>';
+      const countdown = draw.close ? `<span data-product-close="${draw.close}">${window.homeProductReference.countdown(draw.close)}</span>` : '<span>Consulte o prazo oficial de apostas</span>';
       const prizeSummary = draw.amount
-        ? `<div class="product-prize"><strong>${prizeAmount}</strong><b>(R$${draw.short})</b></div><p class="product-contest">${draw.close ? 'Prêmio estimado' : 'Exemplo de prêmio'} do concurso ${draw.contest}</p>`
+        ? `<div class="product-prize"><strong>${prizeAmount}</strong><b>(R$${draw.short})</b></div><p class="product-contest">${draw.close || game.id === 'quina' ? 'Prêmio estimado' : 'Exemplo de prêmio'} do concurso ${draw.contest}</p>`
         : `<p class="product-contest">Próximo Concurso ${draw.contest}</p><p class="product-contest">Aguardando estimativa de prêmio</p>`;
       const prize = `${prizeSummary}<p class="product-draw">${draw.label || 'Sorteio'} <strong>${draw.day}<br>${draw.date} às ${draw.time || '21h00'}</strong>${countdown}</p>`;
-      const action = game.external ? `<a class="product-play" href="#informacoes" data-local-info>Ver modalidade<span>Referência: R$ ${draw.price}</span></a>` : `<button type="button" class="product-play" data-game="${gameRoute}">Aposte<span>por R$ ${draw.price}</span></button>`;
+      const action = game.id === 'quina' ? `<a class="product-play" href="https://www.loteriasonline.caixa.gov.br/" aria-label="Apostar na Quina Friday no site oficial da CAIXA">Aposte na CAIXA<span>por R$ ${draw.price}</span></a>` : game.external ? `<a class="product-play" href="#informacoes" data-local-info>Ver modalidade<span>Referência: R$ ${draw.price}</span></a>` : `<button type="button" class="product-play" data-game="${gameRoute}">Aposte<span>por R$ ${draw.price}</span></button>`;
       const pool = draw.pool === false ? '' : `<a class="product-pool" href="compra-bolao/index.html?modalidade=${gameRoute}" aria-label="Ver bolões de ${game.name}">Compre seu bolão</a><span class="product-or">ou</span>`;
       return `<article class="game-card product-card product-${game.id}${draw.pool === false ? ' product-no-pool' : ''}" style="--game-color:${color};--product-header:${draw.header || color};--product-button:${draw.button || color}"><header class="product-header"><span class="product-clover" aria-hidden="true"><i></i><i></i><i></i><i></i></span><h3>${game.name.toLowerCase()}</h3></header><div class="product-body">${prize}${pool}${action}</div></article>`;
     }).join('');
@@ -401,7 +401,7 @@
     addQuinaGame: (numbers, repeats) => {
       if (!validQuina(numbers, repeats)) return { ok: false, message: 'Confira os números e a quantidade de concursos.' };
       if (cart.length >= 30) return { ok: false, message: 'O carrinho já tem 30 combinações.' };
-      cart.push({ game: 'quina', contest:7167, numbers: [...numbers].sort((a,b) => a-b), month: null, repeats });
+      cart.push({ game: 'quina', contest:7173, numbers: [...numbers].sort((a,b) => a-b), month: null, repeats });
       persist();
       return { ok: true };
     },
