@@ -97,6 +97,8 @@
   select.addEventListener('change', update);
   document.querySelectorAll('[data-pool-game]').forEach(button => {
     if (!button.dataset.poolGame) return;
+    const icon = button.querySelector('span');
+    if (icon) { icon.textContent = ''; icon.className = 'modality-clover'; icon.setAttribute('aria-hidden', 'true'); for (let i = 0; i < 4; i++) icon.append(document.createElement('i')); }
     const footer = document.createElement('small'); footer.className = 'modality-count'; footer.textContent = '0 bolões'; button.append(footer);
   });
   document.querySelectorAll('.modality-arrow').forEach(button => button.addEventListener('click', () => {
