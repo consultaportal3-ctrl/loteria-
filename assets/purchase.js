@@ -27,6 +27,11 @@
   select.value = Object.hasOwn(routes, requested) ? requested : '';
   function update() {
     const name = select.value ? select.selectedOptions[0].textContent : 'Todos os bolões';
+    document.querySelectorAll('[data-pool-game]').forEach(button => {
+      const selected = button.dataset.poolGame === select.value;
+      button.classList.toggle('is-active', selected);
+      button.setAttribute('aria-pressed', String(selected));
+    });
     const visible = pools.filter(pool => !select.value || pool.game === select.value);
     featured.replaceChildren();
     if (!visible.length) {
@@ -85,5 +90,10 @@
     if (!filters.hidden) select.focus();
   });
   select.addEventListener('change', update);
+  document.querySelectorAll('[data-pool-game]').forEach(button => button.addEventListener('click', () => {
+    select.value = button.dataset.poolGame;
+    update();
+    document.querySelector('.purchase-page').scrollIntoView({behavior:'smooth',block:'start'});
+  }));
   fetch('../api/boloes', {cache:'no-store'}).then(response => { if (!response.ok) throw new Error(); return response.json(); }).then(result => { pools = Array.isArray(result.pools) ? result.pools : []; }).catch(() => { loadError = true; }).finally(update);
 })();
