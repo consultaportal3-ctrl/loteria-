@@ -98,7 +98,10 @@
   document.querySelectorAll('[data-pool-game]').forEach(button => {
     if (!button.dataset.poolGame) return;
     const icon = button.querySelector('span');
-    if (icon) { icon.textContent = ''; icon.className = 'modality-clover'; icon.setAttribute('aria-hidden', 'true'); for (let i = 0; i < 4; i++) icon.append(document.createElement('i')); }
+    if (icon) {
+      icon.className = 'modality-clover'; icon.setAttribute('aria-hidden', 'true');
+      icon.innerHTML = '<svg viewBox="0 0 467 460"><path opacity=".48" d="M215 233H87C1 233 1 104 87 104 87 18 215 18 215 104Z"/><path d="M233 233h128c86 0 86-129 0-129 0-86-128-86-128 0Z"/><path d="M215 250H87C1 250 1 379 87 379c0 86 128 86 128 0Z"/><path opacity=".48" d="M233 250h128c86 0 86 129 0 129 0 86-128 86-128 0Z"/></svg>';
+    }
     const footer = document.createElement('small'); footer.className = 'modality-count'; footer.textContent = '0 bolões'; button.append(footer);
   });
   document.querySelectorAll('.modality-arrow').forEach(button => button.addEventListener('click', () => {
