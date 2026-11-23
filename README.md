@@ -23,4 +23,4 @@ npm test
 node tests/browser-smoke.cjs
 ```
 
-Os testes usam dados fictícios e não movimentam dinheiro. Um servidor estático permite visualizar as páginas; as rotas de API exigem um ambiente Node.js compatível ou a Vercel.
+Os testes usam dados fictícios e não movimentam dinheiro. Execute `npm start` para servir o site e as APIs em Node.js. A porta padrão é 3000; em produção, a variável `PORT` define a porta. No Railway, configure as variáveis necessárias descritas em [PAYMENT-DEPLOYMENT.md](PAYMENT-DEPLOYMENT.md) e gere um domínio público nas configurações do serviço.
