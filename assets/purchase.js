@@ -40,11 +40,26 @@
       }
       const shares = document.createElement('p'); shares.textContent = `${pool.available} cotas disponíveis de ${pool.total}`;
       const price = document.createElement('p'); price.textContent = 'Valor da cota: ' + new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(pool.price / 100);
+      const controls = document.createElement('div'); controls.className = 'pool-purchase';
+      const row = document.createElement('div'); row.className = 'pool-quantity';
+      const minus = document.createElement('button'); minus.type = 'button'; minus.textContent = '−'; minus.setAttribute('aria-label','Diminuir quantidade de cotas');
+      const quantity = document.createElement('input'); quantity.type = 'number'; quantity.min = '1'; quantity.max = String(pool.available); quantity.value = pool.available > 0 ? '1' : '0'; quantity.setAttribute('aria-label','Quantidade de cotas'); quantity.disabled = pool.available < 1;
+      const plus = document.createElement('button'); plus.type = 'button'; plus.textContent = '+'; plus.setAttribute('aria-label','Aumentar quantidade de cotas');
+      const total = document.createElement('p'); total.className = 'pool-total';
+      function updateQuantity(value) {
+        const n = pool.available > 0 ? Math.min(pool.available, Math.max(1, Math.floor(Number(value) || 1))) : 0;
+        quantity.value = n; minus.disabled = n <= 1; plus.disabled = n >= pool.available;
+        total.textContent = 'Total: ' + new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(pool.price * n / 100);
+      }
+      minus.addEventListener('click', () => updateQuantity(Number(quantity.value)-1));
+      plus.addEventListener('click', () => updateQuantity(Number(quantity.value)+1));
+      quantity.addEventListener('change', () => updateQuantity(quantity.value));
+      row.append(minus,quantity,plus); controls.append(row,total); updateQuantity(quantity.value);
       const notice = document.createElement('p'); notice.textContent = 'Compra online de cotas ainda indisponível.';
-      const button = document.createElement('button'); button.type = 'button'; button.disabled = true; button.className = 'add-button'; button.textContent = 'Compra indisponível';
+      const button = document.createElement('button'); button.type = 'button'; button.disabled = true; button.className = 'add-button'; button.textContent = 'Adicionar ao carrinho';
       body.append(date, heading, numbers);
       if (comparison.textContent) body.append(comparison);
-      body.append(shares, price, notice, button); card.append(body); featured.append(card);
+      controls.append(button,notice); body.append(shares, price, controls); card.append(body); featured.append(card);
     }
     list.textContent = loadError ? 'Não foi possível carregar os bolões.' : `${visible.length} ${visible.length === 1 ? 'bolão cadastrado' : 'bolões cadastrados'}.`;
     back.href = '../home.html#' + (routes[select.value] || 'modalidades');
