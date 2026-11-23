@@ -63,6 +63,7 @@ module.exports = endpoint(async (req, res) => {
   }
   if (!session.authenticated) throw new ApiError(401, 'Autenticação necessária.');
   if (input.action === 'save-pool') return json(res, {pool:await require('../lib/pools.js').save(input.pool)});
+  if (input.action === 'update-pool') return json(res, {pool:await require('../lib/pools.js').save(input.pool, input.id)});
   if (input.action === 'delete-pool') { await require('../lib/pools.js').remove(input.id); return json(res, {ok:true}); }
   if (input.action === 'clear-visitors') {
     if (input.confirm !== true) throw new ApiError(422, 'Confirme a limpeza do histórico de visitas.');
