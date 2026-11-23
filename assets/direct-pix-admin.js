@@ -311,13 +311,40 @@
     next.addEventListener('click', () => { if (!loading) { offset += 50; update(); } });
     update(); refreshTimer = setInterval(update, 5000);
   }
+  async function poolEditor(host) {
+    const card = node('section', undefined, 'card');
+    card.innerHTML = `<div class="settings-body"><h2>Cadastrar bolão</h2><p>Cadastre as informações reais. A compra de cotas ainda não está habilitada.</p><form id="pool-form"><label>Modalidade<select name="game" required><option value="virada">Mega da Virada</option><option value="mega">Mega-Sena</option><option value="facil">Lotofácil</option><option value="quina">Quina</option><option value="milionaria">+Milionária</option><option value="dupla">Dupla Sena</option><option value="timemania">Timemania</option><option value="dia">Dia de Sorte</option><option value="super">Super Sete</option></select></label><label>Data do sorteio<input type="date" name="date" required></label><label>Números (separados por vírgula)<input name="numbers" placeholder="01, 05, 10, 20, 30, 40" required></label><label>Total de cotas<input name="total" type="number" min="1" max="10000" required></label><label>Cotas disponíveis<input name="available" type="number" min="0" max="10000" required></label><label>Valor da cota em reais<input name="price" type="number" min="0.01" max="1000000" step="0.01" required></label><button class="button" type="submit">Salvar bolão</button><p role="status"></p></form><h2>Bolões cadastrados</h2><div id="pool-list"></div></div>`;
+    host.append(card);
+    const form = card.querySelector('form'), list = card.querySelector('#pool-list'), message = card.querySelector('[role="status"]');
+    async function refresh() {
+      const result = await request('pools'); list.replaceChildren();
+      if (!result.pools.length) list.append(node('p', 'Nenhum bolão cadastrado.'));
+      for (const pool of result.pools) {
+        const row = node('div', undefined, 'settings-body');
+        row.append(node('strong', `${pool.game} · ${pool.date} · ${pool.numbers.join(', ')}`), node('p', `${pool.available} de ${pool.total} cotas · ${new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(pool.price/100)}`));
+        const remove = node('button', 'Excluir bolão', 'button secondary'); remove.type = 'button';
+        remove.addEventListener('click', async () => { if (!confirm('Excluir este bolão?')) return; try { await request('delete-pool',{id:pool.id}); await refresh(); } catch (error) { message.textContent = error.message; } });
+        row.append(remove); list.append(row);
+      }
+    }
+    form.addEventListener('submit', async event => {
+      event.preventDefault(); const button = form.querySelector('button'); button.disabled = true;
+      try {
+        const fields = form.elements;
+        await request('save-pool', {pool:{game:fields.game.value, date:fields.date.value, numbers:fields.numbers.value, total:Number(fields.total.value), available:Number(fields.available.value), price:Math.round(Number(fields.price.value)*100)}});
+        form.reset(); message.textContent = 'Bolão salvo. A venda de cotas continua desativada.'; await refresh();
+      } catch (error) { message.textContent = error.message; } finally { button.disabled = false; }
+    });
+    try { await refresh(); } catch (error) { message.textContent = error.message; }
+  }
   async function authenticated(host, current) {
     const visitorsView = host.dataset.view === 'visitors';
     const summaryView = ['overview','generations'].includes(host.dataset.view);
-    const [settings, orders] = visitorsView || summaryView ? [] : await Promise.all([request('settings'), request('orders')]);
+    const poolsView = host.dataset.view === 'pools';
+    const [settings, orders] = visitorsView || summaryView || poolsView ? [] : await Promise.all([request('settings'), request('orders')]);
     if (current !== generation || !host.isConnected) return;
     clearInterval(refreshTimer); host.replaceChildren();
-    const toolbar = node('div', undefined, 'section-heading'), title = node('h2', visitorsView ? 'Visitantes online' : summaryView ? 'Administração da loja' : 'Administração do PIX direto');
+    const toolbar = node('div', undefined, 'section-heading'), title = node('h2', visitorsView ? 'Visitantes online' : summaryView ? 'Administração da loja' : poolsView ? 'Administração de bolões' : 'Administração do PIX direto');
     const logout = node('button', 'Sair do acesso administrativo', 'button secondary'); logout.type = 'button';
     logout.addEventListener('click', async () => {
       try { await request('logout', {}); await mount(); }
@@ -326,6 +353,7 @@
     toolbar.append(title, logout); host.append(toolbar);
     if (visitorsView) { visitorList(host, current); return; }
     if (summaryView) { storeSummary(host, current); return; }
+    if (poolsView) { await poolEditor(host); return; }
     if (host.dataset.view === 'settings') configuration(host, settings.settings);
     orderList(host, orders.orders, current);
   }

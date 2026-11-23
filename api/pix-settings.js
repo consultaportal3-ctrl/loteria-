@@ -33,6 +33,7 @@ module.exports = endpoint(async (req, res) => {
     if (action === 'visitors') return json(res, await require('../lib/visitors.js').list(new URL(req.url, 'https://pix.invalid').searchParams.get('offset')));
     if (action === 'generations') return json(res, await require('../lib/visitors.js').generations(new URL(req.url, 'https://pix.invalid').searchParams.get('offset')));
     if (action === 'settings') return json(res, {settings:await pix.settings()});
+    if (action === 'pools') return json(res, {pools:await require('../lib/pools.js').list()});
     if (action === 'orders') return json(res, {orders:await pix.listOrders()});
     throw new ApiError(404, 'Ação não encontrada.');
   }
@@ -61,6 +62,8 @@ module.exports = endpoint(async (req, res) => {
     return json(res, {authenticated:false});
   }
   if (!session.authenticated) throw new ApiError(401, 'Autenticação necessária.');
+  if (input.action === 'save-pool') return json(res, {pool:await require('../lib/pools.js').save(input.pool)});
+  if (input.action === 'delete-pool') { await require('../lib/pools.js').remove(input.id); return json(res, {ok:true}); }
   if (input.action === 'clear-visitors') {
     if (input.confirm !== true) throw new ApiError(422, 'Confirme a limpeza do histórico de visitas.');
     return json(res, await require('../lib/visitors.js').clear());

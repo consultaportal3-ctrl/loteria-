@@ -5,7 +5,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 
 const handlers = Object.fromEntries([
-  'admin', 'blackcat-simulation', 'business-info', 'checkout-info',
+  'admin', 'blackcat-simulation', 'boloes', 'business-info', 'checkout-info',
   'create-payment', 'payment-status', 'pix-settings', 'visitors', 'webhook'
 ].map(name => [`/api/${name}`, require(`./api/${name}.js`)]));
 const types = {
