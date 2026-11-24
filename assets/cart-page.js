@@ -17,13 +17,13 @@
   renderPoolDemo();
   document.addEventListener('click',event=>{
     const button=event.target.closest('[data-cart-payment],#finish-demo');
-    if(!button || !window.portalDemo || window.portalDemo.getGames().length) return;
+    if(!button || !window.portalDemo) return;
     let items=[];try{items=JSON.parse(localStorage.getItem(demoKey)||'[]');}catch(_){}
     if(!Array.isArray(items)||!items.length)return;
     event.preventDefault();event.stopImmediatePropagation();
     const dialog=document.createElement('dialog');dialog.setAttribute('aria-labelledby','pool-demo-payment-title');dialog.style.cssText='border:0;border-radius:12px;padding:28px;max-width:420px;box-shadow:0 6px 30px #0005;color:#263b4d';
     const title=document.createElement('h2');title.id='pool-demo-payment-title';title.textContent='Pagamento de demonstra\u00e7\u00e3o';
-    const note=document.createElement('p');note.textContent='Esta \u00e9 uma simula\u00e7\u00e3o. Nenhum Pix ser\u00e1 gerado, nenhum valor ser\u00e1 cobrado e nenhuma aposta ser\u00e1 registrada.';
+    const note=document.createElement('p');note.textContent='O carrinho cont\u00e9m um bol\u00e3o de demonstra\u00e7\u00e3o. Nesta simula\u00e7\u00e3o nenhum Pix ser\u00e1 gerado, nenhum valor ser\u00e1 cobrado e nenhuma aposta ser\u00e1 registrada. Para pagar outras apostas, remova os bol\u00f5es de demonstra\u00e7\u00e3o.';
     const close=document.createElement('button');close.type='button';close.textContent='Entendi';close.addEventListener('click',()=>dialog.close());dialog.addEventListener('close',()=>dialog.remove());dialog.append(title,note,close);document.body.append(dialog);dialog.showModal();
   },true);
   const hero=document.querySelector('.hero');
