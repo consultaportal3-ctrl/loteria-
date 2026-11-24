@@ -318,7 +318,7 @@
     const form = card.querySelector('form'), list = card.querySelector('#pool-list'), message = card.querySelector('[role="status"]');
     const models = document.createElement('section');
     models.innerHTML = '<h2>Modelos da Mega da Virada</h2><p>Modelos ilustrativos, ainda sem apostas registradas e indisponíveis para compra.</p><div class="pool-model-list">Carregando modelos...</div>';
-    card.querySelector('.settings-body').append(models);
+    card.querySelector('.settings-body').prepend(models);
     fetch('assets/pool-models.json', {cache:'no-store'}).then(response => { if (!response.ok) throw new Error(); return response.json(); }).then(items => {
       const container = models.querySelector('.pool-model-list'); container.replaceChildren();
       items.forEach((item, index) => { const row = document.createElement('p'); row.textContent = (index + 1) + '. ' + item.description + ' · ' + item.available + ' de ' + item.total + ' cotas · ' + new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(item.price / 100); container.append(row); item.bets.forEach((bet, betIndex) => { const line = document.createElement('p'); line.textContent = 'Aposta ' + (betIndex + 1) + ': ' + bet.map(n => String(n).padStart(2, '0')).join(', '); container.append(line); }); });
