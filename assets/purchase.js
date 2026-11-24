@@ -95,7 +95,7 @@
       {id:'virada-3', game:'virada', date:'', numbers:[], total:26, available:3, price:1125, description:'5 apostas de 7 dezenas'},
       {id:'virada-4', game:'virada', date:'', numbers:[], total:100, available:28, price:313956, description:'1 aposta de 20 dezenas'}
     ];
-    const visible = [...examples, ...pools].filter(pool => !select.value || pool.game === select.value);
+    const visible = [...examples, ...pools.filter(pool => !(pool.game === 'virada' && pool.unlimited && pool.price === 3990))].filter(pool => !select.value || pool.game === select.value);
     featured.replaceChildren();
     if (!visible.length) {
       const empty = document.createElement('p');
