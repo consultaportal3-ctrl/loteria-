@@ -131,6 +131,15 @@
     dialog.showModal();
     dialog.scrollTop = 0;
   }
+  function poolCartAmount() {
+    try {
+      const items = JSON.parse(localStorage.getItem('portal-pool-demo-cart-v1') || '[]');
+      return Array.isArray(items) ? items.reduce((sum, item) => sum + (Number(item.price) || 0) * (Number(item.quantity) || 0) / 100, 0) : 0;
+    } catch { return 0; }
+  }
+  function hasPoolCartItems() {
+    try { const items = JSON.parse(localStorage.getItem('portal-pool-demo-cart-v1') || '[]'); return Array.isArray(items) && items.length > 0; } catch { return false; }
+  }
   function renderCart() {
     const area = byId('cart-items');
     area.replaceChildren();
@@ -190,11 +199,12 @@
       }
     });
     byId('cart-summary').textContent = `Total de ${cart.length} aposta${cart.length===1?'':'s'}`;
-    byId('cart-total').textContent=formatCartMoney(cart.reduce((sum,item)=>sum+referencePrice(item),0));
-    byId('cart-clear').disabled=cart.length===0;
-    document.querySelector('[data-cart-clear]').disabled=cart.length===0;
-    byId('finish-demo').disabled = cart.length === 0;
-    document.querySelector('[data-cart-payment]').disabled=cart.length===0;
+    const hasPoolItems = hasPoolCartItems();
+    byId('cart-total').textContent=formatCartMoney(cart.reduce((sum,item)=>sum+referencePrice(item),poolCartAmount()));
+    byId('cart-clear').disabled=cart.length===0 && !hasPoolItems;
+    document.querySelector('[data-cart-clear]').disabled=cart.length===0 && !hasPoolItems;
+    byId('finish-demo').disabled = cart.length === 0 && !hasPoolItems;
+    document.querySelector('[data-cart-payment]').disabled=cart.length===0 && !hasPoolItems;
   }
   function cartRepeatOptions(game){return ({mega:[1,2,3,4,6,8,9,12],facil:[1,2,3,4,6,8,9,12,18,24],quina:[1,3,6,12,18,24],milionaria:[1,2,3,4,5],mania:[1,2,3,4,6,8,9,12],timemania:[1,3,6,9,12],dupla:[1,2,3,4,6,8,9,12],dia:[1,3,6,9,12,18,24],super:[1,3,6,9,12]})[game]||[1];}
   byId('cart-items').addEventListener('click',event=>{
