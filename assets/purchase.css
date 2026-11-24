@@ -35,3 +35,4 @@
 .modality-chip[data-pool-game="loteca"]::after{width:44px;height:44px;right:-14px;bottom:30px;clip-path:inset(0 14px 0 0);opacity:.95}.modality-chip[data-pool-game="loteca"]{font-size:18px;padding-left:5px;padding-right:15px}.loteca-prize-note{margin:8px 0 0 45px;color:#697a80;font:12px/1.4 Arial,sans-serif}@media(max-width:720px){.modality-chip[data-pool-game="loteca"]{font-size:15px}.loteca-prize-note{margin-left:22px}}
 .modality-chip[data-pool-game="loteca"]::after{content:none}
 .modality-scroll{padding-top:34px}
+.modality-scroll{padding-top:52px}.modality-chip[data-pool-game="loteca"] .modality-clover{top:-20px;width:50px;height:50px;overflow:visible;clip-path:none}
