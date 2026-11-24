@@ -159,7 +159,7 @@
       const controls = document.createElement('div'); controls.className = 'pool-purchase';
       const row = document.createElement('div'); row.className = 'pool-quantity';
       const minus = document.createElement('button'); minus.type = 'button'; minus.textContent = '−'; minus.setAttribute('aria-label','Diminuir quantidade de cotas');
-      const maxQuantity = pool.unlimited ? 10000 : pool.available;
+      const maxQuantity = examples.some(example => example.id === pool.id) || pool.unlimited ? 10000 : pool.available;
       const quantity = document.createElement('input'); quantity.type = 'number'; quantity.min = '1'; quantity.max = String(maxQuantity); quantity.value = maxQuantity > 0 ? '1' : '0'; quantity.setAttribute('aria-label','Quantidade de cotas'); quantity.disabled = maxQuantity < 1;
       const plus = document.createElement('button'); plus.type = 'button'; plus.textContent = '+'; plus.setAttribute('aria-label','Aumentar quantidade de cotas');
       const total = document.createElement('p'); total.className = 'pool-total';
