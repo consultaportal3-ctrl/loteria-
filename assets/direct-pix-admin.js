@@ -321,7 +321,7 @@
     card.querySelector('.settings-body').append(models);
     fetch('assets/pool-models.json', {cache:'no-store'}).then(response => { if (!response.ok) throw new Error(); return response.json(); }).then(items => {
       const container = models.querySelector('.pool-model-list'); container.replaceChildren();
-      items.forEach((item, index) => { const row = document.createElement('p'); row.textContent = (index + 1) + '. ' + item.description + ' · ' + item.available + ' de ' + item.total + ' cotas · ' + new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(item.price / 100); container.append(row); });
+      items.forEach((item, index) => { const row = document.createElement('p'); row.textContent = (index + 1) + '. ' + item.description + ' · ' + item.available + ' de ' + item.total + ' cotas · ' + new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(item.price / 100); container.append(row); item.bets.forEach((bet, betIndex) => { const line = document.createElement('p'); line.textContent = 'Aposta ' + (betIndex + 1) + ': ' + bet.map(n => String(n).padStart(2, '0')).join(', '); container.append(line); }); });
     }).catch(() => { models.querySelector('.pool-model-list').textContent = 'Não foi possível carregar os modelos.'; });
 
     const unlimitedLabel = node('label');
