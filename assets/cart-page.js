@@ -5,6 +5,8 @@
   let poolTimerInterval;
   function renderPoolDemo(){
     let items; try{items=JSON.parse(localStorage.getItem(demoKey)||'[]');if(!Array.isArray(items))items=[];}catch(_){items=[];}
+    const unexpired=items.filter(item=>!Number.isFinite(item.reservedUntil)||item.reservedUntil>Date.now());
+    if(unexpired.length!==items.length){items=unexpired;localStorage.setItem(demoKey,JSON.stringify(items));}
     demoSection.hidden=!items.length;
     const list=document.getElementById('pool-demo-items');list.replaceChildren();
     const money=value=>new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(value/100);
@@ -33,7 +35,7 @@
       row.append(nameCell,detailsCell,contestCell,priceCell,timerCell,removeCell);body.append(row);
     });
     table.append(body);list.append(table);localStorage.setItem(demoKey,JSON.stringify(items));
-    clearInterval(poolTimerInterval);const updateTimers=()=>list.querySelectorAll('.pool-reservation-time').forEach(timer=>{const left=Math.max(0,Number(timer.dataset.until)-Date.now());timer.textContent=left?`◷ ${String(Math.floor(left/60000)).padStart(2,'0')}:${String(Math.floor(left%60000/1000)).padStart(2,'0')}`:'Tempo encerrado';timer.classList.toggle('is-expired',left===0);});updateTimers();poolTimerInterval=setInterval(updateTimers,1000);
+    clearInterval(poolTimerInterval);const updateTimers=()=>{if(items.some(item=>Number.isFinite(item.reservedUntil)&&item.reservedUntil<=Date.now())){items=items.filter(item=>!Number.isFinite(item.reservedUntil)||item.reservedUntil>Date.now());localStorage.setItem(demoKey,JSON.stringify(items));renderPoolDemo();return;}list.querySelectorAll('.pool-reservation-time').forEach(timer=>{const left=Math.max(0,Number(timer.dataset.until)-Date.now());timer.textContent=left?`◷ ${String(Math.floor(left/60000)).padStart(2,'0')}:${String(Math.floor(left%60000/1000)).padStart(2,'0')}`:'00:00';timer.classList.toggle('is-expired',left===0);});};updateTimers();poolTimerInterval=setInterval(updateTimers,1000);
     document.getElementById('pool-demo-total').textContent='Total dos bolões: '+money(items.reduce((sum,item)=>sum+item.price*item.quantity,0));
     if(window.portalDemo){const gameTotal=window.portalDemo.getGames().reduce((sum,item)=>sum+item.referencePrice,0);document.getElementById('cart-total').textContent=new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(gameTotal+items.reduce((sum,item)=>sum+item.price*item.quantity/100,0));}
     if(window.portalDemo) document.querySelectorAll('[data-cart-payment],#finish-demo').forEach(button=>{button.disabled=!window.portalDemo.getGames().length&&!items.length;});

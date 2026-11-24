@@ -28,6 +28,7 @@
   let poolCartTimer;
   function showPoolCart() {
     let cart = []; try { cart = JSON.parse(localStorage.getItem('portal-pool-demo-cart-v1') || '[]'); if (!Array.isArray(cart)) cart = []; } catch (_) {}
+    cart = cart.filter(item => !Number.isFinite(item.reservedUntil) || item.reservedUntil > Date.now());
     let panel = document.getElementById('pool-cart-preview');
     if (!panel) { panel = document.createElement('section'); panel.id = 'pool-cart-preview'; panel.className = 'pool-cart-preview'; panel.setAttribute('aria-label', 'Resumo das cotas do carrinho'); document.body.append(panel); }
     panel.replaceChildren();
@@ -64,11 +65,10 @@
     panel.style.setProperty('--panel-top', panel.style.top);
     if (cartRect) panel.style.setProperty('--cart-arrow-right', `${Math.max(22, window.innerWidth - cartRect.left - cartRect.width / 2 - 16)}px`);
     document.getElementById('pool-cart-count').textContent = String(cart.reduce((sum, item) => sum + item.quantity, 0));
-    const updateTimers = () => panel.querySelectorAll('.pool-reservation-time').forEach(timer => {
-      const remaining = Math.max(0, Number(timer.dataset.until) - Date.now());
-      timer.textContent = remaining ? `◷ ${String(Math.floor(remaining / 60000)).padStart(2,'0')}:${String(Math.floor(remaining % 60000 / 1000)).padStart(2,'0')}` : 'Tempo encerrado';
-      timer.classList.toggle('is-expired', remaining === 0);
-    });
+    const updateTimers = () => {
+      if (cart.some(item => Number.isFinite(item.reservedUntil) && item.reservedUntil <= Date.now())) { cart = cart.filter(item => !Number.isFinite(item.reservedUntil) || item.reservedUntil > Date.now()); localStorage.setItem('portal-pool-demo-cart-v1', JSON.stringify(cart)); showPoolCart(); return; }
+      panel.querySelectorAll('.pool-reservation-time').forEach(timer => { const remaining = Math.max(0, Number(timer.dataset.until) - Date.now()); timer.textContent = remaining ? `◷ ${String(Math.floor(remaining / 60000)).padStart(2,'0')}:${String(Math.floor(remaining % 60000 / 1000)).padStart(2,'0')}` : '00:00'; timer.classList.toggle('is-expired', remaining === 0); });
+    };
     updateTimers(); poolCartTimer = setInterval(updateTimers, 1000);
     close.focus({preventScroll:true});
     panel.scrollIntoView({behavior:'smooth', block:'nearest'});
