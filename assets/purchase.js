@@ -115,10 +115,10 @@
       featured.append(empty);
     }
     for (const pool of visible) {
-      const card = document.createElement('article'); card.className = 'pool-card';
+      const card = document.createElement('article'); card.className = 'pool-card'; card.dataset.game = pool.game;
       const header = document.createElement('header');
       const title = document.createElement('strong');
-      title.textContent = select.querySelector(`option[value="${pool.game}"]`)?.textContent || 'Bolão';
+      title.textContent = pool.game === 'quina' ? 'Quina Friday' : select.querySelector(`option[value="${pool.game}"]`)?.textContent || 'Bolão';
       const icon = document.createElement('span'); icon.className = 'pool-card-icon'; icon.setAttribute('aria-hidden', 'true'); icon.innerHTML = '<svg viewBox="0 0 467 460" aria-hidden="true"><path d="M215 233H87C1 233 1 104 87 104 87 18 215 18 215 104Z"/><path opacity=".55" d="M233 233h128c86 0 86-129 0-129 0-86-128-86-128 0Z"/><path opacity=".55" d="M215 250H87C1 250 1 379 87 379c0 86 128 86 128 0Z"/><path d="M233 250h128c86 0 86 129 0 129 0 86-128 86-128 0Z"/></svg>';
       header.append(icon, title); card.append(header);
       const body = document.createElement('div'); body.className = 'pool-content';
@@ -175,7 +175,7 @@
       });
       const description = document.createElement('p'); description.className = 'pool-description'; description.textContent = pool.description || '';
       const detailButton = document.createElement('button'); detailButton.type = 'button'; detailButton.className = 'pool-detail-button'; detailButton.textContent = 'Detalhes';
-      const detailDialog = document.createElement('dialog'); detailDialog.className = 'pool-detail-dialog';
+      const detailDialog = document.createElement('dialog'); detailDialog.className = 'pool-detail-dialog'; detailDialog.dataset.game = pool.game;
       const detailHeader = document.createElement('div'); detailHeader.className = 'pool-detail-header';
       const detailTitle = document.createElement('strong'); detailTitle.textContent = title.textContent;
       const closeDialog = document.createElement('button'); closeDialog.type = 'button'; closeDialog.className = 'pool-detail-close'; closeDialog.textContent = '×'; closeDialog.setAttribute('aria-label', 'Fechar detalhes');
