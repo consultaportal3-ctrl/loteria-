@@ -335,6 +335,8 @@
     const generator = node('div');
     generator.innerHTML = '<label>Quantidade de números<input name="numberCount" type="number" min="6" max="20" value="6"></label><button class="button secondary" type="button">Gerar números automaticamente</button><p class="muted">Confira os números antes de salvar. Gerar números não registra uma aposta.</p>';
     numberField.parentElement.after(generator);
+    const addBetButton = node('button', 'Adicionar aposta', 'button secondary'); addBetButton.type = 'button'; generator.after(addBetButton);
+    addBetButton.addEventListener('click', () => { numberField.value = numberField.value.trimEnd() + (numberField.value.trim() ? '\n' : ''); numberField.focus(); });
     const countField = generator.querySelector('input'), generateButton = generator.querySelector('button');
     const rules = {virada:[6,20,60], mega:[6,20,60], facil:[15,20,25], quina:[5,15,80], dupla:[6,15,50]};
     function updateGenerator() {
@@ -353,7 +355,8 @@
         const limit = Math.floor(0x100000000 / rule[2]) * rule[2];
         if (buffer[0] < limit) numbers.add(buffer[0] % rule[2] + 1);
       }
-      numberField.value = [...numbers].sort((a,b)=>a-b).map(n=>String(n).padStart(2,'0')).join(', ');
+      const generatedBet = [...numbers].sort((a,b)=>a-b).map(n=>String(n).padStart(2,'0')).join(', ');
+      numberField.value = numberField.value.trim() ? numberField.value.trimEnd() + '\n' + generatedBet : generatedBet;
       message.textContent = 'Números gerados. Confira antes de salvar.';
     });
     let suggestedTotal = '';

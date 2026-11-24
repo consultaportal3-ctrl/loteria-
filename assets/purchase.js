@@ -127,13 +127,13 @@
       const prizeCaption = document.createElement('p'); prizeCaption.className = 'pool-prize-caption'; prizeCaption.textContent = prize?.contest ? 'Prêmio estimado do concurso ' + prize.contest : 'Estimativa indisponível no momento';
       const date = document.createElement('p'); date.textContent = pool.date ? 'Sorteio: ' + pool.date.split('-').reverse().join('/') : 'Data do sorteio a confirmar.';
       const bets = pool.bets || [pool.numbers];
-      const heading = document.createElement('h2'); heading.textContent = bets.length > 1 ? 'Apostas do bolão' : 'Números do bolão';
       const betDetails = document.createDocumentFragment();
       bets.forEach((bet, index) => {
-        if (bets.length > 1) { const label = document.createElement('p'); label.textContent = `Aposta ${index + 1}`; betDetails.append(label); }
+        const betRow = document.createElement('section'); betRow.className = 'pool-bet-row';
+        const label = document.createElement('h2'); label.className = 'pool-bet-title'; label.textContent = `Aposta ${index + 1}`;
         const numbers = document.createElement('div'); numbers.className = 'pool-numbers';
         for (const number of bet) { const ball = document.createElement('span'); ball.textContent = String(number).padStart(2, '0'); numbers.append(ball); }
-        betDetails.append(numbers);
+        betRow.append(label, numbers); betDetails.append(betRow);
       });
       const comparison = document.createElement('p'); comparison.className = 'pool-chance';
       if (bets.length === 1 && ['mega','virada'].includes(pool.game) && pool.numbers.length >= 6 && pool.numbers.length <= 20 && pool.numbers.every(n => Number.isInteger(n) && n >= 1 && n <= 60) && new Set(pool.numbers).size === pool.numbers.length) {
@@ -185,7 +185,7 @@
       const contest = document.createElement('p'); contest.className = 'pool-detail-contest'; contest.textContent = prize?.contest ? `Concurso: ${prize.contest}` : prizeCaption.textContent;
       const sharePrice = document.createElement('p'); sharePrice.className = 'pool-detail-meta'; sharePrice.textContent = `Valor da cota: ${price.textContent}`;
       detailContent.append(contest, sharePrice, date.cloneNode(true));
-      if (bets.length && bets.some(bet => bet.length)) detailContent.append(heading, betDetails);
+      if (bets.length && bets.some(bet => bet.length)) detailContent.append(betDetails);
       else { const pending = document.createElement('p'); pending.textContent = 'Números das apostas ainda não informados.'; detailContent.append(pending); }
       if (comparison.textContent) detailContent.append(comparison);
       detailDialog.append(detailHeader, detailContent);
