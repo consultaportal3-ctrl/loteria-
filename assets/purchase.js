@@ -17,6 +17,7 @@
   const featured = document.querySelector('.featured');
   const list = document.querySelector('.all-pools p');
   let pools = [];
+  let prizes = {};
   let loadError = false;
   try {
     const cart = JSON.parse(localStorage.getItem('portal-demo-games-v1') || '[]');
@@ -53,8 +54,12 @@
       button.setAttribute('aria-pressed', String(selected));
       const footer = button.querySelector('.modality-count');
       if (footer) {
-        const count = pools.filter(pool => pool.game === button.dataset.poolGame).length;
-        footer.textContent = button.dataset.poolGame === 'loteca' ? 'R$ 1 Milhão*' : `${count} ${count === 1 ? 'bolão' : 'bolões'}`;
+        const prize = prizes[button.dataset.poolGame];
+        if (prize?.amount) {
+          const amount = prize.amount;
+          footer.textContent = amount >= 1000000000 ? `R$ ${new Intl.NumberFormat('pt-BR',{maximumFractionDigits:2}).format(amount/1000000000)} Bilhão` : amount >= 1000000 ? `R$ ${new Intl.NumberFormat('pt-BR',{maximumFractionDigits:2}).format(amount/1000000)} ${amount === 1000000 ? 'Milhão' : 'Milhões'}` : `R$ ${new Intl.NumberFormat('pt-BR',{maximumFractionDigits:0}).format(amount)}`;
+          footer.title = `Prêmio estimado do concurso ${prize.contest}; sujeito a alterações.`;
+        } else { footer.textContent = 'Prêmio indisponível'; footer.title = 'Estimativa indisponível no momento.'; }
       }
     });
     const visible = pools.filter(pool => !select.value || pool.game === select.value);
@@ -122,7 +127,7 @@
       icon.className = 'modality-clover'; icon.setAttribute('aria-hidden', 'true');
       icon.innerHTML = '<svg viewBox="0 0 467 460"><path opacity=".48" d="M215 233H87C1 233 1 104 87 104 87 18 215 18 215 104Z"/><path d="M233 233h128c86 0 86-129 0-129 0-86-128-86-128 0Z"/><path d="M215 250H87C1 250 1 379 87 379c0 86 128 86 128 0Z"/><path opacity=".48" d="M233 250h128c86 0 86 129 0 129 0 86-128 86-128 0Z"/></svg>';
     }
-    const footer = document.createElement('small'); footer.className = 'modality-count'; footer.textContent = '0 bolões'; button.append(footer);
+    const footer = document.createElement('small'); footer.className = 'modality-count'; footer.textContent = 'Consultando...'; button.append(footer);
   });
   document.querySelectorAll('.modality-arrow').forEach(button => button.addEventListener('click', () => {
     document.querySelector('.modality-scroll').scrollBy({left:Number(button.dataset.direction) * 320, behavior:'smooth'});
@@ -133,4 +138,5 @@
     document.querySelector('.purchase-page').scrollIntoView({behavior:'smooth',block:'start'});
   }));
   fetch('../api/boloes', {cache:'no-store'}).then(response => { if (!response.ok) throw new Error(); return response.json(); }).then(result => { pools = Array.isArray(result.pools) ? result.pools : []; }).catch(() => { loadError = true; }).finally(update);
+  fetch('../api/premios', {cache:'no-store'}).then(response => { if (!response.ok) throw new Error(); return response.json(); }).then(result => { prizes = result.prizes || {}; }).catch(() => {}).finally(update);
 })();

@@ -6,7 +6,7 @@ const path = require('node:path');
 
 const handlers = Object.fromEntries([
   'admin', 'blackcat-simulation', 'boloes', 'business-info', 'checkout-info',
-  'create-payment', 'payment-status', 'pix-settings', 'visitors', 'webhook'
+  'create-payment', 'payment-status', 'pix-settings', 'premios', 'visitors', 'webhook'
 ].map(name => [`/api/${name}`, require(`./api/${name}.js`)]));
 const types = {
   '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8',
