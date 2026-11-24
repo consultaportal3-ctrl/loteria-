@@ -142,7 +142,20 @@
 
   const money = value => new Intl.NumberFormat('pt-BR', {style:'currency',currency:'BRL'}).format(value);
 
+  function cartItems() {
+    const items = [...window.portalDemo.getGames()];
+    try {
+      const pools = JSON.parse(localStorage.getItem('portal-pool-demo-cart-v1') || '[]');
+      if (Array.isArray(pools)) pools.forEach(pool => {
+        if (!pool || typeof pool.id !== 'string' || !Number.isInteger(pool.quantity) || pool.quantity < 1 || !Number.isFinite(pool.price) || pool.price < 0) return;
+        items.push({poolId:pool.id, quantity:pool.quantity, name:pool.name || 'Bolão', referencePrice:pool.price * pool.quantity / 100});
+      });
+    } catch {}
+    return items;
+  }
+
   function describeItem(item) {
+    if (item.poolId) return `${item.quantity} cota(s)`;
     const details = [];
     if (Array.isArray(item.numbers)) details.push(item.numbers.map(number => String(number).padStart(2, '0')).join(' · '));
     if (Array.isArray(item.trevos)) details.push(`Trevos ${item.trevos.join(' · ')}`);
@@ -251,7 +264,8 @@
     if (!button) return;
     event.preventDefault();
     event.stopImmediatePropagation();
-    if (modal.open || window.portalDemo.getGames().length === 0) return;
+    const items = cartItems();
+    if (modal.open || items.length === 0) return;
     sessionController?.abort();
     sessionController = new AbortController();
     const session = ++checkoutSession;
@@ -269,8 +283,8 @@
     modal.setAttribute('aria-labelledby', 'payment-title');
     form.hidden = false;
     modal.querySelector('.payment-navigation').open = false;
-    renderOrderSummary(window.portalDemo.getGames());
-    const count = window.portalDemo.getGames().length;
+    renderOrderSummary(items);
+    const count = items.length;
     modal.querySelector('.payment-cart-count').textContent = `${count} ${count === 1 ? 'item' : 'itens'}`;
     modal.showModal();
     window.dispatchEvent(new CustomEvent('portal:visitor-section', {detail:'checkout'}));
@@ -288,21 +302,7 @@
     submit.disabled = true;
     error.hidden = true;
     try {
-      const items = [...window.portalDemo.getGames()];
-      try {
-        const poolItems = JSON.parse(localStorage.getItem('portal-pool-demo-cart-v1') || '[]');
-        if (Array.isArray(poolItems)) {
-          poolItems.forEach(poolItem => {
-            if (!poolItem || typeof poolItem.id !== 'string' || !Number.isInteger(poolItem.quantity) || poolItem.quantity < 1) return;
-            items.push({
-              poolId:poolItem.id,
-              quantity:poolItem.quantity,
-              name:poolItem.name || 'Bolão',
-              referencePrice:(poolItem.price * poolItem.quantity) / 100,
-            });
-          });
-        }
-      } catch {}
+      const items = cartItems();
       if (!items.length) throw new Error('O carrinho está vazio. Adicione uma combinação antes de continuar.');
       renderOrderSummary(items);
       if (live) {
