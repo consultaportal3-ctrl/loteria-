@@ -89,7 +89,13 @@
         else { footer.textContent = 'Consulte o prêmio'; footer.title = 'Estimativa indisponível no momento.'; }
       }
     });
-    const visible = pools.filter(pool => !select.value || pool.game === select.value);
+    const examples = [
+      {id:'virada-1', game:'virada', date:'', numbers:[], total:9, available:3, price:5048, description:'2 apostas de 8 dezenas'},
+      {id:'virada-2', game:'virada', date:'', numbers:[], total:9, available:6, price:5048, description:'8 apostas de 7 dezenas'},
+      {id:'virada-3', game:'virada', date:'', numbers:[], total:26, available:3, price:1125, description:'5 apostas de 7 dezenas'},
+      {id:'virada-4', game:'virada', date:'', numbers:[], total:100, available:28, price:313956, description:'1 aposta de 20 dezenas'}
+    ];
+    const visible = [...examples, ...pools].filter(pool => !select.value || pool.game === select.value);
     featured.replaceChildren();
     if (!visible.length) {
       const empty = document.createElement('p');
@@ -101,9 +107,13 @@
       const header = document.createElement('header');
       const title = document.createElement('strong');
       title.textContent = select.querySelector(`option[value="${pool.game}"]`)?.textContent || 'Bolão';
-      header.append(title); card.append(header);
+      const icon = document.createElement('span'); icon.className = 'pool-card-icon'; icon.setAttribute('aria-hidden', 'true'); icon.innerHTML = '<svg viewBox="0 0 467 460" aria-hidden="true"><path d="M215 233H87C1 233 1 104 87 104 87 18 215 18 215 104Z"/><path opacity=".55" d="M233 233h128c86 0 86-129 0-129 0-86-128-86-128 0Z"/><path opacity=".55" d="M215 250H87C1 250 1 379 87 379c0 86 128 86 128 0Z"/><path d="M233 250h128c86 0 86 129 0 129 0 86-128 86-128 0Z"/></svg>';
+      header.append(icon, title); card.append(header);
       const body = document.createElement('div'); body.className = 'pool-content';
-      const date = document.createElement('p'); date.textContent = 'Sorteio: ' + pool.date.split('-').reverse().join('/');
+      const prize = prizes[pool.game];
+      const prizeValue = document.createElement('p'); prizeValue.className = 'pool-prize'; prizeValue.textContent = prize?.amount ? new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(prize.amount) : 'Prêmio em consulta';
+      const prizeCaption = document.createElement('p'); prizeCaption.className = 'pool-prize-caption'; prizeCaption.textContent = prize?.contest ? 'Prêmio estimado do concurso ' + prize.contest : 'Estimativa indisponível no momento';
+      const date = document.createElement('p'); date.textContent = pool.date ? 'Sorteio: ' + pool.date.split('-').reverse().join('/') : 'Data do sorteio a confirmar.';
       const heading = document.createElement('h2'); heading.textContent = 'Números do bolão';
       const numbers = document.createElement('div'); numbers.className = 'pool-numbers';
       for (const number of pool.numbers) { const ball = document.createElement('span'); ball.textContent = String(number).padStart(2, '0'); numbers.append(ball); }
@@ -113,8 +123,8 @@
         for (let i = 1; i <= 6; i++) combinations = combinations * (pool.numbers.length - i + 1) / i;
         comparison.textContent = `Esta combinação equivale a ${new Intl.NumberFormat('pt-BR').format(Math.round(combinations))} ${combinations === 1 ? 'aposta simples' : 'apostas simples'} para acertar as 6 dezenas.`;
       }
-      const shares = document.createElement('p'); shares.textContent = pool.unlimited ? 'Sem limite de cotas cadastrado' : `${pool.available} cotas disponíveis de ${pool.total}`;
-      const price = document.createElement('p'); price.textContent = 'Valor da cota: ' + new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(pool.price / 100);
+      const shares = document.createElement('p'); shares.className = 'pool-shares'; shares.textContent = pool.unlimited ? 'Sem limite de cotas cadastrado' : `${pool.available} cotas disponíveis de ${pool.total}`;
+      const price = document.createElement('p'); price.className = 'pool-price'; price.textContent = new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(pool.price / 100);
       const controls = document.createElement('div'); controls.className = 'pool-purchase';
       const row = document.createElement('div'); row.className = 'pool-quantity';
       const minus = document.createElement('button'); minus.type = 'button'; minus.textContent = '−'; minus.setAttribute('aria-label','Diminuir quantidade de cotas');
@@ -130,11 +140,20 @@
       minus.addEventListener('click', () => updateQuantity(Number(quantity.value)-1));
       plus.addEventListener('click', () => updateQuantity(Number(quantity.value)+1));
       quantity.addEventListener('change', () => updateQuantity(quantity.value));
-      row.append(minus,quantity,plus); controls.append(row,total); updateQuantity(quantity.value);
+      const quantityLabel = document.createElement('p'); quantityLabel.className = 'pool-quantity-label'; quantityLabel.textContent = 'Quantidade de cotas';
+      row.append(minus,quantity,plus); controls.append(quantityLabel,row,total); updateQuantity(quantity.value);
       const notice = document.createElement('p'); notice.textContent = 'Compra online de cotas ainda indisponível.';
-      const button = document.createElement('button'); button.type = 'button'; button.disabled = true; button.className = 'add-button'; button.textContent = 'Adicionar ao carrinho';
-      body.append(date, heading, numbers);
-      if (comparison.textContent) body.append(comparison);
+      const button = document.createElement('button'); button.type = 'button'; button.disabled = true; button.className = 'add-button'; button.textContent = 'Colocar no carrinho';
+      const description = document.createElement('p'); description.className = 'pool-description'; description.textContent = pool.description || '';
+      const details = document.createElement('details'); details.className = 'pool-card-details';
+      const summary = document.createElement('summary'); summary.textContent = 'Detalhes';
+      details.append(summary, date);
+      if (pool.numbers.length) details.append(heading, numbers);
+      else { const pending = document.createElement('p'); pending.textContent = 'Números das apostas ainda não informados.'; details.append(pending); }
+      if (comparison.textContent) details.append(comparison);
+      body.append(prizeValue, prizeCaption);
+      if (description.textContent) body.append(description);
+      body.append(details);
       controls.append(button,notice); body.append(shares, price, controls); card.append(body); featured.append(card);
     }
     list.textContent = poolsLoading ? 'Carregando bolões...' : loadError ? 'Não foi possível carregar os bolões.' : `${visible.length} ${visible.length === 1 ? 'bolão cadastrado' : 'bolões cadastrados'}.`;
