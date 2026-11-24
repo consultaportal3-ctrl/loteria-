@@ -316,6 +316,14 @@
     card.innerHTML = `<div class="settings-body"><h2>Cadastrar bolão</h2><p>Cadastre as informações reais. A compra de cotas ainda não está habilitada.</p><form id="pool-form"><label>Modalidade<select name="game" required><option value="virada">Mega da Virada</option><option value="mega">Mega-Sena</option><option value="facil">Lotofácil</option><option value="quina">Quina</option><option value="milionaria">+Milionária</option><option value="dupla">Dupla Sena</option><option value="timemania">Timemania</option><option value="dia">Dia de Sorte</option><option value="super">Super Sete</option></select></label><label>Data do sorteio<input type="date" name="date" required></label><label>Números (separados por vírgula)<input name="numbers" placeholder="01, 05, 10, 20, 30, 40" required></label><label>Total de cotas<input name="total" type="number" min="1" max="10000" required></label><label>Cotas disponíveis<input name="available" type="number" min="0" max="10000" required></label><label>Valor da cota em reais<input name="price" type="number" min="0.01" max="1000000" step="0.01" required></label><button class="button" type="submit">Salvar bolão</button><p role="status"></p></form><h2>Bolões cadastrados</h2><div id="pool-list"></div></div>`;
     host.append(card);
     const form = card.querySelector('form'), list = card.querySelector('#pool-list'), message = card.querySelector('[role="status"]');
+    const models = document.createElement('section');
+    models.innerHTML = '<h2>Modelos da Mega da Virada</h2><p>Modelos ilustrativos, ainda sem apostas registradas e indisponíveis para compra.</p><div class="pool-model-list">Carregando modelos...</div>';
+    card.querySelector('.settings-body').append(models);
+    fetch('assets/pool-models.json', {cache:'no-store'}).then(response => { if (!response.ok) throw new Error(); return response.json(); }).then(items => {
+      const container = models.querySelector('.pool-model-list'); container.replaceChildren();
+      items.forEach((item, index) => { const row = document.createElement('p'); row.textContent = (index + 1) + '. ' + item.description + ' · ' + item.available + ' de ' + item.total + ' cotas · ' + new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(item.price / 100); container.append(row); });
+    }).catch(() => { models.querySelector('.pool-model-list').textContent = 'Não foi possível carregar os modelos.'; });
+
     const unlimitedLabel = node('label');
     unlimitedLabel.innerHTML = '<input type="checkbox" name="unlimited"> Sem limite de cotas cadastrado';
     form.elements.total.parentElement.before(unlimitedLabel);
