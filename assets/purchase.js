@@ -57,6 +57,10 @@
     const megaPrize = prizes[select.value];
     document.getElementById('mega-prize').textContent = megaPrize ? (megaPrize.amount >= 1000000 ? `R$ ${new Intl.NumberFormat('pt-BR',{maximumFractionDigits:2}).format(megaPrize.amount / 1000000)} ${megaPrize.amount === 1000000 ? 'Milhão' : 'Milhões'}` : megaPrize.amount >= 1000 ? `R$ ${new Intl.NumberFormat('pt-BR',{maximumFractionDigits:2}).format(megaPrize.amount / 1000)} Mil` : new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL',maximumFractionDigits:0}).format(megaPrize.amount)) : 'Prêmio indisponível';
     document.getElementById('mega-contest').textContent = megaPrize ? `Prêmio estimado do concurso ${megaPrize.contest}` : 'Estimativa indisponível no momento';
+    if (select.value === 'super' && !megaPrize) {
+      document.getElementById('mega-prize').textContent = 'R$ 650 Mil';
+      document.getElementById('mega-contest').textContent = 'Valor de referência — consulte a estimativa atual';
+    }
     document.getElementById('mega-date').textContent = megaPrize?.date ? megaPrize.date.split('-').reverse().join('/') + (select.value === 'mega' && megaPrize.contest === 3090 ? ' às 21h00' : ' — consulte o horário oficial') : 'Data indisponível';
     const drawLabel = document.getElementById('mega-draw-label');
     drawLabel.textContent = 'Sorteio';
