@@ -54,7 +54,7 @@
       const footer = button.querySelector('.modality-count');
       if (footer) {
         const count = pools.filter(pool => pool.game === button.dataset.poolGame).length;
-        footer.textContent = `${count} ${count === 1 ? 'bolão' : 'bolões'}`;
+        footer.textContent = button.dataset.poolGame === 'loteca' ? 'R$ 1 Milhão*' : `${count} ${count === 1 ? 'bolão' : 'bolões'}`;
       }
     });
     const visible = pools.filter(pool => !select.value || pool.game === select.value);
