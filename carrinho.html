@@ -40,7 +40,7 @@
   <script src="assets/dia.js?v=20261113-reference" defer></script>
   <script src="assets/super.js?v=20261113-reference" defer></script>
   <script src="assets/local-actions.js?v=20261026-pools" defer></script>
-  <script src="assets/cart-page.js?v=20261123-bolao-demo" defer></script>
+  <script src="assets/cart-page.js?v=20261123-tabela-bolao" defer></script>
   <script src="assets/payment-checkout.js?v=20261111-visitor-activity" defer></script>
   <link rel="stylesheet" href="assets/mobile-viewport.css?v=20261104-cart-payment">
   <link rel="stylesheet" href="assets/home-header.css?v=20261103-4" media="(max-width:650px)" id="cart-phone-header-style">
@@ -57,7 +57,7 @@
   <link rel="stylesheet" href="assets/loteca-especial.css?v=2">
   <link rel="stylesheet" href="assets/cart-header.css?v=20261109-blue-header">
   <script src="assets/visitor-presence.js?v=20261111-visitor-activity" defer></script>
-</head>
+<style>.pool-demo-section{margin:24px 0;padding:22px;background:#fff;color:#536079}.pool-demo-section h2{font-size:clamp(30px,4vw,52px);color:#1c2a4a;margin:0 0 12px}.pool-demo-section>p{font-size:14px}.pool-demo-section>div{overflow-x:auto}.pool-demo-table{width:100%;border-collapse:collapse;text-align:center;margin:22px 0;min-width:600px}.pool-demo-table th,.pool-demo-table td{border:1px solid #ddd;padding:22px 12px}.pool-demo-table th{font-weight:bold}.pool-demo-table td:first-child{color:#00a451;font-weight:bold}.pool-demo-remove{border:0;background:none;color:#b90000;cursor:pointer}.pool-demo-section strong{color:#0068ac}</style></head>
 <body class="portal-page home-refresh cart-document">
   <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
   <header class="site-header">
@@ -420,7 +420,7 @@
   <dialog class="game-dialog" id="game-dialog" aria-labelledby="game-title"><div class="dialog-top"><span class="eyebrow blue">MONTE SUA COMBINAÇÃO</span><button class="icon-button" type="button" data-close="game-dialog" aria-label="Fechar seleção">×</button></div><h2 id="game-title"></h2><p id="game-instructions"></p><div class="selection-toolbar"><span id="selection-count" role="status" aria-live="polite"></span><div><button class="text-button" id="random-numbers" type="button">✦ Aleatória</button><button class="text-button" id="clear-numbers" type="button">Limpar</button></div></div><div class="number-grid" id="number-grid" role="group" aria-label="Números disponíveis"></div><p class="hint" id="selection-hint" role="status" aria-live="polite"></p><div class="dialog-bottom"><span>Jogo demonstrativo<br><small>Sem valor financeiro</small></span><button class="button" id="add-game" type="button" disabled>Adicionar aos meus jogos</button></div></dialog>
   <dialog class="cart-dialog cart-page" id="cart-dialog" aria-labelledby="cart-title">
     <h1 id="cart-title" class="cart-accessible-title" tabindex="-1">Carrinho de Apostas</h1>
-    <section id="pool-demo-cart" hidden aria-live="polite" style="margin:20px;padding:18px;border:2px solid #009c4c;border-radius:10px;background:#fff"><h2>Bol&otilde;es de demonstra&ccedil;&atilde;o</h2><p>Itens ilustrativos: n&atilde;o geram cobran&ccedil;a, Pix ou aposta registrada. O pagamento abaixo se aplica somente &agrave;s demais apostas.</p><div id="pool-demo-items"></div><strong id="pool-demo-total"></strong></section><div class="cart-page-actions"><button class="cart-continue" type="button" data-close="cart-dialog">Continuar apostando</button><button type="button" id="cart-clear">Limpar carrinho</button><button class="cart-payment" type="button" data-cart-payment><span aria-hidden="true">✓</span> Ir para pagamento</button></div>
+    <section id="pool-demo-cart" class="pool-demo-section" hidden aria-live="polite"><h2>Cotas de Bol&atilde;o</h2><p>Itens ilustrativos: n&atilde;o geram cobran&ccedil;a, Pix ou aposta registrada. O pagamento abaixo se aplica somente &agrave;s demais apostas.</p><div id="pool-demo-items"></div><strong id="pool-demo-total"></strong></section><div class="cart-page-actions"><button class="cart-continue" type="button" data-close="cart-dialog">Continuar apostando</button><button type="button" id="cart-clear">Limpar carrinho</button><button class="cart-payment" type="button" data-cart-payment><span aria-hidden="true">✓</span> Ir para pagamento</button></div>
     <h2 class="cart-list-title">Apostas Individuais</h2>
     <div class="cart-table-heading" aria-hidden="true"><span>Modalidade</span><span>Aposta</span><span>Concurso</span><span>Valor da Aposta</span><span>Excluir</span></div>
     <div id="cart-items"></div>

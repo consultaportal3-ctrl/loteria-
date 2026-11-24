@@ -7,7 +7,10 @@
     demoSection.hidden=!items.length;
     const list=document.getElementById('pool-demo-items');list.replaceChildren();
     const money=value=>new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(value/100);
-    items.forEach((item,index)=>{const row=document.createElement('p');row.textContent='Mega da Virada — '+item.description+' — '+item.quantity+' cota(s) × '+money(item.price)+' ';const remove=document.createElement('button');remove.type='button';remove.textContent='Remover';remove.addEventListener('click',()=>{items.splice(index,1);localStorage.setItem(demoKey,JSON.stringify(items));renderPoolDemo();});row.append(remove);list.append(row);});
+    const table=document.createElement('table');table.className='pool-demo-table';
+    const header=document.createElement('thead');header.innerHTML='<tr><th>Modalidade</th><th>Composi\u00e7\u00e3o</th><th>Cotas</th><th>Valor da cota</th><th>Excluir</th></tr>';table.append(header);
+    const body=document.createElement('tbody');
+    items.forEach((item,index)=>{const row=document.createElement('tr');['Mega da Virada',item.description,String(item.quantity),money(item.price)].forEach(value=>{const cell=document.createElement('td');cell.textContent=value;row.append(cell);});const cell=document.createElement('td');const remove=document.createElement('button');remove.type='button';remove.textContent='Excluir';remove.className='pool-demo-remove';remove.addEventListener('click',()=>{items.splice(index,1);localStorage.setItem(demoKey,JSON.stringify(items));renderPoolDemo();});cell.append(remove);row.append(cell);body.append(row);});table.append(body);list.append(table);
     document.getElementById('pool-demo-total').textContent='Total simulado: '+money(items.reduce((sum,item)=>sum+item.price*item.quantity,0));
   }
   renderPoolDemo();
