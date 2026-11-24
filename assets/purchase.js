@@ -161,7 +161,7 @@
       const quantityLabel = document.createElement('p'); quantityLabel.className = 'pool-quantity-label'; quantityLabel.textContent = 'Quantidade de cotas';
       row.append(minus,quantity,plus); controls.append(quantityLabel,row,total); updateQuantity(quantity.value);
       const isRegisteredPool = /^[a-f0-9-]{36}$/.test(pool.id);
-      const notice = document.createElement('p'); notice.textContent = isRegisteredPool ? 'As cotas ser\u00e3o inclu\u00eddas no pagamento do carrinho.' : 'Demonstra\u00e7\u00e3o: sem cobran\u00e7a ou aposta registrada.';
+      const notice = document.createElement('p'); notice.hidden = true;
       const button = document.createElement('button'); button.type = 'button'; button.disabled = !isRegisteredPool; button.className = 'add-button'; button.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M2 2h2l2.4 11.4A2 2 0 0 0 8.4 15H19a2 2 0 0 0 1.9-1.4L23 6H6l-.4-2H2zm7 15a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm10 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"/></svg><span>Colocar no Carrinho</span>';
       button.addEventListener('click', () => {
         try {
@@ -171,7 +171,7 @@
           cart.push({id:pool.id, game:pool.game, name:select.querySelector(`option[value="${pool.game}"]`)?.textContent || 'Bolão', description:pool.description, bets, price:pool.price, quantity:Number(quantity.value)});
           localStorage.setItem(key, JSON.stringify(cart));
           showPoolCart();
-        } catch (_) { notice.textContent = 'N\u00e3o foi poss\u00edvel guardar o carrinho neste navegador.'; }
+        } catch (_) { notice.textContent = 'N\u00e3o foi poss\u00edvel guardar o carrinho neste navegador.'; notice.hidden = false; }
       });
       const description = document.createElement('p'); description.className = 'pool-description'; description.textContent = pool.description || '';
       const detailButton = document.createElement('button'); detailButton.type = 'button'; detailButton.className = 'pool-detail-button'; detailButton.textContent = 'Detalhes';
