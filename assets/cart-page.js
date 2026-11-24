@@ -1,5 +1,16 @@
 (() => {
   const dialog=document.getElementById('cart-dialog');
+  const demoSection=document.getElementById('pool-demo-cart');
+  const demoKey='portal-pool-demo-cart-v1';
+  function renderPoolDemo(){
+    let items; try{items=JSON.parse(localStorage.getItem(demoKey)||'[]');if(!Array.isArray(items))items=[];}catch(_){items=[];}
+    demoSection.hidden=!items.length;
+    const list=document.getElementById('pool-demo-items');list.replaceChildren();
+    const money=value=>new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(value/100);
+    items.forEach((item,index)=>{const row=document.createElement('p');row.textContent='Mega da Virada — '+item.description+' — '+item.quantity+' cota(s) × '+money(item.price)+' ';const remove=document.createElement('button');remove.type='button';remove.textContent='Remover';remove.addEventListener('click',()=>{items.splice(index,1);localStorage.setItem(demoKey,JSON.stringify(items));renderPoolDemo();});row.append(remove);list.append(row);});
+    document.getElementById('pool-demo-total').textContent='Total simulado: '+money(items.reduce((sum,item)=>sum+item.price*item.quantity,0));
+  }
+  renderPoolDemo();
   const hero=document.querySelector('.hero');
   hero.after(dialog);
   let returnHash=location.hash==='#carrinho'?'#modalidades':location.hash||'#inicio';

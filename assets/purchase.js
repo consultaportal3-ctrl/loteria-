@@ -163,7 +163,7 @@
           if (!Array.isArray(cart)) throw new Error();
           cart.push({id:pool.id, description:pool.description, price:pool.price, quantity:Number(quantity.value)});
           localStorage.setItem(key, JSON.stringify(cart));
-          location.href = '../carrinho-bolao-demo.html';
+          location.href = '../carrinho.html#carrinho';
         } catch (_) { notice.textContent = 'N\u00e3o foi poss\u00edvel guardar o carrinho neste navegador.'; }
       });
       const description = document.createElement('p'); description.className = 'pool-description'; description.textContent = pool.description || '';
