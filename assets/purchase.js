@@ -28,11 +28,17 @@
   function update() {
     const name = select.value ? select.selectedOptions[0].textContent : 'Todos os bolões';
     const virada = select.value === 'virada';
+    const friday = select.value === 'quina';
     document.querySelector('.pool-hero').classList.toggle('show-virada', virada);
+    document.querySelector('.pool-hero').classList.toggle('show-friday', friday);
     document.querySelector('.virada-highlight').hidden = !virada;
     document.querySelector('.virada-details').hidden = !virada;
+    document.querySelector('.friday-highlight').hidden = !friday;
+    document.querySelector('.friday-details').hidden = !friday;
     const viradaPrices = pools.filter(pool => pool.game === 'virada' && (pool.unlimited || pool.available > 0) && Number.isInteger(pool.price) && pool.price > 0).map(pool => pool.price);
     document.getElementById('virada-price').textContent = viradaPrices.length ? 'Valor cadastrado a partir de ' + new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(Math.min(...viradaPrices)/100) : 'Consulte os bolões cadastrados';
+    const fridayPrices = pools.filter(pool => pool.game === 'quina' && (pool.unlimited || pool.available > 0) && Number.isInteger(pool.price) && pool.price > 0).map(pool => pool.price);
+    document.getElementById('friday-price').textContent = fridayPrices.length ? 'Valor cadastrado a partir de ' + new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(Math.min(...fridayPrices)/100) : 'Consulte os bolões cadastrados';
     const remaining = Math.ceil((Date.parse('2026-12-31T22:00:00-03:00') - Date.now()) / 86400000);
     document.getElementById('virada-countdown').textContent = remaining > 0 ? `Apostas oficiais encerram em aproximadamente ${remaining} ${remaining === 1 ? 'dia' : 'dias'}` : 'Prazo oficial de apostas encerrado';
     document.querySelectorAll('[data-pool-game]').forEach(button => {
