@@ -107,25 +107,7 @@
         else { footer.textContent = 'Consulte o prêmio'; footer.title = 'Estimativa indisponível no momento.'; }
       }
     });
-    const examples = [
-      {id:'virada-1', game:'virada', date:'', numbers:[], total:23, available:23, price:5048, description:'2 apostas de 8 dezenas'},
-      {id:'virada-2', game:'virada', date:'', numbers:[], total:25, available:25, price:5048, description:'8 apostas de 7 dezenas'},
-      {id:'virada-3', game:'virada', date:'', numbers:[], total:27, available:27, price:1125, description:'5 apostas de 7 dezenas'},
-      {id:'virada-4', game:'virada', date:'', numbers:[], total:29, available:29, price:313956, description:'1 aposta de 20 dezenas'},
-      {id:'virada-exemplo-1', game:'virada', date:'', numbers:[], total:31, available:31, price:1990, description:'2 apostas de 6 dezenas'},
-      {id:'virada-exemplo-2', game:'virada', date:'', numbers:[], total:33, available:33, price:2490, description:'3 apostas de 6 dezenas'},
-      {id:'virada-exemplo-3', game:'virada', date:'', numbers:[], total:35, available:35, price:2990, description:'2 apostas de 7 dezenas'},
-      {id:'virada-exemplo-4', game:'virada', date:'', numbers:[], total:37, available:37, price:3490, description:'4 apostas de 6 dezenas'},
-      {id:'virada-exemplo-5', game:'virada', date:'', numbers:[], total:39, available:39, price:3990, description:'3 apostas de 7 dezenas'},
-      {id:'virada-exemplo-6', game:'virada', date:'', numbers:[], total:41, available:41, price:4490, description:'5 apostas de 6 dezenas'},
-      {id:'virada-exemplo-7', game:'virada', date:'', numbers:[], total:43, available:43, price:5990, description:'2 apostas de 8 dezenas'},
-      {id:'virada-exemplo-8', game:'virada', date:'', numbers:[], total:45, available:45, price:6990, description:'4 apostas de 7 dezenas'},
-      {id:'virada-exemplo-9', game:'virada', date:'', numbers:[], total:47, available:47, price:7990, description:'3 apostas de 8 dezenas'},
-      {id:'virada-exemplo-10', game:'virada', date:'', numbers:[], total:49, available:49, price:8990, description:'5 apostas de 7 dezenas'},
-      {id:'virada-exemplo-11', game:'virada', date:'', numbers:[], total:51, available:51, price:9990, description:'4 apostas de 8 dezenas'},
-      {id:'virada-exemplo-12', game:'virada', date:'', numbers:[], total:53, available:53, price:12990, description:'5 apostas de 8 dezenas'}
-    ];
-    const visible = [...examples, ...pools.filter(pool => !(pool.game === 'virada' && pool.unlimited && pool.price === 3990))].filter(pool => !select.value || pool.game === select.value);
+    const visible = pools.filter(pool => !select.value || pool.game === select.value);
     featured.replaceChildren();
     if (!visible.length) {
       const empty = document.createElement('p');
@@ -158,7 +140,7 @@
       const controls = document.createElement('div'); controls.className = 'pool-purchase';
       const row = document.createElement('div'); row.className = 'pool-quantity';
       const minus = document.createElement('button'); minus.type = 'button'; minus.textContent = '−'; minus.setAttribute('aria-label','Diminuir quantidade de cotas');
-      const maxQuantity = examples.some(example => example.id === pool.id) || pool.unlimited ? 10000 : pool.available;
+      const maxQuantity = pool.unlimited ? 10000 : pool.available;
       const quantity = document.createElement('input'); quantity.type = 'number'; quantity.min = '1'; quantity.max = String(maxQuantity); quantity.value = maxQuantity > 0 ? '1' : '0'; quantity.setAttribute('aria-label','Quantidade de cotas'); quantity.disabled = maxQuantity < 1;
       const plus = document.createElement('button'); plus.type = 'button'; plus.textContent = '+'; plus.setAttribute('aria-label','Aumentar quantidade de cotas');
       const total = document.createElement('p'); total.className = 'pool-total';
