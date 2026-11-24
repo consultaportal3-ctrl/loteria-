@@ -94,18 +94,18 @@
       {id:'virada-2', game:'virada', date:'', numbers:[], total:9, available:6, price:5048, description:'8 apostas de 7 dezenas'},
       {id:'virada-3', game:'virada', date:'', numbers:[], total:26, available:3, price:1125, description:'5 apostas de 7 dezenas'},
       {id:'virada-4', game:'virada', date:'', numbers:[], total:100, available:28, price:313956, description:'1 aposta de 20 dezenas'},
-      {id:'virada-exemplo-1', game:'virada', date:'', numbers:[], total:10, available:7, price:1990, description:'2 apostas de 6 dezenas (exemplo)'},
-      {id:'virada-exemplo-2', game:'virada', date:'', numbers:[], total:12, available:9, price:2490, description:'3 apostas de 6 dezenas (exemplo)'},
-      {id:'virada-exemplo-3', game:'virada', date:'', numbers:[], total:15, available:11, price:2990, description:'2 apostas de 7 dezenas (exemplo)'},
-      {id:'virada-exemplo-4', game:'virada', date:'', numbers:[], total:20, available:16, price:3490, description:'4 apostas de 6 dezenas (exemplo)'},
-      {id:'virada-exemplo-5', game:'virada', date:'', numbers:[], total:20, available:14, price:3990, description:'3 apostas de 7 dezenas (exemplo)'},
-      {id:'virada-exemplo-6', game:'virada', date:'', numbers:[], total:25, available:20, price:4490, description:'5 apostas de 6 dezenas (exemplo)'},
-      {id:'virada-exemplo-7', game:'virada', date:'', numbers:[], total:25, available:18, price:5990, description:'2 apostas de 8 dezenas (exemplo)'},
-      {id:'virada-exemplo-8', game:'virada', date:'', numbers:[], total:30, available:24, price:6990, description:'4 apostas de 7 dezenas (exemplo)'},
-      {id:'virada-exemplo-9', game:'virada', date:'', numbers:[], total:30, available:21, price:7990, description:'3 apostas de 8 dezenas (exemplo)'},
-      {id:'virada-exemplo-10', game:'virada', date:'', numbers:[], total:40, available:32, price:8990, description:'5 apostas de 7 dezenas (exemplo)'},
-      {id:'virada-exemplo-11', game:'virada', date:'', numbers:[], total:40, available:30, price:9990, description:'4 apostas de 8 dezenas (exemplo)'},
-      {id:'virada-exemplo-12', game:'virada', date:'', numbers:[], total:50, available:40, price:12990, description:'5 apostas de 8 dezenas (exemplo)'}
+      {id:'virada-exemplo-1', game:'virada', date:'', numbers:[], total:10, available:7, price:1990, description:'2 apostas de 6 dezenas'},
+      {id:'virada-exemplo-2', game:'virada', date:'', numbers:[], total:12, available:9, price:2490, description:'3 apostas de 6 dezenas'},
+      {id:'virada-exemplo-3', game:'virada', date:'', numbers:[], total:15, available:11, price:2990, description:'2 apostas de 7 dezenas'},
+      {id:'virada-exemplo-4', game:'virada', date:'', numbers:[], total:20, available:16, price:3490, description:'4 apostas de 6 dezenas'},
+      {id:'virada-exemplo-5', game:'virada', date:'', numbers:[], total:20, available:14, price:3990, description:'3 apostas de 7 dezenas'},
+      {id:'virada-exemplo-6', game:'virada', date:'', numbers:[], total:25, available:20, price:4490, description:'5 apostas de 6 dezenas'},
+      {id:'virada-exemplo-7', game:'virada', date:'', numbers:[], total:25, available:18, price:5990, description:'2 apostas de 8 dezenas'},
+      {id:'virada-exemplo-8', game:'virada', date:'', numbers:[], total:30, available:24, price:6990, description:'4 apostas de 7 dezenas'},
+      {id:'virada-exemplo-9', game:'virada', date:'', numbers:[], total:30, available:21, price:7990, description:'3 apostas de 8 dezenas'},
+      {id:'virada-exemplo-10', game:'virada', date:'', numbers:[], total:40, available:32, price:8990, description:'5 apostas de 7 dezenas'},
+      {id:'virada-exemplo-11', game:'virada', date:'', numbers:[], total:40, available:30, price:9990, description:'4 apostas de 8 dezenas'},
+      {id:'virada-exemplo-12', game:'virada', date:'', numbers:[], total:50, available:40, price:12990, description:'5 apostas de 8 dezenas'}
     ];
     const visible = [...examples, ...pools.filter(pool => !(pool.game === 'virada' && pool.unlimited && pool.price === 3990))].filter(pool => !select.value || pool.game === select.value);
     featured.replaceChildren();
