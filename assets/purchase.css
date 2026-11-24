@@ -55,3 +55,7 @@
 .pool-card-icon svg{display:block;width:36px;height:36px;fill:currentColor}
 
 .pool-purchase .add-button{flex-direction:row;justify-content:center;gap:7px}.pool-purchase .add-button svg{width:24px;height:24px;flex:none}.pool-purchase .add-button:disabled{background:#009c4c;opacity:1}
+
+.pool-cart-preview{position:absolute;z-index:20;right:0;top:90px;width:min(760px,100%);padding:24px;background:#fff;color:#344657;border-radius:8px;box-shadow:0 4px 16px #0004;text-align:left}.pool-cart-preview h2{color:#327bb5;font-size:20px;margin:5px 0 10px}.pool-preview-close{float:right;background:none;border:0;color:#7ea8c8;font-size:30px;cursor:pointer}.pool-preview-note{font-size:14px;color:#4b5c68}.pool-preview-row{display:grid;grid-template-columns:2fr 1fr 1.3fr 1fr;gap:8px;align-items:center;padding:12px 8px;background:#eee}.pool-preview-header{background:#fff;color:#327bb5;font-weight:bold;border-bottom:1px solid #ddd}.pool-preview-row button{border:0;background:transparent;color:#b90000;cursor:pointer}.pool-preview-link{display:block;width:min(100%,500px);margin:24px auto 0;padding:15px;border-radius:4px;background:#ef9000;color:#fff;text-align:center;text-decoration:none;font-size:20px}@media(max-width:720px){.pool-cart-preview{position:absolute;top:85px;right:0;padding:16px;width:100%}.pool-preview-row{font-size:13px}.pool-preview-link{font-size:17px}}
+
+.pool-hero:has(.pool-cart-preview){overflow:visible;z-index:10}.pool-hero-inner:has(.pool-cart-preview){overflow:visible}

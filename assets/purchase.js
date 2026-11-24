@@ -24,6 +24,25 @@
     const cart = JSON.parse(localStorage.getItem('portal-demo-games-v1') || '[]');
     document.getElementById('pool-cart-count').textContent = Array.isArray(cart) ? String(cart.length) : '0';
   } catch { document.getElementById('pool-cart-count').textContent = '0'; }
+  function showPoolCart() {
+    let cart = []; try { cart = JSON.parse(localStorage.getItem('portal-pool-demo-cart-v1') || '[]'); if (!Array.isArray(cart)) cart = []; } catch (_) {}
+    let panel = document.getElementById('pool-cart-preview');
+    if (!panel) { panel = document.createElement('section'); panel.id = 'pool-cart-preview'; panel.className = 'pool-cart-preview'; panel.setAttribute('aria-label', 'Carrinho de demonstra\u00e7\u00e3o'); document.querySelector('.pool-hero-inner').append(panel); }
+    panel.replaceChildren();
+    const close = document.createElement('button'); close.type = 'button'; close.className = 'pool-preview-close'; close.textContent = '\u00d7'; close.setAttribute('aria-label', 'Fechar resumo do carrinho'); close.addEventListener('click', () => panel.remove()); panel.append(close);
+    const heading = document.createElement('h2'); heading.textContent = 'Cotas de Bol\u00e3o'; panel.append(heading);
+    const note = document.createElement('p'); note.className = 'pool-preview-note'; note.textContent = 'Demonstra\u00e7\u00e3o: sem cobran\u00e7a ou aposta registrada.'; panel.append(note);
+    const table = document.createElement('div'); table.className = 'pool-preview-table';
+    const header = document.createElement('div'); header.className = 'pool-preview-row pool-preview-header';
+    ['Modalidade','Cotas','Valor','Excluir'].forEach(label => { const cell = document.createElement('span'); cell.textContent = label; header.append(cell); }); table.append(header);
+    const money = value => new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(value / 100);
+    cart.forEach((item, index) => { const row = document.createElement('div'); row.className = 'pool-preview-row'; [ 'Mega da Virada', String(item.quantity), money(item.price * item.quantity) ].forEach(value => { const cell = document.createElement('span'); cell.textContent = value; row.append(cell); }); const remove = document.createElement('button'); remove.type = 'button'; remove.textContent = 'Excluir'; remove.addEventListener('click', () => { cart.splice(index,1); localStorage.setItem('portal-pool-demo-cart-v1',JSON.stringify(cart)); showPoolCart(); }); row.append(remove); table.append(row); });
+    if (!cart.length) { const empty = document.createElement('p'); empty.textContent = 'Nenhum bol\u00e3o selecionado.'; table.append(empty); }
+    panel.append(table);
+    const link = document.createElement('a'); link.href = '../carrinho.html#carrinho'; link.className = 'pool-preview-link'; link.textContent = 'Ir para Carrinho'; panel.append(link);
+    document.getElementById('pool-cart-count').textContent = String(cart.reduce((sum, item) => sum + item.quantity, 0));
+    panel.scrollIntoView({behavior:'smooth', block:'nearest'});
+  }
   const routes = {virada:'mega-virada', mega:'mega-sena', facil:'lotofacil', quina:'quina', loteca:'loteca', milionaria:'mais-milionaria', dupla:'dupla-sena', timemania:'timemania', dia:'dia-de-sorte', super:'super-sete'};
   const requested = new URLSearchParams(location.search).get('modalidade');
   select.value = Object.hasOwn(routes, requested) ? requested : '';
@@ -163,7 +182,7 @@
           if (!Array.isArray(cart)) throw new Error();
           cart.push({id:pool.id, description:pool.description, price:pool.price, quantity:Number(quantity.value)});
           localStorage.setItem(key, JSON.stringify(cart));
-          location.href = '../carrinho.html#carrinho';
+          showPoolCart();
         } catch (_) { notice.textContent = 'N\u00e3o foi poss\u00edvel guardar o carrinho neste navegador.'; }
       });
       const description = document.createElement('p'); description.className = 'pool-description'; description.textContent = pool.description || '';
