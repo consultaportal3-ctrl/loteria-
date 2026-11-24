@@ -153,7 +153,6 @@
       if (comparison.textContent) details.append(comparison);
       body.append(prizeValue, prizeCaption);
       if (description.textContent) body.append(description);
-      body.append(details);
       controls.append(button,notice); body.append(shares, price, controls); card.append(body); featured.append(card);
     }
     list.textContent = poolsLoading ? 'Carregando bolões...' : loadError ? 'Não foi possível carregar os bolões.' : `${visible.length} ${visible.length === 1 ? 'bolão cadastrado' : 'bolões cadastrados'}.`;
