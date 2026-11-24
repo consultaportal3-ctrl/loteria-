@@ -288,7 +288,21 @@
     submit.disabled = true;
     error.hidden = true;
     try {
-      const items = window.portalDemo.getGames();
+      const items = [...window.portalDemo.getGames()];
+      try {
+        const poolItems = JSON.parse(localStorage.getItem('portal-pool-demo-cart-v1') || '[]');
+        if (Array.isArray(poolItems)) {
+          poolItems.forEach(poolItem => {
+            if (!poolItem || typeof poolItem.id !== 'string' || !Number.isInteger(poolItem.quantity) || poolItem.quantity < 1) return;
+            items.push({
+              poolId:poolItem.id,
+              quantity:poolItem.quantity,
+              name:poolItem.name || 'Bolão',
+              referencePrice:(poolItem.price * poolItem.quantity) / 100,
+            });
+          });
+        }
+      } catch {}
       if (!items.length) throw new Error('O carrinho está vazio. Adicione uma combinação antes de continuar.');
       renderOrderSummary(items);
       if (live) {
