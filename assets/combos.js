@@ -10,14 +10,14 @@
   const tile = (id, name, contest) => ({ id, name, contest });
   const combos = [
     {
-      name: 'Fezinha do Mês', price: '408,00',
+      name: 'Fezinha do Mês', price: '392,50',
       description: 'Quer sorte o mês inteiro? Pacote de apostas teimosinhas de todas as modalidades disponíveis, exceto Timemania e Loteca.',
-      tiles: [tile('mega','Mega-Sena','3086 a 3097'),tile('facil','Lotofácil','3829 a 3852'),tile('quina','Quina','7167 a 7172'),tile('milionaria','+Milionária','407 a 411'),tile('dupla','Dupla Sena','3032 a 3043'),tile('mania','Lotomania','2999 a 3010'),tile('dia','Dia de Sorte','1347 a 1370'),tile('super','Super Sete','922 a 933')]
+      tiles: [tile('quina','Quina Friday','7173'),tile('mega','Mega-Sena','3090 a 3101'),tile('facil','Lotofácil','3837 a 3860'),tile('milionaria','+Milionária','410 a 414'),tile('mania','Lotomania','3003 a 3014'),tile('dupla','Dupla Sena','3036 a 3047'),tile('dia','Dia de Sorte','1355 a 1378'),tile('super','Super Sete','926 a 937')]
     },
     {
-      name: 'Sorte de Hoje', price: '21,00',
+      name: 'Sorte de Hoje', price: '21,50',
       description: 'Não deixe para amanhã a chance de ficar milionário. Aposte nas modalidades do dia!',
-      tiles: [tile('facil','Lotofácil','3829'),tile('quina','Quina','7167'),tile('dupla','Dupla Sena','3032'),tile('mania','Lotomania','2999'),tile('dia','Dia de Sorte','1347'),tile('super','Super Sete','922')]
+      tiles: [tile('mega','Mega-Sena','3090'),tile('facil','Lotofácil','3837'),tile('timemania','Timemania','2472'),tile('dia','Dia de Sorte','1355')]
     },
     {
       name: 'Chance Todo Dia', price: '148,50',
@@ -57,7 +57,7 @@
   let selectedComboIndex=0;
   const activePanel=()=>track.querySelector(`[data-combo-index="${selectedComboIndex}"] .combo-options`);
   const selectedBetCount=()=>[9,7,10,12,20,4,4][selectedComboIndex];
-  const selectedPrice=()=>[408,21,148.5,50,61,1652,24][selectedComboIndex];
+  const selectedPrice=()=>[392.5,21.5,148.5,50,61,1652,24][selectedComboIndex];
   const tileGameCount=item=>selectedComboIndex===6?4:selectedComboIndex===4?{facil:8,mania:2,dia:6,super:4}[item.id]:selectedComboIndex===3||item.id==='mania'?2:1;
   const maxComboQuantity=()=>Math.floor(30/selectedBetCount());
   function stopMonthlyRotation(){clearInterval(monthlyTimer);}
@@ -91,7 +91,7 @@
     track.innerHTML = carouselCombos().slice(activeIndex, activeIndex + visibleCount).map(combo => {
       const tiles = combo.tiles.map(item => {
         const [background, color] = colors[item.id];
-        return `<div class="combo-tile" style="--tile-background:${background};--tile-color:${color}"><span class="combo-watermark" aria-hidden="true"><i></i><i></i><i></i><i></i></span><b>${item.name}${item.id === 'mania' ? ' <small>+ Espelho</small>' : ''}</b><span>Concurso ${item.contest}</span></div>`;
+        return `<div class="combo-tile${item.name === 'Quina Friday' ? ' combo-tile-friday' : ''}" style="--tile-background:${background};--tile-color:${color}"><span class="combo-watermark" aria-hidden="true"><i></i><i></i><i></i><i></i></span><b>${item.name}${item.id === 'mania' ? ' <small>+ Espelho</small>' : ''}</b><span>Concurso ${item.contest}</span></div>`;
       }).join('');
       const buy=`<button class="combo-buy" type="button" data-combo-open="${combos.indexOf(combo)}" aria-label="Montar ${combo.name}">Aposte Já</button>`;
       return `<article class="combo-card${combo===combos[6]?' combo-special':''}" data-combo-index="${combos.indexOf(combo)}" aria-label="${combo.name}"><div class="combo-front"><div class="combo-mosaic" style="--combo-rows:${Math.ceil(combo.tiles.length / 2)}">${tiles}</div><div class="combo-content"><h3>${combo.name}</h3><p>${combo.description}</p><strong class="combo-price">R$ ${combo.price}</strong>${buy}</div></div>${monthlyPanel(combo)}</article>`;

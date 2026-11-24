@@ -58,6 +58,7 @@
 .combo-watermark i:nth-child(2){transform:rotate(90deg)}
 .combo-watermark i:nth-child(3){transform:rotate(-90deg)}
 .combo-watermark i:nth-child(4){transform:rotate(180deg)}
+.combo-tile-friday{background:radial-gradient(ellipse at center,#d000e9 0%,#6a11be 40%,#251181 76%,#140b58 100%)!important}.combo-tile-friday:before{position:absolute;inset:0;z-index:0;background:repeating-conic-gradient(from 5deg at 50% 50%,#fff3 0deg 2deg,transparent 2deg 14deg);content:"";opacity:.42}
 .combo-content{display:flex;flex:1;align-items:center;flex-direction:column;min-height:202px;padding:11px 20px 15px;text-align:center;color:#535b70}
 .combo-content h3{margin:0 0 6px;color:#2d61aa;font:900 23px/1.2 CampaignBold,'Arial Black',sans-serif;letter-spacing:-.7px}
 .combo-content p{margin:0 0 9px;font-size:12px;line-height:1.35;min-height:48px}
