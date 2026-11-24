@@ -29,11 +29,12 @@
   function update() {
     const name = select.value ? select.selectedOptions[0].textContent : 'Todos os bolões';
     const virada = select.value === 'virada';
-    const mega = select.value === 'mega';
+    const mega = ['mega','facil','milionaria'].includes(select.value);
     const friday = select.value === 'quina';
     const loteca = select.value === 'loteca';
     document.querySelector('.pool-hero').classList.toggle('show-virada', virada);
     document.querySelector('.pool-hero').classList.toggle('show-mega', mega);
+    document.querySelector('.pool-hero').style.setProperty('--selected-game-color', ({mega:'#00a94f',facil:'#92278f',milionaria:'#2b327d'})[select.value] || '#00a94f');
     document.querySelector('.pool-hero').classList.toggle('show-friday', friday);
     document.querySelector('.pool-hero').classList.toggle('show-loteca', loteca);
     document.querySelector('.virada-highlight').hidden = !virada;
@@ -46,12 +47,13 @@
     document.querySelector('.loteca-details').hidden = !loteca;
     const viradaPrices = pools.filter(pool => pool.game === 'virada' && (pool.unlimited || pool.available > 0) && Number.isInteger(pool.price) && pool.price > 0).map(pool => pool.price);
     document.getElementById('virada-price').textContent = viradaPrices.length ? 'Valor cadastrado a partir de ' + new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(Math.min(...viradaPrices)/100) : 'Consulte os bolões cadastrados';
-    const megaPrices = pools.filter(pool => pool.game === 'mega' && (pool.unlimited || pool.available > 0) && Number.isInteger(pool.price) && pool.price > 0).map(pool => pool.price);
+    const megaPrices = pools.filter(pool => pool.game === select.value && (pool.unlimited || pool.available > 0) && Number.isInteger(pool.price) && pool.price > 0).map(pool => pool.price);
     document.getElementById('mega-pool-price').textContent = megaPrices.length ? 'Valor cadastrado a partir de ' + new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(Math.min(...megaPrices)/100) : 'Consulte os bolões cadastrados';
-    const megaPrize = prizes.mega;
+    document.getElementById('mega-name').textContent = ({mega:'Mega-Sena',facil:'Lotofácil',milionaria:'+Milionária'})[select.value] || 'Mega-Sena';
+    const megaPrize = prizes[select.value];
     document.getElementById('mega-prize').textContent = megaPrize ? new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL',maximumFractionDigits:0}).format(megaPrize.amount) : 'Prêmio indisponível';
     document.getElementById('mega-contest').textContent = megaPrize ? `Prêmio estimado do concurso ${megaPrize.contest}` : 'Estimativa indisponível no momento';
-    document.getElementById('mega-date').textContent = megaPrize?.date ? megaPrize.date.split('-').reverse().join('/') + (megaPrize.contest === 3090 ? ' às 21h00' : ' — consulte o horário oficial') : 'Data indisponível';
+    document.getElementById('mega-date').textContent = megaPrize?.date ? megaPrize.date.split('-').reverse().join('/') + (select.value === 'mega' && megaPrize.contest === 3090 ? ' às 21h00' : ' — consulte o horário oficial') : 'Data indisponível';
     const fridayPrices = pools.filter(pool => pool.game === 'quina' && (pool.unlimited || pool.available > 0) && Number.isInteger(pool.price) && pool.price > 0).map(pool => pool.price);
     document.getElementById('friday-price').textContent = fridayPrices.length ? 'Valor cadastrado a partir de ' + new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(Math.min(...fridayPrices)/100) : 'Consulte os bolões cadastrados';
     const lotecaPrices = pools.filter(pool => pool.game === 'loteca' && (pool.unlimited || pool.available > 0) && Number.isInteger(pool.price) && pool.price > 0).map(pool => pool.price);
