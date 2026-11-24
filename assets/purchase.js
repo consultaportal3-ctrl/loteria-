@@ -81,7 +81,7 @@
           const amount = prize.amount;
           footer.textContent = amount >= 1000000000 ? `R$ ${new Intl.NumberFormat('pt-BR',{maximumFractionDigits:2}).format(amount/1000000000)} Bilhão` : amount >= 1000000 ? `R$ ${new Intl.NumberFormat('pt-BR',{maximumFractionDigits:2}).format(amount/1000000)} ${amount === 1000000 ? 'Milhão' : 'Milhões'}` : button.dataset.poolGame === 'super' && amount >= 1000 ? `R$ ${new Intl.NumberFormat('pt-BR',{maximumFractionDigits:2}).format(amount/1000)} Mil` : `R$ ${new Intl.NumberFormat('pt-BR',{maximumFractionDigits:0}).format(amount)}`;
           footer.title = `Prêmio estimado do concurso ${prize.contest}; sujeito a alterações.`;
-        } else { footer.textContent = 'Prêmio indisponível'; footer.title = 'Estimativa indisponível no momento.'; }
+        } else { footer.textContent = 'Consulte o prêmio'; footer.title = 'Estimativa indisponível no momento.'; }
       }
     });
     const visible = pools.filter(pool => !select.value || pool.game === select.value);
