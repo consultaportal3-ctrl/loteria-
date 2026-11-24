@@ -60,7 +60,7 @@
     actions.append(payment, link); panel.append(actions);
     const cartTrigger = document.querySelector('.pool-account a:first-child');
     const cartRect = cartTrigger?.getBoundingClientRect();
-    panel.style.top = `${Math.max(12, (cartRect?.bottom || 108) + 12)}px`;
+    panel.style.top = `${Math.max(12, (cartRect?.bottom || 108) + 8)}px`;
     panel.style.right = '16px';
     panel.style.setProperty('--panel-top', panel.style.top);
     if (cartRect) panel.style.setProperty('--cart-arrow-right', `${Math.max(22, window.innerWidth - cartRect.left - cartRect.width / 2 - 16)}px`);
@@ -71,7 +71,6 @@
     };
     updateTimers(); poolCartTimer = setInterval(updateTimers, 1000);
     close.focus({preventScroll:true});
-    panel.scrollIntoView({behavior:'smooth', block:'nearest'});
   }
   const routes = {virada:'mega-virada', mega:'mega-sena', facil:'lotofacil', quina:'quina', loteca:'loteca', milionaria:'mais-milionaria', dupla:'dupla-sena', timemania:'timemania', dia:'dia-de-sorte', super:'super-sete'};
   const requested = new URLSearchParams(location.search).get('modalidade');
