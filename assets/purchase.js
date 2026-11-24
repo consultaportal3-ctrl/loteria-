@@ -17,6 +17,7 @@
   const featured = document.querySelector('.featured');
   const list = document.querySelector('.all-pools p');
   let pools = [];
+  let poolsLoading = true;
   let prizes = {};
   let loadError = false;
   try {
@@ -28,6 +29,7 @@
   select.value = Object.hasOwn(routes, requested) ? requested : '';
   function update() {
     const name = select.value ? select.selectedOptions[0].textContent : 'Todos os bolões';
+    document.querySelector('.pool-hero .hero-copy h1').textContent = select.value ? `Bolões de ${name}` : 'Conheça os Bolões CAIXA';
     const virada = select.value === 'virada';
     const mega = ['mega','facil','milionaria'].includes(select.value);
     const friday = select.value === 'quina';
@@ -78,7 +80,7 @@
     featured.replaceChildren();
     if (!visible.length) {
       const empty = document.createElement('p');
-      empty.textContent = loadError ? 'Não foi possível carregar os bolões. Tente novamente.' : 'Ainda não há bolões cadastrados nesta seleção.';
+      empty.textContent = poolsLoading ? 'Carregando bolões...' : loadError ? 'Não foi possível carregar os bolões. Tente novamente.' : 'Ainda não há bolões cadastrados nesta seleção.';
       featured.append(empty);
     }
     for (const pool of visible) {
@@ -122,7 +124,7 @@
       if (comparison.textContent) body.append(comparison);
       controls.append(button,notice); body.append(shares, price, controls); card.append(body); featured.append(card);
     }
-    list.textContent = loadError ? 'Não foi possível carregar os bolões.' : `${visible.length} ${visible.length === 1 ? 'bolão cadastrado' : 'bolões cadastrados'}.`;
+    list.textContent = poolsLoading ? 'Carregando bolões...' : loadError ? 'Não foi possível carregar os bolões.' : `${visible.length} ${visible.length === 1 ? 'bolão cadastrado' : 'bolões cadastrados'}.`;
     back.href = '../home.html#' + (routes[select.value] || 'modalidades');
     document.title = 'Bolões de ' + name + ' | Portal da Sorte';
   }
@@ -131,7 +133,15 @@
     toggle.setAttribute('aria-expanded', String(!filters.hidden));
     if (!filters.hidden) select.focus();
   });
-  select.addEventListener('change', update);
+  function chooseGame(value) {
+    select.value = Object.hasOwn(routes, value) ? value : '';
+    const url = new URL(location.href);
+    if (select.value) url.searchParams.set('modalidade', select.value);
+    else url.searchParams.delete('modalidade');
+    history.replaceState(history.state, '', url);
+    update();
+  }
+  select.addEventListener('change', () => chooseGame(select.value));
   document.querySelectorAll('[data-pool-game]').forEach(button => {
     if (!button.dataset.poolGame) return;
     const icon = button.querySelector('span');
@@ -145,10 +155,10 @@
     document.querySelector('.modality-scroll').scrollBy({left:Number(button.dataset.direction) * 320, behavior:'smooth'});
   }));
   document.querySelectorAll('[data-pool-game]').forEach(button => button.addEventListener('click', () => {
-    select.value = button.dataset.poolGame;
-    update();
+    chooseGame(button.dataset.poolGame);
     document.querySelector('.purchase-page').scrollIntoView({behavior:'smooth',block:'start'});
   }));
-  fetch('../api/boloes', {cache:'no-store'}).then(response => { if (!response.ok) throw new Error(); return response.json(); }).then(result => { pools = Array.isArray(result.pools) ? result.pools : []; }).catch(() => { loadError = true; }).finally(update);
-  fetch('../api/premios', {cache:'no-store'}).then(response => { if (!response.ok) throw new Error(); return response.json(); }).then(result => { prizes = result.prizes || {}; }).catch(() => {}).finally(update);
+  update();
+  fetch('../api/boloes', {cache:'no-store', signal:AbortSignal.timeout(10000)}).then(response => { if (!response.ok) throw new Error(); return response.json(); }).then(result => { pools = Array.isArray(result.pools) ? result.pools : []; }).catch(() => { loadError = true; }).finally(() => { poolsLoading = false; update(); });
+  fetch('../api/premios', {cache:'no-store', signal:AbortSignal.timeout(10000)}).then(response => { if (!response.ok) throw new Error(); return response.json(); }).then(result => { prizes = result.prizes || {}; }).catch(() => {}).finally(update);
 })();
