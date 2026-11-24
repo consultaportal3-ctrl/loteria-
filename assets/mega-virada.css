@@ -64,3 +64,7 @@
   .virada-route #mega-view .mega-ticket-bottom{flex-wrap:wrap;gap:18px}
   .virada-route #mega-view .mega-how h2{font-size:9vw}
 }
+
+/* A arte rosa da campanha geral não pertence à Mega da Virada. */
+.home-refresh.virada-route:not(.cart-route) .campaign-ribbon{display:none}
+.home-refresh.virada-route:not(.cart-route) .hero::before{display:none}
