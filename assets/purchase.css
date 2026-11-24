@@ -53,3 +53,5 @@
 .pool-description{margin:16px 0 12px;font-size:17px}
 
 .pool-card-icon svg{display:block;width:36px;height:36px;fill:currentColor}
+
+.pool-purchase .add-button{flex-direction:row;justify-content:center;gap:7px}.pool-purchase .add-button svg{width:24px;height:24px;flex:none}.pool-purchase .add-button:disabled{background:#009c4c;opacity:1}

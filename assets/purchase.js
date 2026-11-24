@@ -155,7 +155,7 @@
       const quantityLabel = document.createElement('p'); quantityLabel.className = 'pool-quantity-label'; quantityLabel.textContent = 'Quantidade de cotas';
       row.append(minus,quantity,plus); controls.append(quantityLabel,row,total); updateQuantity(quantity.value);
       const notice = document.createElement('p'); notice.textContent = 'Compra online de cotas ainda indisponível.';
-      const button = document.createElement('button'); button.type = 'button'; button.disabled = true; button.className = 'add-button'; button.textContent = 'Colocar no carrinho';
+      const button = document.createElement('button'); button.type = 'button'; button.disabled = true; button.className = 'add-button'; button.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M2 2h2l2.4 11.4A2 2 0 0 0 8.4 15H19a2 2 0 0 0 1.9-1.4L23 6H6l-.4-2H2zm7 15a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm10 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"/></svg><span>Colocar no Carrinho</span>';
       const description = document.createElement('p'); description.className = 'pool-description'; description.textContent = pool.description || '';
       const details = document.createElement('details'); details.className = 'pool-card-details';
       const summary = document.createElement('summary'); summary.textContent = 'Detalhes';
