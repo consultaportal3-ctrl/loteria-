@@ -93,7 +93,19 @@
       {id:'virada-1', game:'virada', date:'', numbers:[], total:9, available:3, price:5048, description:'2 apostas de 8 dezenas'},
       {id:'virada-2', game:'virada', date:'', numbers:[], total:9, available:6, price:5048, description:'8 apostas de 7 dezenas'},
       {id:'virada-3', game:'virada', date:'', numbers:[], total:26, available:3, price:1125, description:'5 apostas de 7 dezenas'},
-      {id:'virada-4', game:'virada', date:'', numbers:[], total:100, available:28, price:313956, description:'1 aposta de 20 dezenas'}
+      {id:'virada-4', game:'virada', date:'', numbers:[], total:100, available:28, price:313956, description:'1 aposta de 20 dezenas'},
+      {id:'virada-exemplo-1', game:'virada', date:'', numbers:[], total:20, available:20, price:1990, description:'Exemplo de bolão'},
+      {id:'virada-exemplo-2', game:'virada', date:'', numbers:[], total:20, available:20, price:2490, description:'Exemplo de bolão'},
+      {id:'virada-exemplo-3', game:'virada', date:'', numbers:[], total:20, available:20, price:2990, description:'Exemplo de bolão'},
+      {id:'virada-exemplo-4', game:'virada', date:'', numbers:[], total:20, available:20, price:3490, description:'Exemplo de bolão'},
+      {id:'virada-exemplo-5', game:'virada', date:'', numbers:[], total:20, available:20, price:3990, description:'Exemplo de bolão'},
+      {id:'virada-exemplo-6', game:'virada', date:'', numbers:[], total:20, available:20, price:4490, description:'Exemplo de bolão'},
+      {id:'virada-exemplo-7', game:'virada', date:'', numbers:[], total:20, available:20, price:5990, description:'Exemplo de bolão'},
+      {id:'virada-exemplo-8', game:'virada', date:'', numbers:[], total:20, available:20, price:6990, description:'Exemplo de bolão'},
+      {id:'virada-exemplo-9', game:'virada', date:'', numbers:[], total:20, available:20, price:7990, description:'Exemplo de bolão'},
+      {id:'virada-exemplo-10', game:'virada', date:'', numbers:[], total:20, available:20, price:8990, description:'Exemplo de bolão'},
+      {id:'virada-exemplo-11', game:'virada', date:'', numbers:[], total:20, available:20, price:9990, description:'Exemplo de bolão'},
+      {id:'virada-exemplo-12', game:'virada', date:'', numbers:[], total:20, available:20, price:12990, description:'Exemplo de bolão'}
     ];
     const visible = [...examples, ...pools.filter(pool => !(pool.game === 'virada' && pool.unlimited && pool.price === 3990))].filter(pool => !select.value || pool.game === select.value);
     featured.replaceChildren();
