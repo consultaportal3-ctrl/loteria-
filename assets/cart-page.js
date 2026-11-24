@@ -12,8 +12,20 @@
     const body=document.createElement('tbody');
     items.forEach((item,index)=>{const row=document.createElement('tr');['Mega da Virada',item.description+' \u00b7 '+item.quantity+' cota(s)','A confirmar',money(item.price * item.quantity)].forEach(value=>{const cell=document.createElement('td');cell.textContent=value;row.append(cell);});const cell=document.createElement('td');const remove=document.createElement('button');remove.type='button';remove.textContent='Excluir';remove.className='pool-demo-remove';remove.addEventListener('click',()=>{items.splice(index,1);localStorage.setItem(demoKey,JSON.stringify(items));renderPoolDemo();});cell.append(remove);row.append(cell);body.append(row);});table.append(body);list.append(table);
     document.getElementById('pool-demo-total').textContent='Total simulado: '+money(items.reduce((sum,item)=>sum+item.price*item.quantity,0));
+    if(window.portalDemo && !window.portalDemo.getGames().length) document.querySelectorAll('[data-cart-payment],#finish-demo').forEach(button=>{button.disabled=!items.length;});
   }
   renderPoolDemo();
+  document.addEventListener('click',event=>{
+    const button=event.target.closest('[data-cart-payment],#finish-demo');
+    if(!button || !window.portalDemo || window.portalDemo.getGames().length) return;
+    let items=[];try{items=JSON.parse(localStorage.getItem(demoKey)||'[]');}catch(_){}
+    if(!Array.isArray(items)||!items.length)return;
+    event.preventDefault();event.stopImmediatePropagation();
+    const dialog=document.createElement('dialog');dialog.setAttribute('aria-labelledby','pool-demo-payment-title');dialog.style.cssText='border:0;border-radius:12px;padding:28px;max-width:420px;box-shadow:0 6px 30px #0005;color:#263b4d';
+    const title=document.createElement('h2');title.id='pool-demo-payment-title';title.textContent='Pagamento de demonstra\u00e7\u00e3o';
+    const note=document.createElement('p');note.textContent='Esta \u00e9 uma simula\u00e7\u00e3o. Nenhum Pix ser\u00e1 gerado, nenhum valor ser\u00e1 cobrado e nenhuma aposta ser\u00e1 registrada.';
+    const close=document.createElement('button');close.type='button';close.textContent='Entendi';close.addEventListener('click',()=>dialog.close());dialog.addEventListener('close',()=>dialog.remove());dialog.append(title,note,close);document.body.append(dialog);dialog.showModal();
+  },true);
   const hero=document.querySelector('.hero');
   hero.after(dialog);
   let returnHash=location.hash==='#carrinho'?'#modalidades':location.hash||'#inicio';
@@ -46,6 +58,7 @@
       returning=false;
     }
     previousHash=location.hash;
+    if(active) renderPoolDemo();
   }
   function returnToGame(){
     if(location.hash!=='#carrinho'||returning)return;
