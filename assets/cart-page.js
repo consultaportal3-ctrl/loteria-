@@ -2,15 +2,38 @@
   const dialog=document.getElementById('cart-dialog');
   const demoSection=document.getElementById('pool-demo-cart');
   const demoKey='portal-pool-demo-cart-v1';
+  let poolTimerInterval;
   function renderPoolDemo(){
     let items; try{items=JSON.parse(localStorage.getItem(demoKey)||'[]');if(!Array.isArray(items))items=[];}catch(_){items=[];}
     demoSection.hidden=!items.length;
     const list=document.getElementById('pool-demo-items');list.replaceChildren();
     const money=value=>new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(value/100);
     const table=document.createElement('table');table.className='pool-demo-table';
-
+    const thead=document.createElement('thead'),header=document.createElement('tr');
+    ['Modalidade','Detalhar apostas','Concurso','Valor da Cota','Tempo de Reserva da Cota','Excluir'].forEach(title=>{const cell=document.createElement('th');cell.scope='col';cell.textContent=title;header.append(cell);});thead.append(header);table.append(thead);
     const body=document.createElement('tbody');
-    items.forEach((item,index)=>{const row=document.createElement('tr');[item.name || 'Bolão',item.description+' \u00b7 '+item.quantity+' cota(s)','A confirmar',money(item.price * item.quantity)].forEach(value=>{const cell=document.createElement('td');cell.textContent=value;row.append(cell);});const cell=document.createElement('td');const remove=document.createElement('button');remove.type='button';remove.innerHTML='<svg width="20" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 6h18M9 6V3h6v3M6 6l1 15h10l1-15M10 9v9M14 9v9"/></svg>';remove.setAttribute('aria-label','Excluir bol\u00e3o');remove.className='pool-demo-remove';remove.addEventListener('click',()=>{items.splice(index,1);localStorage.setItem(demoKey,JSON.stringify(items));renderPoolDemo();});cell.append(remove);row.append(cell);body.append(row);});table.append(body);list.append(table);
+    const contests={virada:'3100',mega:'3090',facil:'3837',quina:'7173',loteca:'1285',milionaria:'410',dupla:'3036',timemania:'2472',dia:'1355',super:'926'};
+    let detailDialog=document.getElementById('pool-bet-details-dialog');
+    if(!detailDialog){detailDialog=document.createElement('dialog');detailDialog.id='pool-bet-details-dialog';detailDialog.className='pool-bet-details-dialog';document.body.append(detailDialog);}
+    items.forEach((item,index)=>{
+      if(!Number.isFinite(item.reservedUntil))item.reservedUntil=Date.now()+8*60*1000;
+      const row=document.createElement('tr');
+      const nameCell=document.createElement('td'),name=document.createElement('strong');name.textContent=item.name||'Bolão';nameCell.append(name);
+      if(item.quantity>1){const quantity=document.createElement('small');quantity.textContent=`${item.quantity} cotas`;nameCell.append(quantity);}
+      const detailsCell=document.createElement('td'),details=document.createElement('button');details.type='button';details.className='pool-bet-detail-button';details.setAttribute('aria-label',`Detalhar apostas do bolão ${item.name||''}`);details.innerHTML='<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M20 10h24l-6 12 8 10a15 15 0 1 1-24 0l8-10-6-12Zm5 7h14m-18 20h22M32 43v2"/></svg>';
+      details.addEventListener('click',()=>{
+        detailDialog.replaceChildren();const top=document.createElement('div');top.className='pool-bet-details-top';const title=document.createElement('h2');title.textContent=`Apostas do ${item.name||'bolão'}`;const close=document.createElement('button');close.type='button';close.textContent='×';close.setAttribute('aria-label','Fechar detalhes');close.addEventListener('click',()=>detailDialog.close());top.append(title,close);detailDialog.append(top);
+        (item.bets||[]).forEach((bet,betIndex)=>{const section=document.createElement('section');section.className='pool-bet-details-row';const label=document.createElement('h3');label.textContent=`Aposta ${betIndex+1}`;const picks=document.createElement('div');picks.className='pool-bet-detail-picks';(Array.isArray(bet)?bet:[]).forEach((pick,pickIndex)=>{const chip=document.createElement('span');chip.textContent=item.game==='loteca'?`${pickIndex+1}: ${pick}`:String(pick).padStart(2,'0');picks.append(chip);});section.append(label,picks);detailDialog.append(section);});
+        if(!(item.bets||[]).length){const empty=document.createElement('p');empty.textContent='As apostas ainda não foram informadas.';detailDialog.append(empty);}detailDialog.showModal();
+      });detailsCell.append(details);
+      const contestCell=document.createElement('td');contestCell.textContent=item.contest||contests[item.game]||'A confirmar';
+      const priceCell=document.createElement('td');priceCell.textContent=money(item.price);
+      const timerCell=document.createElement('td');timerCell.className='pool-reservation-time';timerCell.dataset.until=String(item.reservedUntil);
+      const removeCell=document.createElement('td'),remove=document.createElement('button');remove.type='button';remove.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M9 6V3h6v3M6 6l1 15h10l1-15M10 9v9M14 9v9"/></svg>';remove.setAttribute('aria-label','Excluir bolão');remove.className='pool-demo-remove';remove.addEventListener('click',()=>{items.splice(index,1);localStorage.setItem(demoKey,JSON.stringify(items));renderPoolDemo();});removeCell.append(remove);
+      row.append(nameCell,detailsCell,contestCell,priceCell,timerCell,removeCell);body.append(row);
+    });
+    table.append(body);list.append(table);localStorage.setItem(demoKey,JSON.stringify(items));
+    clearInterval(poolTimerInterval);const updateTimers=()=>list.querySelectorAll('.pool-reservation-time').forEach(timer=>{const left=Math.max(0,Number(timer.dataset.until)-Date.now());timer.textContent=left?`◷ ${String(Math.floor(left/60000)).padStart(2,'0')}:${String(Math.floor(left%60000/1000)).padStart(2,'0')}`:'Tempo encerrado';timer.classList.toggle('is-expired',left===0);});updateTimers();poolTimerInterval=setInterval(updateTimers,1000);
     document.getElementById('pool-demo-total').textContent='Total dos bolões: '+money(items.reduce((sum,item)=>sum+item.price*item.quantity,0));
     if(window.portalDemo){const gameTotal=window.portalDemo.getGames().reduce((sum,item)=>sum+item.referencePrice,0);document.getElementById('cart-total').textContent=new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(gameTotal+items.reduce((sum,item)=>sum+item.price*item.quantity/100,0));}
     if(window.portalDemo) document.querySelectorAll('[data-cart-payment],#finish-demo').forEach(button=>{button.disabled=!window.portalDemo.getGames().length&&!items.length;});
