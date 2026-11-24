@@ -174,15 +174,27 @@
         } catch (_) { notice.textContent = 'N\u00e3o foi poss\u00edvel guardar o carrinho neste navegador.'; }
       });
       const description = document.createElement('p'); description.className = 'pool-description'; description.textContent = pool.description || '';
-      const details = document.createElement('details'); details.className = 'pool-card-details';
-      const summary = document.createElement('summary'); summary.textContent = 'Detalhes';
-      details.append(summary, date);
-      if (bets.length && bets.some(bet => bet.length)) details.append(heading, betDetails);
-      else { const pending = document.createElement('p'); pending.textContent = 'Números das apostas ainda não informados.'; details.append(pending); }
-      if (comparison.textContent) details.append(comparison);
+      const detailButton = document.createElement('button'); detailButton.type = 'button'; detailButton.className = 'pool-detail-button'; detailButton.textContent = 'Detalhes';
+      const detailDialog = document.createElement('dialog'); detailDialog.className = 'pool-detail-dialog';
+      const detailHeader = document.createElement('div'); detailHeader.className = 'pool-detail-header';
+      const detailTitle = document.createElement('strong'); detailTitle.textContent = title.textContent;
+      const closeDialog = document.createElement('button'); closeDialog.type = 'button'; closeDialog.className = 'pool-detail-close'; closeDialog.textContent = '×'; closeDialog.setAttribute('aria-label', 'Fechar detalhes');
+      detailHeader.append(icon.cloneNode(true), detailTitle, closeDialog);
+      const detailContent = document.createElement('div'); detailContent.className = 'pool-detail-content';
+      detailContent.append(prizeValue.cloneNode(true));
+      const contest = document.createElement('p'); contest.className = 'pool-detail-contest'; contest.textContent = prize?.contest ? `Concurso: ${prize.contest}` : prizeCaption.textContent;
+      const sharePrice = document.createElement('p'); sharePrice.className = 'pool-detail-meta'; sharePrice.textContent = `Valor da cota: ${price.textContent}`;
+      detailContent.append(contest, sharePrice, date.cloneNode(true));
+      if (bets.length && bets.some(bet => bet.length)) detailContent.append(heading, betDetails);
+      else { const pending = document.createElement('p'); pending.textContent = 'Números das apostas ainda não informados.'; detailContent.append(pending); }
+      if (comparison.textContent) detailContent.append(comparison);
+      detailDialog.append(detailHeader, detailContent);
+      closeDialog.addEventListener('click', () => detailDialog.close());
+      detailDialog.addEventListener('click', event => { if (event.target === detailDialog) detailDialog.close(); });
+      detailButton.addEventListener('click', () => detailDialog.showModal());
       body.append(prizeValue, prizeCaption);
       if (description.textContent) body.append(description);
-      controls.append(button,notice); body.append(details, shares, price, controls); card.append(body); featured.append(card);
+      controls.append(button,notice); body.append(detailButton, shares, price, controls); card.append(body, detailDialog); featured.append(card);
     }
     list.textContent = poolsLoading ? 'Carregando bolões...' : loadError ? 'Não foi possível carregar os bolões.' : `${visible.length} ${visible.length === 1 ? 'bolão cadastrado' : 'bolões cadastrados'}.`;
     back.href = '../home.html#' + (routes[select.value] || 'modalidades');
