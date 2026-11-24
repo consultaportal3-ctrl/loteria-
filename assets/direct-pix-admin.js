@@ -314,7 +314,7 @@
   }
   async function poolEditor(host) {
     const card = node('section', undefined, 'card');
-    card.innerHTML = `<div class="settings-body"><h2>Cadastrar bolão</h2><p>Cadastre as informações reais. A compra de cotas ainda não está habilitada.</p><form id="pool-form"><label>Modalidade<select name="game" required><option value="virada">Mega da Virada</option><option value="mega">Mega-Sena</option><option value="facil">Lotofácil</option><option value="quina">Quina</option><option value="milionaria">+Milionária</option><option value="dupla">Dupla Sena</option><option value="timemania">Timemania</option><option value="dia">Dia de Sorte</option><option value="super">Super Sete</option></select></label><label>Data do sorteio<input type="date" name="date" required></label><div class="pool-bets-field"><span>Apostas do bolão</span><div id="pool-bet-editor"></div><button type="button" id="add-pool-bet" class="button secondary">Adicionar aposta</button></div><textarea name="numbers" hidden></textarea><label>Total de cotas<input name="total" type="number" min="1" max="10000" required></label><label>Cotas disponíveis<input name="available" type="number" min="0" max="10000" required></label><label>Valor da cota em reais<input name="price" type="number" min="0.01" max="1000000" step="0.01" required></label><button class="button" type="submit">Salvar bolão</button><p role="status"></p></form><h2>Bolões cadastrados</h2><div id="pool-list"></div></div>`;
+    card.innerHTML = `<div class="settings-body"><h2>Cadastrar bolão</h2><p>Cadastre as informações reais. A compra de cotas ainda não está habilitada.</p><form id="pool-form"><label>Modalidade<select name="game" required><option value="virada">Mega da Virada</option><option value="mega">Mega-Sena</option><option value="facil">Lotofácil</option><option value="quina">Quina</option><option value="loteca">Loteca Especial</option><option value="milionaria">+Milionária</option><option value="dupla">Dupla Sena</option><option value="timemania">Timemania</option><option value="dia">Dia de Sorte</option><option value="super">Super Sete</option></select></label><label>Data do sorteio<input type="date" name="date" required></label><div class="pool-bets-field"><span>Apostas do bolão</span><div id="pool-bet-editor"></div><button type="button" id="add-pool-bet" class="button secondary">Adicionar aposta</button></div><textarea name="numbers" hidden></textarea><label>Total de cotas<input name="total" type="number" min="1" max="10000" required></label><label>Cotas disponíveis<input name="available" type="number" min="0" max="10000" required></label><label>Valor da cota em reais<input name="price" type="number" min="0.01" max="1000000" step="0.01" required></label><button class="button" type="submit">Salvar bolão</button><p role="status"></p></form><h2>Bolões cadastrados</h2><div id="pool-list"></div></div>`;
     host.append(card);
     const form = card.querySelector('form'), list = card.querySelector('#pool-list'), message = card.querySelector('[role="status"]');
 
@@ -331,7 +331,7 @@
     const cancel = node('button', 'Cancelar edição', 'button secondary'); cancel.type = 'button'; cancel.hidden = true; submit.after(cancel);
     const numberField = form.elements.numbers, betEditor = form.querySelector('#pool-bet-editor');
     const addBetButton = form.querySelector('#add-pool-bet');
-    betEditor.before(node('p', 'Informe as dezenas separadas por vírgula. Use “Adicionar aposta” para incluir outra combinação.', 'muted'));
+    const betHelp = node('p', 'Informe as dezenas separadas por vírgula. Use “Adicionar aposta” para incluir outra combinação.', 'muted'); betEditor.before(betHelp);
     function syncBetField() { numberField.value = [...betEditor.querySelectorAll('input')].map(input => input.value.trim()).filter(Boolean).join('\n'); }
     function refreshBetRows() {
       [...betEditor.children].forEach((row, index) => {
@@ -343,13 +343,13 @@
     function addBetRow(value = '') {
       const row = node('div', undefined, 'pool-bet-input-row');
       const label = node('strong', undefined, 'pool-bet-row-title');
-      const input = document.createElement('input'); input.type = 'text'; input.value = value; input.placeholder = '03, 11, 38, 43, 45, 50, 51, 53'; input.autocomplete = 'off';
+      const input = document.createElement('input'); input.type = 'text'; input.value = value; input.placeholder = form.elements.game.value === 'loteca' ? '1, X, 2, 1X, ... (14 jogos)' : '03, 11, 38, 43, 45, 50, 51, 53'; input.autocomplete = 'off';
       input.addEventListener('input', syncBetField);
       const remove = node('button', 'Remover', 'button secondary'); remove.type = 'button';
       remove.addEventListener('click', () => { if (betEditor.children.length === 1) input.value = ''; else row.remove(); refreshBetRows(); syncBetField(); });
       row.append(label, input, remove); betEditor.append(row); refreshBetRows(); syncBetField();
     }
-    function resetBetEditor(bets = ['']) { betEditor.replaceChildren(); bets.forEach(bet => addBetRow(Array.isArray(bet) ? bet.map(n => String(n).padStart(2,'0')).join(', ') : bet)); }
+    function resetBetEditor(bets = ['']) { betEditor.replaceChildren(); bets.forEach(bet => addBetRow(Array.isArray(bet) ? bet.map(n => form.elements.game.value === 'loteca' ? String(n) : String(n).padStart(2,'0')).join(', ') : bet)); }
     addBetButton.addEventListener('click', () => addBetRow());
     resetBetEditor();
     function stopEditing() { editingId = null; submit.textContent = 'Salvar bolão'; cancel.hidden = true; }
@@ -360,6 +360,11 @@
     const countField = generator.querySelector('input'), generateButton = generator.querySelector('button');
     const rules = {virada:[6,20,60], mega:[6,20,60], facil:[15,20,25], quina:[5,15,80], dupla:[6,15,50]};
     function updateGenerator() {
+      const isLoteca = form.elements.game.value === 'loteca';
+      generator.hidden = isLoteca;
+      betHelp.textContent = isLoteca ? 'Em cada aposta, informe 14 palpites separados por vírgula: 1, X, 2, 1X, 12, X2 ou 1X2.' : 'Informe as dezenas separadas por vírgula. Use “Adicionar aposta” para incluir outra combinação.';
+      for (const input of betEditor.querySelectorAll('input')) input.placeholder = isLoteca ? '1, X, 2, 1X, ... (14 jogos)' : '03, 11, 38, 43, 45, 50, 51, 53';
+      if (isLoteca) { message.textContent = 'Cada aposta da Loteca precisa conter 14 palpites.'; return; }
       const rule = rules[form.elements.game.value];
       generateButton.disabled = !rule; countField.disabled = !rule;
       if (rule) { countField.min = rule[0]; countField.max = rule[1]; countField.value = rule[0]; }
@@ -390,9 +395,9 @@
       if (!result.pools.length) list.append(node('p', 'Nenhum bolão cadastrado.'));
       for (const pool of result.pools) {
         const row = node('div', undefined, 'settings-body');
-        const bets = pool.bets || [pool.numbers];
-        row.append(node('strong', `${pool.game} · ${pool.date} · ${pool.description || pool.numbers.join(', ')}`), node('p', `${pool.unlimited ? 'Sem limite cadastrado' : `${pool.available} de ${pool.total} cotas`} · ${new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(pool.price/100)}`));
-        bets.forEach((bet, index) => row.append(node('p', `Aposta ${index + 1}: ${bet.map(n => String(n).padStart(2,'0')).join(', ')}`)));
+        const bets = pool.bets || [pool.numbers], poolName = pool.game === 'loteca' ? 'Loteca Especial' : pool.game;
+        row.append(node('strong', `${poolName} · ${pool.date} · ${pool.description || pool.numbers.join(', ')}`), node('p', `${pool.unlimited ? 'Sem limite cadastrado' : `${pool.available} de ${pool.total} cotas`} · ${new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(pool.price/100)}`));
+        bets.forEach((bet, index) => row.append(node('p', `Aposta ${index + 1}: ${pool.game === 'loteca' ? bet.map((pick, gameIndex) => `${gameIndex + 1}: ${pick}`).join(' · ') : bet.map(n => String(n).padStart(2,'0')).join(', ')}`)));
         const remove = node('button', 'Excluir bolão', 'button secondary'); remove.type = 'button';
         const edit = node('button', 'Editar bolão', 'button secondary'); edit.type = 'button';
         edit.addEventListener('click', () => {

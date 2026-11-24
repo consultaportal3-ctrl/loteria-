@@ -131,8 +131,8 @@
       bets.forEach((bet, index) => {
         const betRow = document.createElement('section'); betRow.className = 'pool-bet-row';
         const label = document.createElement('h2'); label.className = 'pool-bet-title'; label.textContent = `Aposta ${index + 1}`;
-        const numbers = document.createElement('div'); numbers.className = 'pool-numbers';
-        for (const number of bet) { const ball = document.createElement('span'); ball.textContent = String(number).padStart(2, '0'); numbers.append(ball); }
+        const numbers = document.createElement('div'); numbers.className = pool.game === 'loteca' ? 'pool-loteca-picks' : 'pool-numbers';
+        for (const [gameIndex, number] of bet.entries()) { const ball = document.createElement('span'); ball.textContent = pool.game === 'loteca' ? `${gameIndex + 1}: ${number}` : String(number).padStart(2, '0'); numbers.append(ball); }
         betRow.append(label, numbers); betDetails.append(betRow);
       });
       const comparison = document.createElement('p'); comparison.className = 'pool-chance';
