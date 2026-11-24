@@ -182,7 +182,7 @@
       if (comparison.textContent) details.append(comparison);
       body.append(prizeValue, prizeCaption);
       if (description.textContent) body.append(description);
-      controls.append(button,notice); body.append(price, controls); card.append(body); featured.append(card);
+      controls.append(button,notice); body.append(details, shares, price, controls); card.append(body); featured.append(card);
     }
     list.textContent = poolsLoading ? 'Carregando bolões...' : loadError ? 'Não foi possível carregar os bolões.' : `${visible.length} ${visible.length === 1 ? 'bolão cadastrado' : 'bolões cadastrados'}.`;
     back.href = '../home.html#' + (routes[select.value] || 'modalidades');
