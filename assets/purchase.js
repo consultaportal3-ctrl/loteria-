@@ -29,7 +29,7 @@
   select.value = Object.hasOwn(routes, requested) ? requested : '';
   function update() {
     const name = select.value ? select.selectedOptions[0].textContent : 'Todos os bolões';
-    document.querySelector('.pool-hero .hero-copy h1').textContent = select.value ? `Bolões de ${name}` : 'Conheça os Bolões CAIXA';
+    document.querySelector('.pool-hero .hero-copy h1').textContent = select.value === 'dupla' ? 'Aposte nos Bolões CAIXA' : select.value ? `Bolões de ${name}` : 'Conheça os Bolões CAIXA';
     const virada = select.value === 'virada';
     const mega = ['mega','facil','milionaria','timemania','dupla'].includes(select.value);
     const friday = select.value === 'quina';
@@ -54,9 +54,15 @@
     document.getElementById('mega-pool-price').textContent = megaPrices.length ? 'Valor cadastrado a partir de ' + new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(Math.min(...megaPrices)/100) : 'Consulte os bolões cadastrados';
     document.getElementById('mega-name').textContent = ({mega:'Mega-Sena',facil:'Lotofácil',milionaria:'+Milionária',timemania:'Timemania',dupla:'Dupla Sena'})[select.value] || 'Mega-Sena';
     const megaPrize = prizes[select.value];
-    document.getElementById('mega-prize').textContent = megaPrize ? new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL',maximumFractionDigits:0}).format(megaPrize.amount) : 'Prêmio indisponível';
+    document.getElementById('mega-prize').textContent = megaPrize ? (megaPrize.amount >= 1000000 ? `R$ ${new Intl.NumberFormat('pt-BR',{maximumFractionDigits:2}).format(megaPrize.amount / 1000000)} ${megaPrize.amount === 1000000 ? 'Milhão' : 'Milhões'}` : new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL',maximumFractionDigits:0}).format(megaPrize.amount)) : 'Prêmio indisponível';
     document.getElementById('mega-contest').textContent = megaPrize ? `Prêmio estimado do concurso ${megaPrize.contest}` : 'Estimativa indisponível no momento';
     document.getElementById('mega-date').textContent = megaPrize?.date ? megaPrize.date.split('-').reverse().join('/') + (select.value === 'mega' && megaPrize.contest === 3090 ? ' às 21h00' : ' — consulte o horário oficial') : 'Data indisponível';
+    const drawLabel = document.getElementById('mega-draw-label');
+    drawLabel.textContent = 'Sorteio';
+    if (select.value === 'dupla' && megaPrize?.date) {
+      const day = new Intl.DateTimeFormat('pt-BR', {weekday:'long', timeZone:'UTC'}).format(new Date(`${megaPrize.date}T12:00:00Z`));
+      drawLabel.textContent = `Sorteio ${day.charAt(0).toUpperCase() + day.slice(1)}`;
+    }
     const fridayPrices = pools.filter(pool => pool.game === 'quina' && (pool.unlimited || pool.available > 0) && Number.isInteger(pool.price) && pool.price > 0).map(pool => pool.price);
     document.getElementById('friday-price').textContent = fridayPrices.length ? 'Valor cadastrado a partir de ' + new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(Math.min(...fridayPrices)/100) : 'Consulte os bolões cadastrados';
     const lotecaPrices = pools.filter(pool => pool.game === 'loteca' && (pool.unlimited || pool.available > 0) && Number.isInteger(pool.price) && pool.price > 0).map(pool => pool.price);
