@@ -34,6 +34,7 @@
     const mega = ['mega','facil','milionaria','timemania','dupla','dia','super'].includes(select.value);
     const friday = select.value === 'quina';
     const loteca = select.value === 'loteca';
+    document.querySelector('.pool-hero').dataset.game = select.value;
     document.querySelector('.pool-hero').classList.toggle('show-virada', virada);
     document.querySelector('.pool-hero').classList.toggle('show-mega', mega);
     document.querySelector('.pool-hero').style.setProperty('--selected-game-color', ({mega:'#00a94f',facil:'#92278f',milionaria:'#2b327d',timemania:'#fff200',dupla:'#af2942',dia:'#e5c71c',super:'#bedb28'})[select.value] || '#00a94f');
@@ -51,7 +52,7 @@
     const viradaPrices = pools.filter(pool => pool.game === 'virada' && (pool.unlimited || pool.available > 0) && Number.isInteger(pool.price) && pool.price > 0).map(pool => pool.price);
     document.getElementById('virada-price').textContent = viradaPrices.length ? 'Valor cadastrado a partir de ' + new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(Math.min(...viradaPrices)/100) : 'Consulte os bolões cadastrados';
     const megaPrices = pools.filter(pool => pool.game === select.value && (pool.unlimited || pool.available > 0) && Number.isInteger(pool.price) && pool.price > 0).map(pool => pool.price);
-    document.getElementById('mega-pool-price').textContent = megaPrices.length ? 'Valor cadastrado a partir de ' + new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(Math.min(...megaPrices)/100) : 'Consulte os bolões cadastrados';
+    document.getElementById('mega-pool-price').textContent = megaPrices.length ? 'Cotas a partir de ' + new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(Math.min(...megaPrices)/100) : 'Consulte os bolões cadastrados';
     document.getElementById('mega-name').textContent = ({mega:'Mega-Sena',facil:'Lotofácil',milionaria:'+Milionária',timemania:'Timemania',dupla:'Dupla Sena',dia:'Dia de Sorte',super:'Super Sete'})[select.value] || 'Mega-Sena';
     const megaPrize = prizes[select.value];
     document.getElementById('mega-prize').textContent = megaPrize ? (megaPrize.amount >= 1000000 ? `R$ ${new Intl.NumberFormat('pt-BR',{maximumFractionDigits:2}).format(megaPrize.amount / 1000000)} ${megaPrize.amount === 1000000 ? 'Milhão' : 'Milhões'}` : megaPrize.amount >= 1000 ? `R$ ${new Intl.NumberFormat('pt-BR',{maximumFractionDigits:2}).format(megaPrize.amount / 1000)} Mil` : new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL',maximumFractionDigits:0}).format(megaPrize.amount)) : 'Prêmio indisponível';
