@@ -18,6 +18,7 @@
 #direct-pix-panel label{display:block;margin:16px 0;font-size:14px;line-height:1.5}
 #direct-pix-panel label>input:not([type=checkbox]),#direct-pix-panel label>select{display:block;width:100%;max-width:100%;margin-top:7px;padding:11px;border:1px solid #d6d6e2;border-radius:7px;font:inherit}
 #direct-pix-panel label>textarea{display:block;width:100%;max-width:100%;min-height:220px;box-sizing:border-box;margin-top:7px;padding:12px;border:1px solid #d6d6e2;border-radius:7px;background:#fff;color:#29283b;font:14px/1.65 Consolas,monospace;resize:vertical;white-space:pre}
+#direct-pix-panel .pool-bets-field{margin:16px 0}#direct-pix-panel .pool-bets-field>span{display:block;margin-bottom:4px;font-size:14px;font-weight:700}#direct-pix-panel .pool-bet-input-row{display:grid;grid-template-columns:90px minmax(0,1fr) auto;align-items:center;gap:10px;margin:8px 0}#direct-pix-panel .pool-bet-input-row input{width:100%;min-width:0;padding:11px;border:1px solid #d6d6e2;border-radius:7px;font:14px Consolas,monospace}#direct-pix-panel .pool-bet-input-row button{white-space:nowrap}#direct-pix-panel #add-pool-bet{margin-bottom:8px}
 #direct-pix-panel input[type=checkbox]{width:auto;margin-right:8px;vertical-align:middle}
 #direct-pix-panel p,#direct-pix-panel h3{overflow-wrap:anywhere}
 #direct-pix-panel [hidden]{display:none!important}
