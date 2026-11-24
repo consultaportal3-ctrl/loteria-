@@ -15,6 +15,7 @@
     if(window.portalDemo) document.querySelectorAll('[data-cart-payment],#finish-demo').forEach(button=>{button.disabled=!window.portalDemo.getGames().length&&!items.length;});
   }
   renderPoolDemo();
+  if(new URLSearchParams(location.search).get('checkout')==='1')setTimeout(()=>document.querySelector('[data-cart-payment]')?.click(),0);
   const hero=document.querySelector('.hero');
   hero.after(dialog);
   let returnHash=location.hash==='#carrinho'?'#modalidades':location.hash||'#inicio';
