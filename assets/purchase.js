@@ -29,15 +29,15 @@
   select.value = Object.hasOwn(routes, requested) ? requested : '';
   function update() {
     const name = select.value ? select.selectedOptions[0].textContent : 'Todos os bolões';
-    document.querySelector('.pool-hero .hero-copy h1').textContent = select.value === 'dupla' ? 'Aposte nos Bolões CAIXA' : select.value ? `Bolões de ${name}` : 'Conheça os Bolões CAIXA';
+    document.querySelector('.pool-hero .hero-copy h1').textContent = ['dupla','dia','super'].includes(select.value) ? 'Aposte nos Bolões CAIXA' : select.value ? `Bolões de ${name}` : 'Conheça os Bolões CAIXA';
     const virada = select.value === 'virada';
-    const mega = ['mega','facil','milionaria','timemania','dupla'].includes(select.value);
+    const mega = ['mega','facil','milionaria','timemania','dupla','dia','super'].includes(select.value);
     const friday = select.value === 'quina';
     const loteca = select.value === 'loteca';
     document.querySelector('.pool-hero').classList.toggle('show-virada', virada);
     document.querySelector('.pool-hero').classList.toggle('show-mega', mega);
-    document.querySelector('.pool-hero').style.setProperty('--selected-game-color', ({mega:'#00a94f',facil:'#92278f',milionaria:'#2b327d',timemania:'#fff200',dupla:'#af2942'})[select.value] || '#00a94f');
-    document.querySelector('.pool-hero').style.setProperty('--selected-game-text', select.value === 'timemania' ? '#007a43' : '#fff');
+    document.querySelector('.pool-hero').style.setProperty('--selected-game-color', ({mega:'#00a94f',facil:'#92278f',milionaria:'#2b327d',timemania:'#fff200',dupla:'#af2942',dia:'#e5c71c',super:'#bedb28'})[select.value] || '#00a94f');
+    document.querySelector('.pool-hero').style.setProperty('--selected-game-text', ({timemania:'#007a43',dia:'#806800',super:'#007a43'})[select.value] || '#fff');
     document.querySelector('.pool-hero').classList.toggle('show-friday', friday);
     document.querySelector('.pool-hero').classList.toggle('show-loteca', loteca);
     document.querySelector('.virada-highlight').hidden = !virada;
@@ -52,14 +52,14 @@
     document.getElementById('virada-price').textContent = viradaPrices.length ? 'Valor cadastrado a partir de ' + new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(Math.min(...viradaPrices)/100) : 'Consulte os bolões cadastrados';
     const megaPrices = pools.filter(pool => pool.game === select.value && (pool.unlimited || pool.available > 0) && Number.isInteger(pool.price) && pool.price > 0).map(pool => pool.price);
     document.getElementById('mega-pool-price').textContent = megaPrices.length ? 'Valor cadastrado a partir de ' + new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(Math.min(...megaPrices)/100) : 'Consulte os bolões cadastrados';
-    document.getElementById('mega-name').textContent = ({mega:'Mega-Sena',facil:'Lotofácil',milionaria:'+Milionária',timemania:'Timemania',dupla:'Dupla Sena'})[select.value] || 'Mega-Sena';
+    document.getElementById('mega-name').textContent = ({mega:'Mega-Sena',facil:'Lotofácil',milionaria:'+Milionária',timemania:'Timemania',dupla:'Dupla Sena',dia:'Dia de Sorte',super:'Super Sete'})[select.value] || 'Mega-Sena';
     const megaPrize = prizes[select.value];
-    document.getElementById('mega-prize').textContent = megaPrize ? (megaPrize.amount >= 1000000 ? `R$ ${new Intl.NumberFormat('pt-BR',{maximumFractionDigits:2}).format(megaPrize.amount / 1000000)} ${megaPrize.amount === 1000000 ? 'Milhão' : 'Milhões'}` : new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL',maximumFractionDigits:0}).format(megaPrize.amount)) : 'Prêmio indisponível';
+    document.getElementById('mega-prize').textContent = megaPrize ? (megaPrize.amount >= 1000000 ? `R$ ${new Intl.NumberFormat('pt-BR',{maximumFractionDigits:2}).format(megaPrize.amount / 1000000)} ${megaPrize.amount === 1000000 ? 'Milhão' : 'Milhões'}` : megaPrize.amount >= 1000 ? `R$ ${new Intl.NumberFormat('pt-BR',{maximumFractionDigits:2}).format(megaPrize.amount / 1000)} Mil` : new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL',maximumFractionDigits:0}).format(megaPrize.amount)) : 'Prêmio indisponível';
     document.getElementById('mega-contest').textContent = megaPrize ? `Prêmio estimado do concurso ${megaPrize.contest}` : 'Estimativa indisponível no momento';
     document.getElementById('mega-date').textContent = megaPrize?.date ? megaPrize.date.split('-').reverse().join('/') + (select.value === 'mega' && megaPrize.contest === 3090 ? ' às 21h00' : ' — consulte o horário oficial') : 'Data indisponível';
     const drawLabel = document.getElementById('mega-draw-label');
     drawLabel.textContent = 'Sorteio';
-    if (select.value === 'dupla' && megaPrize?.date) {
+    if (['dupla','dia','super'].includes(select.value) && megaPrize?.date) {
       const day = new Intl.DateTimeFormat('pt-BR', {weekday:'long', timeZone:'UTC'}).format(new Date(`${megaPrize.date}T12:00:00Z`));
       drawLabel.textContent = `Sorteio ${day.charAt(0).toUpperCase() + day.slice(1)}`;
     }
