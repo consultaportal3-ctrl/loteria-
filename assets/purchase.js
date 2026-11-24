@@ -27,11 +27,10 @@
   function showPoolCart() {
     let cart = []; try { cart = JSON.parse(localStorage.getItem('portal-pool-demo-cart-v1') || '[]'); if (!Array.isArray(cart)) cart = []; } catch (_) {}
     let panel = document.getElementById('pool-cart-preview');
-    if (!panel) { panel = document.createElement('section'); panel.id = 'pool-cart-preview'; panel.className = 'pool-cart-preview'; panel.setAttribute('aria-label', 'Carrinho de demonstra\u00e7\u00e3o'); document.querySelector('.pool-hero-inner').append(panel); }
+    if (!panel) { panel = document.createElement('section'); panel.id = 'pool-cart-preview'; panel.className = 'pool-cart-preview'; panel.setAttribute('aria-label', 'Resumo das cotas do carrinho'); document.querySelector('.pool-hero-inner').append(panel); }
     panel.replaceChildren();
     const close = document.createElement('button'); close.type = 'button'; close.className = 'pool-preview-close'; close.textContent = '\u00d7'; close.setAttribute('aria-label', 'Fechar resumo do carrinho'); close.addEventListener('click', () => panel.remove()); panel.append(close);
     const heading = document.createElement('h2'); heading.textContent = 'Cotas de Bol\u00e3o'; panel.append(heading);
-    const note = document.createElement('p'); note.className = 'pool-preview-note'; note.textContent = 'Demonstra\u00e7\u00e3o: sem cobran\u00e7a ou aposta registrada.'; panel.append(note);
     const table = document.createElement('div'); table.className = 'pool-preview-table';
     const header = document.createElement('div'); header.className = 'pool-preview-row pool-preview-header';
     ['Modalidade','Cotas','Valor','Excluir'].forEach(label => { const cell = document.createElement('span'); cell.textContent = label; header.append(cell); }); table.append(header);
