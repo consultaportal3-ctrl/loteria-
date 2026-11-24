@@ -60,7 +60,7 @@
     actions.append(payment, link); panel.append(actions);
     const cartTrigger = document.querySelector('.pool-account a:first-child');
     const cartRect = cartTrigger?.getBoundingClientRect();
-    panel.style.top = `${Math.max(12, (cartRect?.bottom || 108) + 44)}px`;
+    panel.style.top = `${Math.max(12, (cartRect?.bottom || 108) + 12)}px`;
     panel.style.right = '16px';
     panel.style.setProperty('--panel-top', panel.style.top);
     if (cartRect) panel.style.setProperty('--cart-arrow-right', `${Math.max(22, window.innerWidth - cartRect.left - cartRect.width / 2 - 16)}px`);
