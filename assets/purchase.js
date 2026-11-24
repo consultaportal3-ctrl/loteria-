@@ -126,11 +126,17 @@
       const prizeValue = document.createElement('p'); prizeValue.className = 'pool-prize'; prizeValue.textContent = prize?.amount ? new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(prize.amount) : 'Prêmio em consulta';
       const prizeCaption = document.createElement('p'); prizeCaption.className = 'pool-prize-caption'; prizeCaption.textContent = prize?.contest ? 'Prêmio estimado do concurso ' + prize.contest : 'Estimativa indisponível no momento';
       const date = document.createElement('p'); date.textContent = pool.date ? 'Sorteio: ' + pool.date.split('-').reverse().join('/') : 'Data do sorteio a confirmar.';
-      const heading = document.createElement('h2'); heading.textContent = 'Números do bolão';
-      const numbers = document.createElement('div'); numbers.className = 'pool-numbers';
-      for (const number of pool.numbers) { const ball = document.createElement('span'); ball.textContent = String(number).padStart(2, '0'); numbers.append(ball); }
+      const bets = pool.bets || [pool.numbers];
+      const heading = document.createElement('h2'); heading.textContent = bets.length > 1 ? 'Apostas do bolão' : 'Números do bolão';
+      const betDetails = document.createDocumentFragment();
+      bets.forEach((bet, index) => {
+        if (bets.length > 1) { const label = document.createElement('p'); label.textContent = `Aposta ${index + 1}`; betDetails.append(label); }
+        const numbers = document.createElement('div'); numbers.className = 'pool-numbers';
+        for (const number of bet) { const ball = document.createElement('span'); ball.textContent = String(number).padStart(2, '0'); numbers.append(ball); }
+        betDetails.append(numbers);
+      });
       const comparison = document.createElement('p'); comparison.className = 'pool-chance';
-      if (['mega','virada'].includes(pool.game) && pool.numbers.length >= 6 && pool.numbers.length <= 20 && pool.numbers.every(n => Number.isInteger(n) && n >= 1 && n <= 60) && new Set(pool.numbers).size === pool.numbers.length) {
+      if (bets.length === 1 && ['mega','virada'].includes(pool.game) && pool.numbers.length >= 6 && pool.numbers.length <= 20 && pool.numbers.every(n => Number.isInteger(n) && n >= 1 && n <= 60) && new Set(pool.numbers).size === pool.numbers.length) {
         let combinations = 1;
         for (let i = 1; i <= 6; i++) combinations = combinations * (pool.numbers.length - i + 1) / i;
         comparison.textContent = `Esta combinação equivale a ${new Intl.NumberFormat('pt-BR').format(Math.round(combinations))} ${combinations === 1 ? 'aposta simples' : 'apostas simples'} para acertar as 6 dezenas.`;
@@ -162,7 +168,7 @@
           const key = 'portal-pool-demo-cart-v1';
           const cart = JSON.parse(localStorage.getItem(key) || '[]');
           if (!Array.isArray(cart)) throw new Error();
-          cart.push({id:pool.id, game:pool.game, name:select.querySelector(`option[value="${pool.game}"]`)?.textContent || 'Bolão', description:pool.description, price:pool.price, quantity:Number(quantity.value)});
+          cart.push({id:pool.id, game:pool.game, name:select.querySelector(`option[value="${pool.game}"]`)?.textContent || 'Bolão', description:pool.description, bets, price:pool.price, quantity:Number(quantity.value)});
           localStorage.setItem(key, JSON.stringify(cart));
           showPoolCart();
         } catch (_) { notice.textContent = 'N\u00e3o foi poss\u00edvel guardar o carrinho neste navegador.'; }
@@ -171,7 +177,7 @@
       const details = document.createElement('details'); details.className = 'pool-card-details';
       const summary = document.createElement('summary'); summary.textContent = 'Detalhes';
       details.append(summary, date);
-      if (pool.numbers.length) details.append(heading, numbers);
+      if (bets.length && bets.some(bet => bet.length)) details.append(heading, betDetails);
       else { const pending = document.createElement('p'); pending.textContent = 'Números das apostas ainda não informados.'; details.append(pending); }
       if (comparison.textContent) details.append(comparison);
       body.append(prizeValue, prizeCaption);

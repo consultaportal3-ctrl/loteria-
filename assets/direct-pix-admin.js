@@ -126,7 +126,8 @@
   function selectionText(item) {
     const details = [item.special === 'virada' ? 'Mega da Virada' : gameNames[item.game] || item.game];
     if (item.contest) details.push('Concurso ' + item.contest);
-    if (Array.isArray(item.numbers) && item.numbers.length) details.push('Números: ' + item.numbers.map(n => String(n).padStart(2,'0')).join(', '));
+    if (Array.isArray(item.bets) && item.bets.length) details.push(item.bets.map((bet,index) => `Aposta ${index + 1}: ${bet.map(n => String(n).padStart(2,'0')).join(', ')}`).join(' · '));
+    else if (Array.isArray(item.numbers) && item.numbers.length) details.push('Números: ' + item.numbers.map(n => String(n).padStart(2,'0')).join(', '));
     if (Array.isArray(item.trevos)) details.push('Trevos: ' + item.trevos.join(', '));
     if (Array.isArray(item.columns)) details.push(item.columns.map((column,i) => `Coluna ${i+1}: ${column.join('/')}`).join(' · '));
     if (Array.isArray(item.picks)) details.push(item.picks.map((mask,i) => `Jogo ${i+1}: ${[1,2,4].flatMap((bit,j) => mask & bit ? [['1','X','2'][j]] : []).join('/')}`).join(' · '));
@@ -313,7 +314,7 @@
   }
   async function poolEditor(host) {
     const card = node('section', undefined, 'card');
-    card.innerHTML = `<div class="settings-body"><h2>Cadastrar bolão</h2><p>Cadastre as informações reais. A compra de cotas ainda não está habilitada.</p><form id="pool-form"><label>Modalidade<select name="game" required><option value="virada">Mega da Virada</option><option value="mega">Mega-Sena</option><option value="facil">Lotofácil</option><option value="quina">Quina</option><option value="milionaria">+Milionária</option><option value="dupla">Dupla Sena</option><option value="timemania">Timemania</option><option value="dia">Dia de Sorte</option><option value="super">Super Sete</option></select></label><label>Data do sorteio<input type="date" name="date" required></label><label>Números (separados por vírgula)<input name="numbers" placeholder="01, 05, 10, 20, 30, 40" required></label><label>Total de cotas<input name="total" type="number" min="1" max="10000" required></label><label>Cotas disponíveis<input name="available" type="number" min="0" max="10000" required></label><label>Valor da cota em reais<input name="price" type="number" min="0.01" max="1000000" step="0.01" required></label><button class="button" type="submit">Salvar bolão</button><p role="status"></p></form><h2>Bolões cadastrados</h2><div id="pool-list"></div></div>`;
+    card.innerHTML = `<div class="settings-body"><h2>Cadastrar bolão</h2><p>Cadastre as informações reais. A compra de cotas ainda não está habilitada.</p><form id="pool-form"><label>Modalidade<select name="game" required><option value="virada">Mega da Virada</option><option value="mega">Mega-Sena</option><option value="facil">Lotofácil</option><option value="quina">Quina</option><option value="milionaria">+Milionária</option><option value="dupla">Dupla Sena</option><option value="timemania">Timemania</option><option value="dia">Dia de Sorte</option><option value="super">Super Sete</option></select></label><label>Data do sorteio<input type="date" name="date" required></label><label>Apostas (uma por linha; dezenas separadas por vírgula)<textarea name="numbers" rows="8" placeholder="03, 11, 38, 43, 45, 50, 51, 53" required></textarea></label><label>Total de cotas<input name="total" type="number" min="1" max="10000" required></label><label>Cotas disponíveis<input name="available" type="number" min="0" max="10000" required></label><label>Valor da cota em reais<input name="price" type="number" min="0.01" max="1000000" step="0.01" required></label><button class="button" type="submit">Salvar bolão</button><p role="status"></p></form><h2>Bolões cadastrados</h2><div id="pool-list"></div></div>`;
     host.append(card);
     const form = card.querySelector('form'), list = card.querySelector('#pool-list'), message = card.querySelector('[role="status"]');
 
@@ -366,13 +367,15 @@
       if (!result.pools.length) list.append(node('p', 'Nenhum bolão cadastrado.'));
       for (const pool of result.pools) {
         const row = node('div', undefined, 'settings-body');
-        row.append(node('strong', `${pool.game} · ${pool.date} · ${pool.numbers.join(', ')}`), node('p', `${pool.unlimited ? 'Sem limite cadastrado' : `${pool.available} de ${pool.total} cotas`} · ${new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(pool.price/100)}`));
+        const bets = pool.bets || [pool.numbers];
+        row.append(node('strong', `${pool.game} · ${pool.date} · ${pool.description || pool.numbers.join(', ')}`), node('p', `${pool.unlimited ? 'Sem limite cadastrado' : `${pool.available} de ${pool.total} cotas`} · ${new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(pool.price/100)}`));
+        bets.forEach((bet, index) => row.append(node('p', `Aposta ${index + 1}: ${bet.map(n => String(n).padStart(2,'0')).join(', ')}`)));
         const remove = node('button', 'Excluir bolão', 'button secondary'); remove.type = 'button';
         const edit = node('button', 'Editar bolão', 'button secondary'); edit.type = 'button';
         edit.addEventListener('click', () => {
           editingId = pool.id; form.elements.game.value = pool.game; updateGenerator();
           form.elements.unlimited.checked = pool.unlimited === true; updateLimit();
-          form.elements.date.value = pool.date; numberField.value = pool.numbers.map(n => String(n).padStart(2,'0')).join(', ');
+          form.elements.date.value = pool.date; numberField.value = (pool.bets || [pool.numbers]).map(bet => bet.map(n => String(n).padStart(2,'0')).join(', ')).join('\n');
           form.elements.total.value = pool.total; form.elements.available.value = pool.available; form.elements.price.value = (pool.price / 100).toFixed(2);
           submit.textContent = 'Salvar alterações'; cancel.hidden = false; message.textContent = 'Edite os dados e clique em Salvar alterações.'; form.scrollIntoView({behavior:'smooth',block:'start'});
         });
